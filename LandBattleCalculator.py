@@ -53,7 +53,7 @@ class Division:
         else:                DEF = self.BRK  # si attaque alors utilise BREAKTOUGHT stat
     # Defense de la cible
         if DEF > NbDAMAGE: NbDAMAGE *= 0.1
-        else:              NbDAMAGE = self.DEF*0.1 + (NbDAMAGE-self.DEF)*0.6
+        else:              NbDAMAGE = self.DEF*0.1 + (NbDAMAGE-self.DEF)*0.4
     # Calcul des dégats entre les PV et l'ORG
         self.PV -= 1.5*NbDAMAGE
         if self.PV <= 0 : self.PV = 0
