@@ -2,6 +2,7 @@
 class Division:
     def __init__(self):
         self._PVmax = 200
+        self._ORG = 100
         self._SA = 100 # Soft Attack
         self._HA = 10 # Hard Attack
         self._DEF = 50 # Defense
@@ -46,6 +47,31 @@ class Division:
         self.ORG -= 2.5*NbDAMAGE
         if self.ORG <= 0 : self.ORG = 0
 
+class Battle:
+    def __init__(self, ATK, DEF):
+        assert type(ATK) == Division and type(DEF) == Division , "campA and campB must be division class"
+        assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
+        assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
+        self.ATK = ATK
+        self.DEF = DEF
+
+    def Round(self):
+        self.ATK.Attaque(self.DEF)
+        self.DEF.Damage(self.ATK)
+        self.DEF.Attaque(self.ATK)
+        self.ATK.Damage(self.DEF)
+
+        self.printLOG()
+
+    def printLOG(self):
+        txt = """
+        DivATK: {}/{}   {}/{}
+        DivDEF: {}/{}   {}/{}
+        """.format(self.ATK.PV,self.ATK._PVmax,self.ATK.ORG,self.ATK._ORG,
+                   self.DEF.PV,self.DEF._PVmax,self.DEF.ORG,self.DEF._ORG)
+
+        print(txt)
+
 
 ####### TESTING
 
@@ -54,5 +80,5 @@ DivA.isDefending = False
 DivB = Division()
 DivB.isDefending = True
 
-DivA.Attaque(DivB)
-DivB.Damage(DivA)
+BATTLE = Battle(DivA,DivB)
+BATTLE.Round()
