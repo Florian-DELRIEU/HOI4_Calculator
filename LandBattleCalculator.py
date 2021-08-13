@@ -94,14 +94,3 @@ class Battle:
         """.format(self.ATK.PV,self.ATK._PVmax,self.ATK.ORG,self.ATK._ORG,
                    self.DEF.PV,self.DEF._PVmax,self.DEF.ORG,self.DEF._ORG)
         print(txt)
-
-
-####### TESTING
-
-DivA = Division()
-DivA.isDefending = False
-DivB = Division()
-DivB.isDefending = True
-
-BATTLE = Battle(DivA,DivB)
-BATTLE.Round()
