@@ -20,7 +20,7 @@ class Division:
         self.RTCH = 0 # Retranchement
         self.NbATK = 0
         self.set_STR()  # Mets a jour les stat en fonction des PV de la division
-        self.isDefending = False # TRUE si la division et en défense
+        self.isDefending = True # TRUE si la division et en défense
     def set_STR(self):
         """
         Calcul de la STR en fonction des PV
