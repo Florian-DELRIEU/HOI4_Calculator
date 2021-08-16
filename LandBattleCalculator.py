@@ -76,6 +76,7 @@ class Battle:
         assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
         self.ATK = ATK
         self.DEF = DEF
+        self.roundCounter = 0
     def isFinnish(self):
         """
         Check si le combat est terminé
@@ -109,15 +110,21 @@ class Battle:
         self.DEF.Attaque(self.ATK)  # DEF riposte
         self.ATK.Damage(self.DEF)   # ATK prend les dommages
     # Log de fin de round
+        self.roundCounter += 1
         self.printLOG()
     def printLOG(self):
         """
         log pour chaque heure de combats
             - résulat des PV et ORG de chaques divisions
         """
-        txt = """
-        DivATK: {}/{}   {}/{}
-        DivDEF: {}/{}   {}/{}
-        """.format(self.ATK.PV,self.ATK._PVmax,self.ATK.ORG,self.ATK._ORG,
-                   self.DEF.PV,self.DEF._PVmax,self.DEF.ORG,self.DEF._ORG)
+        txt = """----------- round {} -----------------
+DivATK: {}/{}   {}/{}
+DivDEF: {}/{}   {}/{}""".format(self.roundCounter,
+                                self.ATK.PV,self.ATK._PVmax,self.ATK.ORG,self.ATK._ORG,
+                                self.DEF.PV,self.DEF._PVmax,self.DEF.ORG,self.DEF._ORG)
+        if self.isFinnish():
+            txt += """
+----------- End of Battle -----------------
+The battle finnish after {} hours
+            """.format(self.roundCounter)
         print(txt)
