@@ -56,10 +56,15 @@ class Division:
         if DEF > NbDAMAGE: NbDAMAGE *= 0.1
         else:              NbDAMAGE = self.DEF*0.1 + (NbDAMAGE-self.DEF)*0.4
     # Calcul des dégats entre les PV et l'ORG
-        self.PV -= 1.5*NbDAMAGE
+    # PV Dégats
+        self.PV -= 1.5*NbDAMAGE # Moyenne de D2
         self.PV = truncDecimal(self.PV,1)
         if self.PV <= 0 : self.PV = 0
-        self.ORG -= 2.5*NbDAMAGE
+    # ORG Dégats
+        if self.PRC > Striker.ARM:
+            self.ORG -= 3.5*NbDAMAGE # Moyenne de D6
+        else:
+            self.ORG -= 2.5*NbDAMAGE # Moyenne de D4
         self.ORG = truncDecimal(self.ORG,1)
         if self.ORG <= 0 : self.ORG = 0
 
