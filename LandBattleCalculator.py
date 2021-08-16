@@ -1,3 +1,4 @@
+from MyPack.Utilities import *
 
 class Division:
     """
@@ -13,7 +14,7 @@ class Division:
         self._DEF = 50 # Defense
         self._BRK = 40 # Breakthought
         self.PV = self._PVmax
-        self.ORG = 100
+        self.ORG = self._ORG
         self.PRC = 10 # Piercing
         self.ARM = 10 # Armor
         self.HARD = 0.1 # Hardness
@@ -56,8 +57,10 @@ class Division:
         else:              NbDAMAGE = self.DEF*0.1 + (NbDAMAGE-self.DEF)*0.4
     # Calcul des dégats entre les PV et l'ORG
         self.PV -= 1.5*NbDAMAGE
+        self.PV = truncDecimal(self.PV,1)
         if self.PV <= 0 : self.PV = 0
         self.ORG -= 2.5*NbDAMAGE
+        self.ORG = truncDecimal(self.ORG,1)
         if self.ORG <= 0 : self.ORG = 0
 
 #######################################################################################################################
@@ -73,7 +76,31 @@ class Battle:
         assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
         self.ATK = ATK
         self.DEF = DEF
-    def Round(self):
+    def isFinnish(self):
+        """
+        Check si le combat est terminé
+            - Si l'un des deux camps n'as plus de PV ou d'Organisation
+        :return: True ou False
+        """
+        if (self.ATK.PV <= 0) or (self.DEF.PV <= 0) or (self.ATK.ORG <= 0) or (self.DEF.ORG <= 0):
+            return True
+        else:
+            return False
+    def Round(self,Nb=1):
+        """
+        Definit le nombre de lancement de round
+        :param Nb: Nombre de round souhaité (-1 si jusqu'a fin du combat)
+        """
+        assert type(Nb) is int , "Nb must be an :int:"
+        if Nb != -1:
+            i = 1
+            while i <= Nb: # Lancement de :Nb: rounds
+                self._Round()
+                i += 1
+        else: # Lancement des rounds jusqu'a fin du combat
+            while not self.isFinnish():
+                self._Round()
+    def _Round(self):
         """
         Lancement d'un round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """

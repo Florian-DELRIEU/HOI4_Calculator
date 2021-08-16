@@ -6,9 +6,4 @@ DivB = Division()
 DivB.isDefending = True
 
 BATTLE = Battle(DivA,DivB)
-BATTLE.Round()
-BATTLE.Round()
-BATTLE.Round()
-BATTLE.Round()
-BATTLE.Round()
-BATTLE.Round()
+BATTLE.Round(-1)
