@@ -1,4 +1,5 @@
 from LandBattleCalculator import *
+from DivisionList import *
 
 DivA = Division()
 DivA.isDefending = False
