@@ -1,9 +1,9 @@
 from LandBattleCalculator import *
 from DivisionList import *
 
-DivA = Division()
+DivA = Infantery_72
 DivA.isDefending = False
-DivB = Division()
+DivB = Armored_64
 DivB.isDefending = True
 
 BATTLE = Battle(DivA,DivB)
