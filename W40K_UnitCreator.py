@@ -16,14 +16,15 @@ class Weapons:
         self.Breakthrought = float()
         self.Piercing = float()
     def HOI4_Profil(self):
-        self.SoftAttack = SoftAttack_F(self.F)*SoftAttack_PA(self.PA)
-        self.HardAttack = HardAttack_F(self.F)*HardAttack_PA(self.PA)
-        self.Defense = Defense_F(self.F)*Defense_PA(self.PA)
-        self.Breakthrought = Breakthrought_F(self.F)*Breakthrought_PA(self.PA)
+        self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA]
+        self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA]
+        self.Defense = Defense_F[self.F]*Defense_PA[self.PA]
+        self.Breakthrought = Breakthrought_F[self.F]*Breakthrought_PA[self.PA]
     # Piercing
         self.Piercing = self.F + 4
         if self.PA == 2 : self.Piercing += 1
         if self.PA == 1 : self.Piercing += 2
+        self.Bonus()
     def Bonus(self):
         for rule in self.SpecialsRules:
             if rule == "Perforant":
@@ -51,3 +52,15 @@ class Weapons:
         if self.Type == "Salve":
             self.Defense *= 1.1
             self.Breakthrought = 1.1
+    def Show_HOI_Stats(self):
+        self.HOI4_Profil()
+        txt = """
+        Soft Attack   = {}
+        Hard Attack   = {}
+        Defense       = {}
+        Breakthrought = {}
+        Piercing      = {}
+        """.format(self.SoftAttack,self.HardAttack,
+                   self.Defense,self.Breakthrought,
+                   self.Piercing)
+        print(txt)
