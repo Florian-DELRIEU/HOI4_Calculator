@@ -1,11 +1,11 @@
 from W40K_TableValues import *
 
 class Weapons:
-    def __init__(self):
+    def __init__(self,F=3,PA=None,Type="Tir rapide"):
     # Profils W40K
-        self.F = 3
-        self.PA = None
-        self.Type = "Tir rapide"
+        self.F = F
+        self.PA = PA
+        self.Type = Type
         self.Cadence = 1
         self.Portee = 24
         self.SpecialsRules = []
@@ -64,3 +64,4 @@ class Weapons:
                    self.Defense,self.Breakthrought,
                    self.Piercing)
         print(txt)
+        
