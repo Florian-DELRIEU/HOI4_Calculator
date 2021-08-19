@@ -15,11 +15,11 @@ class Weapons:
         self.Defense = float()
         self.Breakthrought = float()
         self.Piercing = float()
-    def HOI4_Profil(self):
-        self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA]
-        self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA]
-        self.Defense = Defense_F[self.F]*Defense_PA[self.PA]
-        self.Breakthrought = Breakthrought_F[self.F]*Breakthrought_PA[self.PA]
+    def HOI4_Profil(self,Number=100):
+        self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA] / 100*Number
+        self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA] / 100*Number
+        self.Defense = Defense_F[self.F]*Defense_PA[self.PA] / 100*Number
+        self.Breakthrought = Breakthrought_F[self.F]*Breakthrought_PA[self.PA] /100*Number
     # Piercing
         self.Piercing = self.F + 4
         if self.PA == 2 : self.Piercing += 1
@@ -64,4 +64,27 @@ class Weapons:
                    self.Defense,self.Breakthrought,
                    self.Piercing)
         print(txt)
-        
+
+class Unit:
+    def __init__(self,CC,CT,F,E,PV,A,Cd,Svg):
+    # W40K Stats
+        self.CC = CC
+        self.CT = CT
+        self.F = F
+        self.E = E
+        self.PV = PV
+        self.A = A
+        self.Cd = Cd
+        self.Svg = Svg
+    # HOI Stats
+        self.HP = float()
+        self.ORG = float()
+        self.SoftAttack = float()
+        self.HardAttack = float()
+        self.Defense = float()
+        self.Breakthrought = float()
+        self.MeleeAttack = float()
+        self.Hardness = float()
+        self.Armor = float()
+        self.Piercing = float()
+
