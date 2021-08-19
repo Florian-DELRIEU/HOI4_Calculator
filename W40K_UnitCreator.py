@@ -1,7 +1,7 @@
 from W40K_TableValues import *
 
 class Weapons:
-    def __init__(self,F=3,PA=None,Type="Tir rapide"):
+    def __init__(self,F=3,PA=None,Type="Tir rapide",Number=100):
     # Profils W40K
         self.F = F
         self.PA = PA
@@ -10,16 +10,17 @@ class Weapons:
         self.Portee = 24
         self.SpecialsRules = []
     # Profils HOI VI
+        self.Number = Number
         self.SoftAttack = float()
         self.HardAttack = float()
         self.Defense = float()
         self.Breakthrought = float()
         self.Piercing = float()
-    def HOI4_Profil(self,Number=100):
-        self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA] / 100*Number
-        self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA] / 100*Number
-        self.Defense = Defense_F[self.F]*Defense_PA[self.PA] / 100*Number
-        self.Breakthrought = Breakthrought_F[self.F]*Breakthrought_PA[self.PA] /100*Number
+    def HOI4_Profil(self):
+        self.SoftAttack = (SoftAttack_F[self.F]*SoftAttack_PA[self.PA] / 100)*self.Number
+        self.HardAttack = (HardAttack_F[self.F]*HardAttack_PA[self.PA] / 100)*self.Number
+        self.Defense = (Defense_F[self.F]*Defense_PA[self.PA] / 100*self.Number)
+        self.Breakthrought = (Breakthrought_F[self.F]*Breakthrought_PA[self.PA] /100)*self.Number
     # Piercing
         self.Piercing = self.F + 4
         if self.PA == 2 : self.Piercing += 1
