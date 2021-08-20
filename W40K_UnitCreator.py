@@ -1,4 +1,5 @@
 from W40K_TableValues import *
+import numpy as np
 
 class Weapon:
     def __init__(self, F=3, PA=None, Type="Tir rapide",Quantity=1):
@@ -138,8 +139,9 @@ class Unit:
 
 class Company:
     def __init__(self):
-        self.Manpower = list()
+        self.Units = list()
         self.Equipement = list()
+        self.Manpower = float()
     # HOI Stats
         self.HP = float()
         self.ORG = float()
@@ -153,14 +155,21 @@ class Company:
         self.Breakthrought = float()
         self.Defense = float()
     def check_lists(self):
-        for el in self.Manpower:
+        assert len(self.Units) == 1 , ":Unit list: must have only one unit"
+        for el in self.Units:
             assert type(el) is Unit , "Each element of Manpower list must be a :Unit class:"
         for el in self.Equipement:
             assert type(el) is Weapon , "Each element of Equipement list must be a :Weapon class:"
     def HOI4_profil(self):
-        self.HP = sum(el.HP for el in self.Manpower)
-        self.ORG = sum(el.ORG for el in self.Manpower)
-        self.SoftAttack = sum(el.SoftAttack for el in self.Equipement)
-        self.HardAttack = sum(el.HardAttack for el in self.Equipement)
-        self.SoftMeleeAttack = sum(el.SoftMeleeAttack for el in self.Equipement)
-        self.HardMeleeAttack = sum(el.HardMeleeAttack for el in self.Equipement)
+        self.Manpower = np.sum(el.Quantity for el in self.Units)
+        self.HP = np.sum(el.HP for el in self.Units)
+        self.ORG = np.sum(el.ORG for el in self.Units)
+        self.SoftAttack = np.sum(el.SoftAttack for el in self.Equipement)
+        self.HardAttack = np.sum(el.HardAttack for el in self.Equipement)
+        self.SoftMeleeAttack = np.sum(el.SoftMeleeAttack for el in self.Equipement)
+        self.HardMeleeAttack = np.sum(el.HardMeleeAttack for el in self.Equipement)
+        self.Defense = np.sum(el.Defense for el in self.Units)
+        self.Breakthrought = np.sum(el.Breakthrought for el in self.Units)
+        self.Hardness = np.sum(el.Quantity*el.Hardness for el in self.Units) / self.Manpower
+        self.Armor = np.sum(el.Quantity*el.Armor for el in self.Units) / self.Manpower
+        self.Piercing = np.sum(el.Quantity*el.Piercing for el in self.Units) / self.Manpower
