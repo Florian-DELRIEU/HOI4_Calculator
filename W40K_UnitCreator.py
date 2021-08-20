@@ -93,6 +93,7 @@ class Unit:
         self.Hardness = float()
         self.Armor = float()
         self.Piercing = float()
+        self.HOI4_Profil()
     def HOI4_Profil(self):
         self.HP = self.PV*HPbonus_E[self.E] *self.Quantity
         self.ORG = self.Cd *self.Quantity
@@ -155,10 +156,11 @@ class Company:
         self.Piercing = float()
         self.Breakthrought = float()
         self.Defense = float()
+        self.HOI4_Profil()
     def check_lists(self):
         for el in self.Equipement:
             assert type(el) is Weapon , "Each element of Equipement list must be a :Weapon class:"
-    def HOI4_profil(self):
+    def HOI4_Profil(self):
         self.Manpower = self.Unit.Quantity
         self.Quantity_Equipement = np.sum(el.Quantity for el in self.Equipement)
         self.HP = self.Unit.HP
