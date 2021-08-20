@@ -139,9 +139,10 @@ class Unit:
 
 class Company:
     def __init__(self):
-        self.Units = list()
+        self.Unit = Unit()
         self.Equipement = list()
         self.Manpower = float()
+        self.Quantity_Equipement = float()
     # HOI Stats
         self.HP = float()
         self.ORG = float()
@@ -155,21 +156,20 @@ class Company:
         self.Breakthrought = float()
         self.Defense = float()
     def check_lists(self):
-        assert len(self.Units) == 1 , ":Unit list: must have only one unit"
-        for el in self.Units:
-            assert type(el) is Unit , "Each element of Manpower list must be a :Unit class:"
         for el in self.Equipement:
             assert type(el) is Weapon , "Each element of Equipement list must be a :Weapon class:"
     def HOI4_profil(self):
-        self.Manpower = np.sum(el.Quantity for el in self.Units)
-        self.HP = np.sum(el.HP for el in self.Units)
-        self.ORG = np.sum(el.ORG for el in self.Units)
+        self.Manpower = self.Unit.Quantity
+        self.Quantity_Equipement = np.sum(el.Quantity for el in self.Equipement)
+        self.HP = self.Unit.HP
+        self.ORG = self.Unit.ORG
         self.SoftAttack = np.sum(el.SoftAttack for el in self.Equipement)
         self.HardAttack = np.sum(el.HardAttack for el in self.Equipement)
         self.SoftMeleeAttack = np.sum(el.SoftMeleeAttack for el in self.Equipement)
         self.HardMeleeAttack = np.sum(el.HardMeleeAttack for el in self.Equipement)
-        self.Defense = np.sum(el.Defense for el in self.Units)
-        self.Breakthrought = np.sum(el.Breakthrought for el in self.Units)
-        self.Hardness = np.sum(el.Quantity*el.Hardness for el in self.Units) / self.Manpower
-        self.Armor = np.sum(el.Quantity*el.Armor for el in self.Units) / self.Manpower
-        self.Piercing = np.sum(el.Quantity*el.Piercing for el in self.Units) / self.Manpower
+        self.Defense = self.Unit.Defense + np.sum(el.Defense for el in self.Equipement)
+        self.Breakthrought = self.Unit.Breakthrought + np.sum(el.Breakthrought for el in self.Equipement)
+        self.Hardness = self.Unit.Hardness
+        self.Armor = self.Unit.Armor
+        self.Piercing = (self.Unit.Piercing + np.sum(el.Quantity*el.Piercing for el in self.Equipement))\
+                        /(self.Quantity_Equipement+self.Manpower)
