@@ -1,4 +1,4 @@
 from W40K_UnitCreator import *
 
-Lasgun = Weapons()
+Lasgun = Weapon()
 Lasgun.Show_HOI_Stats()

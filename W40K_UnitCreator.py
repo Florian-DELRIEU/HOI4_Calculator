@@ -1,6 +1,6 @@
 from W40K_TableValues import *
 
-class Weapons:
+class Weapon:
     def __init__(self, F=3, PA=None, Type="Tir rapide"):
     # Profils W40K
         self.F = F
@@ -93,7 +93,7 @@ class Unit:
         self.HP = self.PV*HPbonus_E[self.E]
         self.ORG = self.Cd
         self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC]
-        self.HardMeleeAttack = HMA_SMA_prop[self.F]*self.SoftMeleeAttack*HardAttack_CC_CT[self.CC]
+        self.HardMeleeAttack = HMA_SMA_prop[self.F]* self.SoftMeleeAttack* HardAttack_CC_CT[self.CC]
     # Hardness & Armor
         if self.Svg == 3:
             self.Hardness = 0.1
@@ -118,3 +118,32 @@ class Unit:
         if self.Svg is None:
             self.Defense *= 0.7
             self.Breakthrought *= 0.7
+
+class Company:
+    def __init__(self):
+        self.Manpower = list()
+        self.Equipement = list()
+    # HOI Stats
+        self.HP = float()
+        self.ORG = float()
+        self.SoftAttack = float()
+        self.SoftMeleeAttack = float()
+        self.HardAttack = float()
+        self.HardMeleeAttack = float()
+        self.Hardness = float()
+        self.Armor = float()
+        self.Piercing = float()
+        self.Breakthrought = float()
+        self.Defense = float()
+    def check_lists(self):
+        for el in self.Manpower:
+            assert type(el) is Unit , "Each element of Manpower list must be a :Unit class:"
+        for el in self.Equipement:
+            assert type(el) is Weapon , "Each element of Equipement list must be a :Weapon class:"
+    def HOI4_profil(self):
+        self.HP = sum(el.HP for el in self.Manpower)
+        self.ORG = sum(el.ORG for el in self.Manpower)
+        self.SoftAttack = sum(el.SoftAttack for el in self.Equipement)
+        self.HardAttack = sum(el.HardAttack for el in self.Equipement)
+        self.SoftMeleeAttack = sum(el.SoftMeleeAttack for el in self.Equipement)
+        self.HardMeleeAttack = sum(el.HardMeleeAttack for el in self.Equipement)
