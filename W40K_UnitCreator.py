@@ -1,7 +1,7 @@
 from W40K_TableValues import *
 
 class Weapons:
-    def __init__(self, F=3, PA=None, Type="Tir rapide", Nb=100):
+    def __init__(self, F=3, PA=None, Type="Tir rapide", Quantity=100):
     # Profils W40K
         self.F = F
         self.PA = PA
@@ -10,7 +10,7 @@ class Weapons:
         self.Portee = 24
         self.SpecialsRules = []
     # Profils HOI VI
-        self.Number = Nb
+        self.Number = Quantity
         self.SoftAttack = float()
         self.HardAttack = float()
         self.Defense = float()
