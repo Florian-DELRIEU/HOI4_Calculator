@@ -1,7 +1,7 @@
 from W40K_TableValues import *
 
 class Weapons:
-    def __init__(self, F=3, PA=None, Type="Tir rapide", Quantity=100):
+    def __init__(self, F=3, PA=None, Type="Tir rapide"):
     # Profils W40K
         self.F = F
         self.PA = PA
@@ -10,17 +10,17 @@ class Weapons:
         self.Portee = 24
         self.SpecialsRules = []
     # Profils HOI VI
-        self.Number = Quantity
+        self.Quantity = Quantity
         self.SoftAttack = float()
         self.HardAttack = float()
         self.Defense = float()
         self.Breakthrought = float()
         self.Piercing = float()
     def HOI4_Profil(self):
-        self.SoftAttack = (SoftAttack_F[self.F]*SoftAttack_PA[self.PA])*self.Number
-        self.HardAttack = (HardAttack_F[self.F]*HardAttack_PA[self.PA])*self.Number
-        self.Defense = (Defense_F[self.F]*Defense_PA[self.PA])*self.Number
-        self.Breakthrought = (Breakthrought_F[self.F]*Breakthrought_PA[self.PA])*self.Number
+        self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA]
+        self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA]
+        self.Defense = Defense_F[self.F]*Defense_PA[self.PA]
+        self.Breakthrought = Breakthrought_F[self.F]*Breakthrought_PA[self.PA]
     # Piercing
         self.Piercing = self.F + 4
         if self.PA == 2 : self.Piercing += 1
