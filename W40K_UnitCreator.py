@@ -10,7 +10,6 @@ class Weapons:
         self.Portee = 24
         self.SpecialsRules = []
     # Profils HOI VI
-        self.Quantity = Quantity
         self.SoftAttack = float()
         self.HardAttack = float()
         self.Defense = float()
@@ -67,7 +66,7 @@ class Weapons:
         print(txt)
 
 class Unit:
-    def __init__(self,CC,CT,F,E,PV,A,Cd,Svg):
+    def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=4,SvgInvu=None):
     # W40K Stats
         self.CC = CC
         self.CT = CT
@@ -77,6 +76,7 @@ class Unit:
         self.A = A
         self.Cd = Cd
         self.Svg = Svg
+        self.SvgInvu = SvgInvu
     # HOI Stats
         self.HP = float()
         self.ORG = float()
@@ -84,8 +84,37 @@ class Unit:
         self.HardAttack = float()
         self.Defense = float()
         self.Breakthrought = float()
-        self.MeleeAttack = float()
+        self.SoftMeleeAttack = float()
+        self.HardMeleeAttack = float()
         self.Hardness = float()
         self.Armor = float()
         self.Piercing = float()
-
+    def HOI4_Profil(self):
+        self.HP = self.PV*HPbonus_E[self.E]
+        self.ORG = self.Cd
+        self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC]
+        self.HardMeleeAttack = HMA_SMA_prop[self.F]*self.SoftMeleeAttack*HardAttack_CC_CT[self.CC]
+    # Hardness & Armor
+        if self.Svg == 3:
+            self.Hardness = 0.1
+            self.Armor = 2 * Armor_SvgInvu[self.SvgInvu]
+        if self.Svg == 2:
+            self.Hardness = 0.2
+            self.Armor = 4 * Armor_SvgInvu[self.SvgInvu]
+        else:
+            self.Hardness = 0.0
+            self.Armor = 0 * Armor_SvgInvu[self.SvgInvu]
+    # Piercing
+        self.Piercing = self.F+4
+    # Defense & Breakthrought
+        self.Defense = Defense_F[self.F]
+        self.Breakthrought = Breakthrought_F[self.F]
+        if self.Svg == 5:
+            self.Defense *= 0.9
+            self.Breakthrought *= 0.9
+        if self.Svg == 6:
+            self.Defense *= 0.8
+            self.Breakthrought *= 0.8
+        if self.Svg is None:
+            self.Defense *= 0.7
+            self.Breakthrought *= 0.7

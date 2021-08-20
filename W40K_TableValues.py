@@ -60,6 +60,28 @@ SoftAttack_PA[3] = 1.20
 SoftAttack_PA[2] = 1.23
 SoftAttack_PA[1] = 1.25
 
+SoftAttack_CC_CT = dict()
+SoftAttack_CC_CT[1] = 0.5
+SoftAttack_CC_CT[2] = 0.8
+SoftAttack_CC_CT[3] = 1.0
+SoftAttack_CC_CT[4] = 1.2
+SoftAttack_CC_CT[5] = 1.5
+SoftAttack_CC_CT[6] = 1.8
+SoftAttack_CC_CT[7] = 2.0
+SoftAttack_CC_CT[8] = 2.5
+SoftAttack_CC_CT[9] = 3.0
+
+HardAttack_CC_CT = dict()
+HardAttack_CC_CT[1] = 0.5
+HardAttack_CC_CT[2] = 0.8
+HardAttack_CC_CT[3] = 1.0
+HardAttack_CC_CT[4] = 1.2
+HardAttack_CC_CT[5] = 1.5
+HardAttack_CC_CT[6] = 1.8
+HardAttack_CC_CT[7] = 2.0
+HardAttack_CC_CT[8] = 2.5
+HardAttack_CC_CT[9] = 3.0
+
 HardAttack_PA = dict()
 HardAttack_PA[None] = 1
 HardAttack_PA[6] = 1.01
@@ -87,3 +109,36 @@ Breakthrought_PA[3] = 1.20
 Breakthrought_PA[2] = 1.25
 Breakthrought_PA[1] = 1.30
 
+#################### HP Bonus Endurance
+HPbonus_E = dict()
+HPbonus_E[1] = 0.8
+HPbonus_E[2] = 0.9
+HPbonus_E[3] = 1.0
+HPbonus_E[4] = 1.1
+HPbonus_E[5] = 1.2
+HPbonus_E[6] = 1.3
+HPbonus_E[7] = 1.4
+HPbonus_E[8] = 1.5
+HPbonus_E[9] = 1.6
+HPbonus_E[10] = 1.7
+
+HMA_SMA_prop = dict()
+"Proportion de HMA par rapport au SMA enf fonction de F"
+HMA_SMA_prop[1] = 0
+HMA_SMA_prop[2] = 0
+HMA_SMA_prop[3] = 0.05
+HMA_SMA_prop[4] = 0.1
+HMA_SMA_prop[5] = 0.15
+HMA_SMA_prop[6] = 0.20
+HMA_SMA_prop[7] = 0.30
+HMA_SMA_prop[8] = 0.50
+HMA_SMA_prop[9] = 0.80
+HMA_SMA_prop[10] = 1.5
+
+Armor_SvgInvu = dict()
+Armor_SvgInvu[2] = 1.5
+Armor_SvgInvu[3] = 1.4
+Armor_SvgInvu[4] = 1.3
+Armor_SvgInvu[5] = 1.2
+Armor_SvgInvu[6] = 1.1
+Armor_SvgInvu[None] = 1
