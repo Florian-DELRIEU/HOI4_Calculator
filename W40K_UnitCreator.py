@@ -68,7 +68,8 @@ class Weapon:
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
 class Unit:
-    def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=4,SvgInvu=None):
+    def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=4,SvgInvu=None,Quantity=1):
+        self.Quantity = Quantity
     # W40K Stats
         self.CC = CC
         self.CT = CT
@@ -92,10 +93,10 @@ class Unit:
         self.Armor = float()
         self.Piercing = float()
     def HOI4_Profil(self):
-        self.HP = self.PV*HPbonus_E[self.E]
-        self.ORG = self.Cd
-        self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC]
-        self.HardMeleeAttack = HMA_SMA_prop[self.F]* self.SoftMeleeAttack* HardAttack_CC_CT[self.CC]
+        self.HP = self.PV*HPbonus_E[self.E] *self.Quantity
+        self.ORG = self.Cd *self.Quantity
+        self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC] *self.Quantity
+        self.HardMeleeAttack = HMA_SMA_prop[self.F]* self.SoftMeleeAttack* HardAttack_CC_CT[self.CC] *self.Quantity
     # Hardness & Armor
         if self.Svg == 3:
             self.Hardness = 0.1
@@ -109,8 +110,8 @@ class Unit:
     # Piercing
         self.Piercing = self.F+4
     # Defense & Breakthrought
-        self.Defense = Defense_F[self.F]
-        self.Breakthrought = Breakthrought_F[self.F]
+        self.Defense = Defense_F[self.F] *self.Quantity
+        self.Breakthrought = Breakthrought_F[self.F] *self.Quantity
         if self.Svg == 5:
             self.Defense *= 0.9
             self.Breakthrought *= 0.9
@@ -120,6 +121,20 @@ class Unit:
         if self.Svg is None:
             self.Defense *= 0.7
             self.Breakthrought *= 0.7
+    def Show_HOI_Stats(self):
+        self.HOI4_Profil()
+        txt = """
+        HP            = {}
+        ORG           = {}
+        Defense       = {}
+        Breakthrought = {}
+        Piercing      = {}
+        """.format(self.HP,self.ORG,
+                   self.Defense,self.Breakthrought,
+                   self.Piercing)
+        print(txt)
+    def set_Quantity(self,Quantity):
+        self.Quantity = Quantity
 
 class Company:
     def __init__(self):
