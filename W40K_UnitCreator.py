@@ -1,7 +1,8 @@
 from W40K_TableValues import *
 
 class Weapon:
-    def __init__(self, F=3, PA=None, Type="Tir rapide"):
+    def __init__(self, F=3, PA=None, Type="Tir rapide",Quantity=1):
+        self.Quantity = Quantity
     # Profils W40K
         self.F = F
         self.PA = PA
@@ -16,10 +17,10 @@ class Weapon:
         self.Breakthrought = float()
         self.Piercing = float()
     def HOI4_Profil(self):
-        self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA]
-        self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA]
-        self.Defense = Defense_F[self.F]*Defense_PA[self.PA]
-        self.Breakthrought = Breakthrought_F[self.F]*Breakthrought_PA[self.PA]
+        self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA] *self.Quantity
+        self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA] *self.Quantity
+        self.Defense = Defense_F[self.F]*Defense_PA[self.PA] *self.Quantity
+        self.Breakthrought = Breakthrought_F[self.F]*Breakthrought_PA[self.PA] *self.Quantity
     # Piercing
         self.Piercing = self.F + 4
         if self.PA == 2 : self.Piercing += 1
@@ -64,7 +65,8 @@ class Weapon:
                    self.Defense,self.Breakthrought,
                    self.Piercing)
         print(txt)
-
+    def set_Quantity(self,Quantity):
+        self.Quantity = Quantity
 class Unit:
     def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=4,SvgInvu=None):
     # W40K Stats
