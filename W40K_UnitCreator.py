@@ -14,12 +14,19 @@ class Weapon:
     # Profils HOI VI
         self.SoftAttack = float()
         self.HardAttack = float()
+        self.SoftMeleeAttack = float()
+        self.HardMeleeAttack = float()
         self.Defense = float()
         self.Breakthrought = float()
         self.Piercing = float()
     def HOI4_Profil(self):
-        self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA] *self.Quantity
-        self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA] *self.Quantity
+        if self.Type == "Melee":
+            self.SoftMeleeAttack , self.HardMeleeAttack = 0 , 0
+            self.SoftAttack , self.HardAttack = 0 , 0
+        else:
+            self.SoftMeleeAttack, self.HardMeleeAttack = 0, 0
+            self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA] *self.Quantity
+            self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA] *self.Quantity
         self.Defense = Defense_F[self.F]*Defense_PA[self.PA] *self.Quantity
         self.Breakthrought = Breakthrought_F[self.F]*Breakthrought_PA[self.PA] *self.Quantity
     # Piercing
@@ -166,18 +173,18 @@ class Company:
             assert type(el) is Weapon , "Each element of Equipement list must be a :Weapon class:"
     def HOI4_Profil(self):
         self.Manpower = self.Unit.Quantity
-        self.Quantity_Equipement = np.sum(el.Quantity for el in self.Equipement)
+        self.Quantity_Equipement = np.sum([el.Quantity for el in self.Equipement])
         self.HP = self.Unit.HP
         self.ORG = self.Unit.ORG
-        self.SoftAttack = np.sum(el.SoftAttack for el in self.Equipement)
-        self.HardAttack = np.sum(el.HardAttack for el in self.Equipement)
-        self.SoftMeleeAttack = np.sum(el.SoftMeleeAttack for el in self.Equipement)
-        self.HardMeleeAttack = np.sum(el.HardMeleeAttack for el in self.Equipement)
-        self.Defense = self.Unit.Defense + np.sum(el.Defense for el in self.Equipement)
-        self.Breakthrought = self.Unit.Breakthrought + np.sum(el.Breakthrought for el in self.Equipement)
+        self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])
+        self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])
+        self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])
+        self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])
+        self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
+        self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
         self.Hardness = self.Unit.Hardness
         self.Armor = self.Unit.Armor
-        self.Piercing = (self.Unit.Piercing + np.sum(el.Quantity*el.Piercing for el in self.Equipement))\
+        self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
                         /(self.Quantity_Equipement+self.Manpower)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
