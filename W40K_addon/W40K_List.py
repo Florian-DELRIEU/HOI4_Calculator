@@ -1,4 +1,4 @@
-from W40K_UnitCreator import *
+from W40K_Unit import *
 
 KrakGrenade = Weapon(8,2,"Assaut")
 KrakGrenade.set_Quantity(100)

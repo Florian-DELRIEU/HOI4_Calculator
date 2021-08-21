@@ -1,4 +1,4 @@
-from W40K_UnitCreator import *
+from W40K_Unit import *
 
 ############ HARD & SOFT ATTACK
 SoftAttack_F = dict()
