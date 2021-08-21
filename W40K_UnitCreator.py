@@ -19,6 +19,7 @@ class Weapon:
         self.Defense = float()
         self.Breakthrought = float()
         self.Piercing = float()
+        self.HOI4_Profil()
     def HOI4_Profil(self):
         if self.Type == "Melee":
             self.SoftMeleeAttack , self.HardMeleeAttack = 0 , 0
