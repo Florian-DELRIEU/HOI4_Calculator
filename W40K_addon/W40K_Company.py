@@ -40,6 +40,12 @@ class Company:
         self.Armor = self.Unit.Armor
         self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
                         /(self.Quantity_Equipement+self.Manpower)
+    def setUnit(self,Unit):
+        self.Unit = Unit
+        self.HOI4_Profil()
+    def setEquipement(self,List):
+        self.Equipement = List
+        self.HOI4_Profil()
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
