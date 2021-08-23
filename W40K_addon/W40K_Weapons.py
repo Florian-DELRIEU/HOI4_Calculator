@@ -61,6 +61,13 @@ class Weapon:
         if self.Type == "Salve":
             self.Defense *= 1.1
             self.Breakthrought = 1.1
+    def round_Stats(self):
+        self.Defense = round(self.Defense,2)
+        self.Breakthrought = round(self.Breakthrought,2)
+        self.SoftAttack = round(self.SoftAttack,2)
+        self.HardAttack = round(self.HardAttack,2)
+        self.SoftMeleeAttack = round(self.SoftMeleeAttack,2)
+        self.HardMeleeAttack = round(self.HardMeleeAttack,2)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

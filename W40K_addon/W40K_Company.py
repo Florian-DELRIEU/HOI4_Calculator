@@ -5,7 +5,7 @@ import numpy as np
 
 class Company:
     def __init__(self):
-        self.Unit = Unit()
+        self.Unit = None
         self.Equipement = list()
         self.Manpower = float()
         self.Quantity_Equipement = float()
@@ -26,20 +26,23 @@ class Company:
         for el in self.Equipement:
             assert type(el) is Weapon , "Each element of Equipement list must be a :Weapon class:"
     def HOI4_Profil(self):
-        self.Manpower = self.Unit.Quantity
-        self.Quantity_Equipement = np.sum([el.Quantity for el in self.Equipement])
-        self.HP = self.Unit.HP
-        self.ORG = self.Unit.ORG
-        self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])
-        self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])
-        self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])
-        self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])
-        self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
-        self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
-        self.Hardness = self.Unit.Hardness
-        self.Armor = self.Unit.Armor
-        self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
-                        /(self.Quantity_Equipement+self.Manpower)
+        if self.Unit is None:
+            pass
+        else:
+            self.Manpower = self.Unit.Quantity
+            self.Quantity_Equipement = np.sum([el.Quantity for el in self.Equipement])
+            self.HP = self.Unit.HP
+            self.ORG = self.Unit.ORG
+            self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])
+            self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])
+            self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])
+            self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])
+            self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
+            self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
+            self.Hardness = self.Unit.Hardness
+            self.Armor = self.Unit.Armor
+            self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
+                            /(self.Quantity_Equipement+self.Manpower)
     def setUnit(self,Unit):
         self.Unit = Unit
         self.HOI4_Profil()
