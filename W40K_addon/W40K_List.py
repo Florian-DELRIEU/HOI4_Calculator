@@ -5,8 +5,8 @@ from W40K_Unit import *
 
 Bolter = Weapon(4,5,"Tir rapide")
 SpaceMarines = Unit(4,4,4,5,1,1,9,3)
+Comp1 = Company()
+Comp1.Unit = SpaceMarines
+Comp1.Equipement = [Bolter]
 
-print("Lasgun stats --")
-Bolter.Show_HOI_Stats()
-print("Space Marine stats --")
-SpaceMarines.Show_HOI_Stats()
+Comp1.Show_HOI_Stats()
