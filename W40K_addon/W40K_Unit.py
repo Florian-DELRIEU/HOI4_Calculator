@@ -2,7 +2,10 @@ from W40K_TableValues import *
 import numpy as np
 
 class Unit:
-    def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=4,SvgInvu=None,Quantity=1):
+    def __init__(self,CC=4,CT=4,F=4,E=4,PV=1,A=1,Cd=8,Svg=3,SvgInvu=None,Quantity=1):
+        """
+        Default is Space Marine
+        """
         self.Quantity = Quantity
     # W40K Stats
         self.CC = CC
@@ -87,7 +90,10 @@ class Unit:
 ########################################################################################################################
 
 class Tank:
-    def __init__(self,CT=3,Blind_Av=12,Blind_Side=11,Blind_Arr=10,PC=3,Quantity=1):
+    def __init__(self,CT=4,Blind_Av=13,Blind_Side=11,Blind_Arr=10,PC=3,Quantity=1):
+        """
+        Default is Predator
+        """
         self.Quantity = Quantity
     # W40K Stats
         self.CT = CT
@@ -145,7 +151,10 @@ class Tank:
 ########################################################################################################################
 
 class Walker:
-    def __init__(self,CC=3,CT=3,F=5,Blind_Av=12,Blind_Side=11,Blind_Arr=10,A=2,PC=3,Quantity=1):
+    def __init__(self,CC=4,CT=4,F=6,Blind_Av=12,Blind_Side=12,Blind_Arr=10,A=4,PC=3,Quantity=1):
+        """
+        Default is Dreadnought
+        """
         self.Quantity = Quantity
     # W40K Stats
         self.CC = CC
@@ -173,6 +182,11 @@ class Walker:
         self.ORG = 1*self.Quantity
         self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC]*self.Quantity
         self.HardMeleeAttack = HMA_SMA_prop[self.F]*self.SoftMeleeAttack*HardAttack_CC_CT[self.CC]*self.Quantity
+    # Piercing
+        self.Piercing = self.F + 4
+    # Defense & Breakthrought
+        self.Defense = Defense_F[self.F]*self.Quantity
+        self.Breakthrought = Breakthrought_F[self.F]*self.Quantity
     # Hardness & Armor
         self.Armor = np.mean(self.Blind_Av,self.Blind_Side,self.Blind_Arr)
     def round_Stats(self):
