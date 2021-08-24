@@ -37,7 +37,7 @@ class Unit:
         if self.Svg == 3:
             self.Hardness = 0.1
             self.Armor = 2 * Armor_SvgInvu[self.SvgInvu]
-        if self.Svg == 2:
+        elif self.Svg == 2:
             self.Hardness = 0.2
             self.Armor = 4 * Armor_SvgInvu[self.SvgInvu]
         else:
