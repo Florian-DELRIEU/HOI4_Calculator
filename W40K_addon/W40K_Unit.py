@@ -1,4 +1,5 @@
 from W40K_TableValues import *
+import numpy as np
 
 class Unit:
     def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=4,SvgInvu=None,Quantity=1):
@@ -26,8 +27,6 @@ class Unit:
         self.Armor = float()
         self.Piercing = float()
         self.HOI4_Profil()
-
-
     def HOI4_Profil(self):
         self.HP = self.PV*HPbonus_E[self.E] *self.Quantity
         self.ORG = self.Cd *self.Quantity
@@ -57,6 +56,7 @@ class Unit:
         if self.Svg is None:
             self.Defense *= 0.7
             self.Breakthrought *= 0.7
+        self.round_Stats()
     def round_Stats(self):
         self.Defense = round(self.Defense,2)
         self.Breakthrought = round(self.Breakthrought,2)
@@ -83,3 +83,57 @@ class Unit:
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
 
+class Tank:
+    def __init__(self,CT=3,Blind_Av=12,Blind_Side=11,Blind_Arr=10,PC=3,Quantity=1):
+        self.Quantity = Quantity
+    # W40K Stats
+        self.CT = CT
+        self.Blind_Av = Blind_Av
+        self.Blind_Side = Blind_Side
+        self.Blind_Arr = Blind_Arr
+        self.PC = PC
+        # HOI Stats
+        self.HP = float()
+        self.ORG = float()
+        self.SoftAttack = float()
+        self.HardAttack = float()
+        self.Defense = float()
+        self.Breakthrought = float()
+        self.SoftMeleeAttack = float()
+        self.HardMeleeAttack = float()
+        self.Hardness = float()
+        self.Armor = float()
+        self.Piercing = float()
+        self.HOI4_Profil()
+    def HOI4_Profil(self):
+        self.HP = self.PC * self.Quantity
+        self.ORG = 2*self.Quantity
+        self.SoftMeleeAttack = 0
+        self.HardMeleeAttack = 0
+    # Hardness & Armor
+        self.Armor = np.mean(self.Blind_Av,self.Blind_Side,self.Blind_Arr)
+    def round_Stats(self):
+        self.Defense = round(self.Defense,2)
+        self.Breakthrought = round(self.Breakthrought,2)
+        self.SoftAttack = round(self.SoftAttack,2)
+        self.HardAttack = round(self.HardAttack,2)
+        self.SoftMeleeAttack = round(self.SoftMeleeAttack,2)
+        self.HardMeleeAttack = round(self.HardMeleeAttack,2)
+    def Show_HOI_Stats(self):
+        self.HOI4_Profil()
+        txt = """
+        HP              = {}
+        ORG             = {}
+        Defense         = {}   
+        Breakthrought   = {}
+        SoftMA          = {}
+        HardMA          = {}
+        Hardness        = {}
+        Armor           = {}
+        """.format(self.HP,self.ORG,
+                   self.Defense,self.Breakthrought,
+                   self.SoftMeleeAttack,self.HardMeleeAttack,
+                   self.Hardness,self.Armor)
+        print(txt)
+    def set_Quantity(self,Quantity):
+        self.Quantity = Quantity
