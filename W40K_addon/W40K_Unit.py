@@ -2,7 +2,7 @@ from W40K_TableValues import *
 import numpy as np
 
 class Unit:
-    def __init__(self,CC=4,CT=4,F=4,E=4,PV=1,A=1,Cd=8,Svg=3,SvgInvu=None,Quantity=1):
+    def __init__(self,CC=4,CT=4,F=4,E=4,PV=1,A=1,Cd=8,Svg=3,SvgInvu=None,Quantity=1,Type="Infantry",SpecialRules=list):
         """
         Default is Space Marine
         """
@@ -17,6 +17,8 @@ class Unit:
         self.Cd = Cd
         self.Svg = Svg
         self.SvgInvu = SvgInvu
+        self.Type = Type
+        self.SpecialRules = SpecialRules
     # HOI Stats
         self.HP = float()
         self.ORG = float()
@@ -90,7 +92,7 @@ class Unit:
 ########################################################################################################################
 
 class Tank:
-    def __init__(self,CT=4,Blind_Av=13,Blind_Side=11,Blind_Arr=10,PC=3,Quantity=1):
+    def __init__(self,CT=4,Blind_Av=13,Blind_Side=11,Blind_Arr=10,PC=3,Quantity=1,Type="Tank",SpecialRules=list):
         """
         Default is Predator
         """
@@ -101,7 +103,9 @@ class Tank:
         self.Blind_Side = Blind_Side
         self.Blind_Arr = Blind_Arr
         self.PC = PC
-        # HOI Stats
+        self.Type = Type
+        self.SpecialRules = SpecialRules
+    # HOI Stats
         self.HP = float()
         self.ORG = float()
         self.SoftAttack = float()
@@ -151,7 +155,8 @@ class Tank:
 ########################################################################################################################
 
 class Walker:
-    def __init__(self,CC=4,CT=4,F=6,Blind_Av=12,Blind_Side=12,Blind_Arr=10,A=4,PC=3,Quantity=1):
+    def __init__(self,CC=4,CT=4,F=6,Blind_Av=12,Blind_Side=12,Blind_Arr=10,A=4,PC=3,Quantity=1,Type="Marcheur"
+                 ,SpecialRules=list):
         """
         Default is Dreadnought
         """
@@ -165,6 +170,8 @@ class Walker:
         self.Blind_Arr = Blind_Arr
         self.A = A
         self.PC = PC
+        self.Type = Type
+        self.SpecialRules = SpecialRules
         # HOI Stats
         self.HP = float()
         self.ORG = float()
