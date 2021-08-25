@@ -2,9 +2,9 @@ from W40K_TableValues import *
 import numpy as np
 
 class Unit:
-    def __init__(self,CC=4,CT=4,F=4,E=4,PV=1,A=1,Cd=8,Svg=3,SvgInvu=None,Quantity=1,Type="Infantry",SpecialRules=list):
+    def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=5,SvgInvu=None,Quantity=1,Type="Infantry",SpecialRules=list):
         """
-        Default is Space Marine
+        Default is Guardsman
         """
         self.Quantity = Quantity
     # W40K Stats
@@ -92,9 +92,9 @@ class Unit:
 ########################################################################################################################
 
 class Tank:
-    def __init__(self,CT=4,Blind_Av=13,Blind_Side=11,Blind_Arr=10,PC=3,Quantity=1,Type="Tank",SpecialRules=list):
+    def __init__(self,CT=3,Blind_Av=14,Blind_Side=13,Blind_Arr=10,PC=3,Quantity=1,Type="Heavy Tank",SpecialRules=list):
         """
-        Default is Predator
+        Default is Leman Russ battle tank
         """
         self.Quantity = Quantity
     # W40K Stats
@@ -155,10 +155,10 @@ class Tank:
 ########################################################################################################################
 
 class Walker:
-    def __init__(self,CC=4,CT=4,F=6,Blind_Av=12,Blind_Side=12,Blind_Arr=10,A=4,PC=3,Quantity=1,Type="Marcheur"
+    def __init__(self,CC=3,CT=3,F=5,Blind_Av=12,Blind_Side=10,Blind_Arr=10,A=1,PC=2,Quantity=1,Type="Marcheur"
                  ,SpecialRules=list):
         """
-        Default is Dreadnought
+        Default is Sentinel
         """
         self.Quantity = Quantity
     # W40K Stats
