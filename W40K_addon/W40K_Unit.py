@@ -120,10 +120,22 @@ class Tank:
         self.HOI4_Profil()
     def HOI4_Profil(self):
         self.HP = self.PC * self.Quantity
-        self.ORG = 2*self.Quantity
         self.SoftMeleeAttack = 0
         self.HardMeleeAttack = 0
-    # Hardness & Armor
+    # Organisation
+        if self.Type is "SuperHeavy":   self.ORG = 3
+        else:                           self.ORG = 2
+        self.ORG *= self.Quantity
+    # Hardness
+        if self.Type == "Chariot":      self.Hardness = 0.80
+        elif self.Type == "Char":       self.Hardness = 0.90
+        elif self.Type == "Heavy":      self.Hardness = 0.95
+        elif self.Type == "SuperHeavy": self.Hardness = 0.99
+        else:                           pass
+        if self.Type == "Oppen-Topped": self.Hardness -= 0.1
+        if self.Hardness <= 0: self.Hardness = 0
+        if self.Hardness >= 1: self.Hardness = 1
+    # Armor
         self.Armor = np.mean(self.Blind_Av,self.Blind_Side,self.Blind_Arr)
     def round_Stats(self):
         self.Defense = round(self.Defense,2)
