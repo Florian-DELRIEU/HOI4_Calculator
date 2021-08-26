@@ -33,10 +33,10 @@ class Company:
             self.Quantity_Equipement = np.sum([el.Quantity for el in self.Equipement])
             self.HP = self.Unit.HP
             self.ORG = self.Unit.ORG
-            self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])
-            self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])
-            self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])
-            self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])
+            self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])*SoftAttack_CC_CT[self.Unit.CT]
+            self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])*HardAttack_CC_CT[self.Unit.CT]
+            self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])*SoftAttack_CC_CT[self.Unit.CC]
+            self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*HardAttack_CC_CT[self.Unit.CC]
             self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
             self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
             self.Hardness = self.Unit.Hardness
@@ -46,8 +46,9 @@ class Company:
     def setUnit(self,Unit):
         self.Unit = Unit
         self.HOI4_Profil()
-    def setEquipement(self,List):
+    def setEquipement(self,List=list):
         self.Equipement = List
+        self.check_lists()
         self.HOI4_Profil()
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
