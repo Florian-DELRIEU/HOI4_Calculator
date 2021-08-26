@@ -29,3 +29,9 @@ def setWeaponsBonus(Object):
     if Object.Type == "Salve":
         Object.Defense *= 1.1
         Object.Breakthrought = 1.1
+# Weapon Range
+    if Object.Range <= 18:
+        Object.SoftAttack *= 0.8
+        Object.HardAttack *= 0.8
+        Object.Defense *= 0.8
+        Object.Breakthrought *= 0.8

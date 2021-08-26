@@ -2,11 +2,13 @@ from W40K_TableValues import *
 from W40K_Bonus import *
 
 class Weapon:
-    def __init__(self, F=3, PA=None, Type="Tir rapide",Quantity=1):
+    def __init__(self, F=3, PA=None, Range = 24, Cadence = 2, Type="Tir rapide",Quantity=1):
         self.Quantity = Quantity
     # Profils W40K
         self.F = F
         self.PA = PA
+        self.Range = Range
+        self.Cadence = Cadence
         self.Type = Type
         self.Cadence = 1
         self.Portee = 24

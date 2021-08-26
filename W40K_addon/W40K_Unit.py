@@ -98,6 +98,9 @@ class Tank:
         self.PC = PC
         self.Type = Type
         self.SpecialRules = SpecialRules
+        self.TurretWeapon = list()
+        self.HullWeapon = list()
+        self.SideWeapon = list()
     # HOI Stats
         self.HP = float()
         self.ORG = float()
@@ -133,6 +136,16 @@ class Tank:
             self.HardMeleeAttack = 2
             self.Defense = 5
             self.Breakthrought = 2
+        for weapon in self.HullWeapon:
+            weapon.SoftAttack *= 0.33
+            weapon.HardAttack *= 0.33
+            weapon.Defense *= 0.33
+            weapon.Breakthrought *= 0.33
+        for weapon in self.SideWeapon:
+            weapon.SoftAttack *= 0.66
+            weapon.HardAttack *= 0.66
+            weapon.Defense *= 0.66
+            weapon.Breakthrought *= 0.66
     # Organisation
         if self.Type is "SuperHeavy":   self.ORG = 3
         else:                           self.ORG = 2
