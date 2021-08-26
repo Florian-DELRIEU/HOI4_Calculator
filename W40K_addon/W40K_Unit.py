@@ -226,6 +226,7 @@ class Walker:
         self.Breakthrought = Breakthrought_F[self.F]*self.Quantity
     # Hardness & Armor
         self.Armor = np.mean(self.Blind_Av,self.Blind_Side,self.Blind_Arr)
+        self.Hardness = 0.7
     def round_Stats(self):
         self.Defense = round(self.Defense,2)
         self.Breakthrought = round(self.Breakthrought,2)
