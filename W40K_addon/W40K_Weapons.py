@@ -34,9 +34,11 @@ class Weapon:
         self.Piercing = self.F + 4
         if self.PA == 2 : self.Piercing += 1
         if self.PA == 1 : self.Piercing += 2
+    # End
         self.Bonus()
+        self.round_Stats()
     def Bonus(self):
-        setBonus(self)
+        setWeaponsBonus(self)
     def round_Stats(self):
         self.Defense = round(self.Defense,2)
         self.Breakthrought = round(self.Breakthrought,2)
@@ -58,3 +60,4 @@ class Weapon:
         print(txt)
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
+        self.HOI4_Profil()

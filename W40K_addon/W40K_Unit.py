@@ -87,6 +87,7 @@ class Unit:
         print(txt)
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
+        self.HOI4_Profil()
 
 ########################################################################################################################
 ########################################################################################################################
@@ -153,6 +154,8 @@ class Tank:
         if self.Type == "Oppen-Topped": self.Hardness -= 0.1
         if self.Hardness <= 0: self.Hardness = 0
         if self.Hardness >= 1: self.Hardness = 1
+    # End
+        self.round_Stats()
     # Armor
         self.Armor = np.mean(self.Blind_Av,self.Blind_Side,self.Blind_Arr)
     def round_Stats(self):
@@ -180,6 +183,7 @@ class Tank:
         print(txt)
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
+        self.HOI4_Profil()
 
 ########################################################################################################################
 ########################################################################################################################
@@ -227,6 +231,8 @@ class Walker:
     # Hardness & Armor
         self.Armor = np.mean(self.Blind_Av,self.Blind_Side,self.Blind_Arr)
         self.Hardness = 0.7
+    # End
+        self.round_Stats()
     def round_Stats(self):
         self.Defense = round(self.Defense,2)
         self.Breakthrought = round(self.Breakthrought,2)
@@ -252,3 +258,4 @@ class Walker:
         print(txt)
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
+        self.HOI4_Profil()

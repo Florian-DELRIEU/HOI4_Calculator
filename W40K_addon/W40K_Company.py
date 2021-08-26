@@ -7,6 +7,7 @@ class Company:
     def __init__(self):
         self.Unit = None
         self.Equipement = list()
+        self.Upgrade = list()
         self.Manpower = float()
         self.Quantity_Equipement = float()
     # HOI Stats
@@ -43,12 +44,20 @@ class Company:
             self.Armor = self.Unit.Armor
             self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
                             /(self.Quantity_Equipement+self.Manpower)
+        # End
+        self.round_Stats()
+    def round_Stats(self):
+        self.Defense = round(self.Defense,2)
+        self.Breakthrought = round(self.Breakthrought,2)
+        self.SoftAttack = round(self.SoftAttack,2)
+        self.HardAttack = round(self.HardAttack,2)
+        self.SoftMeleeAttack = round(self.SoftMeleeAttack,2)
+        self.HardMeleeAttack = round(self.HardMeleeAttack,2)
     def setUnit(self,Unit):
         self.Unit = Unit
         self.HOI4_Profil()
     def setEquipement(self,List=list):
         self.Equipement = List
-        self.check_lists()
         self.HOI4_Profil()
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
