@@ -1,6 +1,7 @@
 from W40K_Unit import *
 from W40K_Weapons import *
 
+def setBonus(Object):
     if type(Object) == Weapon:
     # Weapons Specials rules
         for rule in Object.SpecialsRules:
