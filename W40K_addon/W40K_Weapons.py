@@ -1,4 +1,5 @@
 from W40K_TableValues import *
+from W40K_Bonus import *
 
 class Weapon:
     def __init__(self, F=3, PA=None, Type="Tir rapide",Quantity=1):
@@ -35,32 +36,7 @@ class Weapon:
         if self.PA == 1 : self.Piercing += 2
         self.Bonus()
     def Bonus(self):
-        for rule in self.SpecialsRules:
-            if rule == "Perforant":
-                self.SoftAttack *= 1.1
-                self.HardAttack *= 1.1
-                self.Piercing += 1
-            if rule == "Fléau de la chair":
-                self.SoftAttack *= 1.1
-            if rule == "Fléau des chars":
-                self.HardAttack *= 1.1
-            if rule == "Ignore les couverts":
-                self.SoftAttack *= 1.2
-            if rule == "Explosion 3'":
-                self.SoftAttack *= 1.1
-                self.HardAttack += 1.02
-            if rule == "Explosion 5'":
-                self.SoftAttack *= 1.2
-                self.HardAttack += 1.05
-        # Type d'armes
-        if self.Type == "Lourde":
-            self.Defense *= 1.2
-        if self.Type == "Assaut":
-            self.Breakthrought *= 1.2
-        if self.Type == "Tir Rapide": pass
-        if self.Type == "Salve":
-            self.Defense *= 1.1
-            self.Breakthrought = 1.1
+        setBonus(self)
     def round_Stats(self):
         self.Defense = round(self.Defense,2)
         self.Breakthrought = round(self.Breakthrought,2)
