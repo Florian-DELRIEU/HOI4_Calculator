@@ -36,8 +36,10 @@ class Company:
             self.ORG = self.Unit.ORG
             self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])*SoftAttack_CC_CT[self.Unit.CT]
             self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])*HardAttack_CC_CT[self.Unit.CT]
-            self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])*SoftAttack_CC_CT[self.Unit.CC]
-            self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*HardAttack_CC_CT[self.Unit.CC]
+            self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])*SoftAttack_CC_CT[self.Unit.CC]\
+                                   + self.Unit.SoftMeleeAttack
+            self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*HardAttack_CC_CT[self.Unit.CC]\
+                                   + self.Unit.HardMeleeAttack
             self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
             self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
             self.Hardness = self.Unit.Hardness

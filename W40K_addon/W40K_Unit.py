@@ -61,14 +61,6 @@ class Unit:
         if self.Svg is None:
             self.Defense *= 0.7
             self.Breakthrought *= 0.7
-        self.round_Stats()
-    def round_Stats(self):
-        self.Defense = round(self.Defense,2)
-        self.Breakthrought = round(self.Breakthrought,2)
-        self.SoftAttack = round(self.SoftAttack,2)
-        self.HardAttack = round(self.HardAttack,2)
-        self.SoftMeleeAttack = round(self.SoftMeleeAttack,2)
-        self.HardMeleeAttack = round(self.HardMeleeAttack,2)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
@@ -154,17 +146,8 @@ class Tank:
         if self.Type == "Oppen-Topped": self.Hardness -= 0.1
         if self.Hardness <= 0: self.Hardness = 0
         if self.Hardness >= 1: self.Hardness = 1
-    # End
-        self.round_Stats()
     # Armor
         self.Armor = np.mean(self.Blind_Av,self.Blind_Side,self.Blind_Arr)
-    def round_Stats(self):
-        self.Defense = round(self.Defense,2)
-        self.Breakthrought = round(self.Breakthrought,2)
-        self.SoftAttack = round(self.SoftAttack,2)
-        self.HardAttack = round(self.HardAttack,2)
-        self.SoftMeleeAttack = round(self.SoftMeleeAttack,2)
-        self.HardMeleeAttack = round(self.HardMeleeAttack,2)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
@@ -232,14 +215,6 @@ class Walker:
         self.Armor = np.mean(self.Blind_Av,self.Blind_Side,self.Blind_Arr)
         self.Hardness = 0.7
     # End
-        self.round_Stats()
-    def round_Stats(self):
-        self.Defense = round(self.Defense,2)
-        self.Breakthrought = round(self.Breakthrought,2)
-        self.SoftAttack = round(self.SoftAttack,2)
-        self.HardAttack = round(self.HardAttack,2)
-        self.SoftMeleeAttack = round(self.SoftMeleeAttack,2)
-        self.HardMeleeAttack = round(self.HardMeleeAttack,2)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

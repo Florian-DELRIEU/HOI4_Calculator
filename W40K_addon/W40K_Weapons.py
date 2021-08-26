@@ -36,16 +36,8 @@ class Weapon:
         if self.PA == 1 : self.Piercing += 2
     # End
         self.Bonus()
-        self.round_Stats()
     def Bonus(self):
         setWeaponsBonus(self)
-    def round_Stats(self):
-        self.Defense = round(self.Defense,2)
-        self.Breakthrought = round(self.Breakthrought,2)
-        self.SoftAttack = round(self.SoftAttack,2)
-        self.HardAttack = round(self.HardAttack,2)
-        self.SoftMeleeAttack = round(self.SoftMeleeAttack,2)
-        self.HardMeleeAttack = round(self.HardMeleeAttack,2)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
