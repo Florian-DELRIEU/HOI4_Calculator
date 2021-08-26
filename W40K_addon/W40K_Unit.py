@@ -120,8 +120,26 @@ class Tank:
         self.HOI4_Profil()
     def HOI4_Profil(self):
         self.HP = self.PC * self.Quantity
-        self.SoftMeleeAttack = 0
-        self.HardMeleeAttack = 0
+        if self.Type == "Chariot":
+            self.SoftMeleeAttack = 0.5
+            self.HardMeleeAttack = 0.1
+            self.Defense = 1
+            self.Breakthrought = 0.5
+        if self.Type == "Char":
+            self.SoftMeleeAttack = 1
+            self.HardMeleeAttack = 0.5
+            self.Defense = 1.5
+            self.Breakthrought = 1
+        if self.Type == "Heavy":
+            self.SoftMeleeAttack = 1.2
+            self.HardMeleeAttack = 1.5
+            self.Defense = 3
+            self.Breakthrought = 1.5
+        if self.Type == "SuperHeavy":
+            self.SoftMeleeAttack = 1.4
+            self.HardMeleeAttack = 2
+            self.Defense = 5
+            self.Breakthrought = 2
     # Organisation
         if self.Type is "SuperHeavy":   self.ORG = 3
         else:                           self.ORG = 2
