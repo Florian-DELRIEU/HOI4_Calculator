@@ -60,12 +60,14 @@ def setUpgradeBonus(Company):
     Defense_Bonus = 1
     Breakthrought_Bonus = 1
     for el in Company.Upgrade: # Additionne tout les bonus des Upgrades
-        SoftAttack_Bonus += el.SoftAttack_Bonus
-        HardAttack_Bonus += el.HardAttack_Bonus
-        SoftMeleeAttack_Bonus += el.SoftMeleeAttack_Bonus
-        HardMeleeAttack_Bonus += el.HardMeleeAttack_Bonus
-        Defense_Bonus += el.Defense_Bonus
-        Breakthrought_Bonus += el.Breakthrought_Bonus
+        equip_ratio = el.Quantity / Company.Manpower
+    # Cette opération est pour incorporer le :equip_ratio: dans les bonus
+        SoftAttack_Bonus *= 1 + (el.SoftAttack_Bonus-1)*equip_ratio
+        HardAttack_Bonus *= 1 + (el.HardAttack_Bonus-1)*equip_ratio
+        SoftMeleeAttack_Bonus *= 1 + (el.SoftMeleeAttack_Bonus-1)*equip_ratio
+        HardMeleeAttack_Bonus *= 1 + (el.HardMeleeAttack_Bonus-1)*equip_ratio
+        Defense_Bonus *= 1 + (el.Defense_Bonus-1)*equip_ratio
+        Breakthrought_Bonus *= 1 + (el.Breakthrought_Bonus-1)*equip_ratio
     Company.SoftAttack = Company.SoftAttack * SoftAttack_Bonus
     Company.HardAttack = Company.HardAttack * HardAttack_Bonus
     Company.SoftMeleeAttack = Company.SoftMeleeAttack * SoftMeleeAttack_Bonus
