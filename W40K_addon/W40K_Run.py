@@ -3,9 +3,11 @@ from W40K_Weapons import *
 from W40K_Company import *
 from W40K_Unit import *
 
-BolterLD = Weapon(5,4,"Lourde",Range=36,Cadence=3)
-CanonLaser = Weapon(9,1,"Lourde",Range=48,Cadence=1)
+Guards = Unit(Quantity=100)
+Lasgun = Weapon(3,None,"Tir Rapide",Quantity=90)
+PlasmaGun = Weapon(7,2,"Tir Rapide",Quantity=5)
+BolterLD = Weapon(5,4,"Lourd",Quantity=5,Range=36)
 
-Predator = Tank(4,13,11,10,3,Quantity=1,Type="Tank")
-Predator.setTurretWeapons([CanonLaser])
-Predator.setSideWeapons([BolterLD,BolterLD])
+Comp1 = Company()
+Comp1.setUnit(Guards)
+Comp1.setEquipement([Lasgun,PlasmaGun,BolterLD])
