@@ -61,6 +61,8 @@ class Company:
     def setEquipement(self,List=list):
         self.Equipement = List
         self.HOI4_Profil()
+    def setUpgrade(self,List=list):
+        self.Upgrade = List
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

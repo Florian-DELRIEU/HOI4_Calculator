@@ -50,3 +50,25 @@ def setWeaponsBonus(Object):
         Object.HardAttack *= 1.2
         Object.Defense *= 1.2
         Object.Breakthrought *= 1.2
+
+def setUpgradeBonus(Company):
+    assert type(Company) is Company , "Argument must be a company"
+    SoftAttack_Bonus = 1
+    HardAttack_Bonus = 1
+    SoftMeleeAttack_Bonus = 1
+    HardMeleeAttack_Bonus = 1
+    Defense_Bonus = 1
+    Breakthrought_Bonus = 1
+    for el in Company.Upgrade: # Additionne tout les bonus des Upgrades
+        SoftAttack_Bonus += el.SoftAttack_Bonus
+        HardAttack_Bonus += el.HardAttack_Bonus
+        SoftMeleeAttack_Bonus += el.SoftMeleeAttack_Bonus
+        HardMeleeAttack_Bonus += el.HardMeleeAttack_Bonus
+        Defense_Bonus += el.Defense_Bonus
+        Breakthrought_Bonus += el.Breakthrought_Bonus
+    Company.SoftAttack = Company.SoftAttack * SoftAttack_Bonus
+    Company.HardAttack = Company.HardAttack * HardAttack_Bonus
+    Company.SoftMeleeAttack = Company.SoftMeleeAttack * SoftMeleeAttack_Bonus
+    Company.HardMeleeAttack = Company.HardMeleeAttack * HardMeleeAttack_Bonus
+    Company.Defense = Company.Defense * Defense_Bonus
+    Company.Breakthrought = Company.Breakthrought * Breakthrought_Bonus

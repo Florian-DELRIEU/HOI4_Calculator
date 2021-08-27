@@ -55,3 +55,16 @@ class Weapon:
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
         self.HOI4_Profil()
+
+
+class Upgrade:
+    def __init__(self,SA=0,HA=0,SMA=0,HMA=0,DEF=0,BRK=0):
+        """
+        type 0.2 for +20% bonus
+        """
+        self.SoftAttack_Bonus = SA
+        self.HardAttack_Bonus = HA
+        self.SoftMeleeAttack_Bonus = SMA
+        self.HardMeleeAttack_Bonus = HMA
+        self.Defense_Bonus = DEF
+        self.Breakthrought_Bonus = BRK
