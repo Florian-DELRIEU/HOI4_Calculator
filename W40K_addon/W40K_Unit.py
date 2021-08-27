@@ -161,14 +161,10 @@ class Tank:
         if self.Hardness >= 1: self.Hardness = 1
     # Armor
         self.Armor = np.mean((self.Blind_Av,self.Blind_Side,self.Blind_Arr))
-    def setHullWeapons(self,List):
-        self.HullWeapon = List
-        self.HOI4_Profil()
-    def setSideWeapons(self,List):
-        self.SideWeapon = List
-        self.HOI4_Profil()
-    def setTurretWeapons(self,List):
-        self.TurretWeapon = List
+    def setWeapons(self,TurretList,SideList,HullList):
+        self.TurretWeapon = TurretList
+        self.SideWeapon = SideList
+        self.HullWeapon = HullList
         self.HOI4_Profil()
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
