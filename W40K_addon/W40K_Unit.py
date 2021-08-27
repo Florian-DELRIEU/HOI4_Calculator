@@ -121,7 +121,7 @@ class Tank:
             self.HardMeleeAttack = 0.1
             self.Defense = 1
             self.Breakthrought = 0.5
-        if self.Type == "Char":
+        if self.Type == "Tank":
             self.SoftMeleeAttack = 1
             self.HardMeleeAttack = 0.5
             self.Defense = 1.5
@@ -152,7 +152,7 @@ class Tank:
         self.ORG *= self.Quantity
     # Hardness
         if self.Type == "Chariot":      self.Hardness = 0.80
-        elif self.Type == "Char":       self.Hardness = 0.90
+        elif self.Type == "Tank":       self.Hardness = 0.90
         elif self.Type == "Heavy":      self.Hardness = 0.95
         elif self.Type == "SuperHeavy": self.Hardness = 0.99
         else:                           pass
@@ -160,7 +160,16 @@ class Tank:
         if self.Hardness <= 0: self.Hardness = 0
         if self.Hardness >= 1: self.Hardness = 1
     # Armor
-        self.Armor = np.mean(self.Blind_Av,self.Blind_Side,self.Blind_Arr)
+        self.Armor = np.mean((self.Blind_Av,self.Blind_Side,self.Blind_Arr))
+    def setHullWeapons(self,List):
+        self.HullWeapon = List
+        self.HOI4_Profil()
+    def setSideWeapons(self,List):
+        self.SideWeapon = List
+        self.HOI4_Profil()
+    def setTurretWeapons(self,List):
+        self.TurretWeapon = List
+        self.HOI4_Profil()
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

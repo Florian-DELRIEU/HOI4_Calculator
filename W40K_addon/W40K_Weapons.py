@@ -57,9 +57,6 @@ class Weapon:
 
 class Upgrade:
     def __init__(self,SA=1,HA=1,SMA=1,HMA=1,DEF=1,BRK=1,Quantity=100):
-        """
-        type 0.2 for +20% bonus
-        """
         self.Quantity = Quantity
         self.SoftAttack_Bonus = SA
         self.HardAttack_Bonus = HA
