@@ -36,7 +36,7 @@ class Unit:
         self.HP = self.PV*HPbonus_E[self.E] *self.Quantity
         self.ORG = self.Cd *self.Quantity
         self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC] *self.Quantity
-        self.HardMeleeAttack = HMA_SMA_prop[self.F]* self.SoftMeleeAttack* HardAttack_CC_CT[self.CC] *self.Quantity
+        self.HardMeleeAttack = HMA_SMA_prop[self.F]* self.SoftMeleeAttack* HardAttack_CC_CT[self.CC]
     # Hardness & Armor
         if self.Svg == 3:
             self.Hardness = 0.1
