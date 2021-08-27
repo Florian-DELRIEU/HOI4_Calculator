@@ -2,7 +2,7 @@ from W40K_TableValues import *
 from W40K_Bonus import *
 
 class Weapon:
-    def __init__(self, F=3, PA=None, Type="Tir rapide", Range = 24, Cadence = 2,Quantity=1):
+    def __init__(self, F=3, PA=None, Type="Tir rapide", Range = 24, Cadence = 2,Quantity=1,Name=""):
         self.Quantity = Quantity
     # Profils W40K
         self.F = F
@@ -10,6 +10,7 @@ class Weapon:
         self.Range = Range
         self.Cadence = Cadence
         self.Type = Type
+        self.Name = Name
         self.SpecialsRules = []
     # Profils HOI VI
         self.SoftAttack = float()
@@ -20,6 +21,9 @@ class Weapon:
         self.Breakthrought = float()
         self.Piercing = float()
         self.HOI4_Profil()
+    def __repr__(self):
+        txt = str(self.Quantity) + " " + self.Name
+        return txt
     def HOI4_Profil(self):
         if self.Type == "Melee":
             self.SoftMeleeAttack , self.HardMeleeAttack = 0 , 0
