@@ -1,4 +1,4 @@
-from W40K_TableValues import *
+from W40K_addon.W40K_TableValues import *
 import numpy as np
 
 class Unit:

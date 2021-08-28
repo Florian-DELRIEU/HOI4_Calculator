@@ -1,6 +1,4 @@
-from W40K_Unit import *
-from W40K_Weapons import *
-from W40K_Company import *
+from W40K_addon.W40K_Company import *
 
 def setWeaponsBonus(Object):
 # Weapons Specials rules
@@ -53,7 +51,7 @@ def setWeaponsBonus(Object):
         Object.Breakthrought *= 1.2
 
 def setUpgradeBonus(company):
-    assert type(company) is Company, "Argument must be a company"
+    #assert type(company) is Company, "Argument must be a company"
     SoftAttack_Bonus = 1
     HardAttack_Bonus = 1
     SoftMeleeAttack_Bonus = 1

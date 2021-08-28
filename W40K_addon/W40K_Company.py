@@ -1,7 +1,4 @@
-from W40K_TableValues import *
-from W40K_Weapons import *
-from W40K_Bonus import *
-from W40K_Unit import *
+from W40K_addon.W40K_Weapons import *
 import numpy as np
 
 class Company:
