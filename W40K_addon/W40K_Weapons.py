@@ -26,8 +26,10 @@ class Weapon:
         return txt
     def HOI4_Profil(self):
         if self.Type == "Melee":
-            self.SoftMeleeAttack , self.HardMeleeAttack = 0 , 0
+            self.SoftMeleeAttack , self.HardMeleeAttack = SoftMeleeAttack_F[self.F] , HardMeleeAttack_F[self.F]
             self.SoftAttack , self.HardAttack = 0 , 0
+            self.Cadence = 1
+            self.Range = None
         else:
             self.SoftMeleeAttack, self.HardMeleeAttack = 0, 0
             self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA] *self.Quantity

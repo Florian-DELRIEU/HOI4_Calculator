@@ -23,6 +23,30 @@ HardAttack_F[8] = 6.8
 HardAttack_F[9] = 13.5
 HardAttack_F[10] = 27
 
+SoftMeleeAttack_F = dict()
+SoftMeleeAttack_F[1] = 10
+SoftMeleeAttack_F[2] = 11
+SoftMeleeAttack_F[3] = 12.1
+SoftMeleeAttack_F[4] = 13.3
+SoftMeleeAttack_F[5] = 14.6
+SoftMeleeAttack_F[6] = 15.4
+SoftMeleeAttack_F[7] = 16.1
+SoftMeleeAttack_F[8] = 16.9
+SoftMeleeAttack_F[9] = 17.3
+SoftMeleeAttack_F[10] = 17.6
+
+HardMeleeAttack_F = dict()
+HardMeleeAttack_F[1] = 0
+HardMeleeAttack_F[2] = 0
+HardMeleeAttack_F[3] = 0
+HardMeleeAttack_F[4] = 0.5
+HardMeleeAttack_F[5] = 1.5
+HardMeleeAttack_F[6] = 2.3
+HardMeleeAttack_F[7] = 3.4
+HardMeleeAttack_F[8] = 6.8
+HardMeleeAttack_F[9] = 13.5
+HardMeleeAttack_F[10] = 27
+
 ################ DEFENSES & BREAKTHROUGHT
 Defense_F = dict()
 Defense_F[1] = 5
