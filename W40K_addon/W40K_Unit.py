@@ -2,7 +2,8 @@ from W40K_addon.W40K_TableValues import *
 import numpy as np
 
 class Unit:
-    def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=5,SvgInvu=None,Quantity=1,Type="Infantry",SpecialRules=list):
+    def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=5,SvgInvu=None,Quantity=1,Type="Infantry",SpecialRules=list,
+                 Name = ""):
         """
         Default is Guardsman
         """
@@ -19,6 +20,7 @@ class Unit:
         self.SvgInvu = SvgInvu
         self.Type = Type
         self.SpecialRules = SpecialRules
+        self.Name = Name
     # HOI Stats
         self.HP = float()
         self.ORG = float()
@@ -77,6 +79,9 @@ class Unit:
                    self.SoftMeleeAttack,self.HardMeleeAttack,
                    self.Hardness,self.Armor)
         print(txt)
+    def __repr__(self):
+        txt = str(self.Quantity) + " " + self.Name
+        return txt
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
         self.HOI4_Profil()
