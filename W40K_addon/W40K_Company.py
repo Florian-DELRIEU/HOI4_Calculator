@@ -1,5 +1,6 @@
 from W40K_TableValues import *
 from W40K_Weapons import *
+from W40K_Bonus import *
 from W40K_Unit import *
 import numpy as np
 
@@ -63,6 +64,7 @@ class Company:
         self.HOI4_Profil()
     def setUpgrade(self,List=list):
         self.Upgrade = List
+        setUpgradeBonus(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

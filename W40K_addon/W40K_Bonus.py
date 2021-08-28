@@ -1,5 +1,6 @@
 from W40K_Unit import *
 from W40K_Weapons import *
+from W40K_Company import *
 
 def setWeaponsBonus(Object):
 # Weapons Specials rules
@@ -51,16 +52,16 @@ def setWeaponsBonus(Object):
         Object.Defense *= 1.2
         Object.Breakthrought *= 1.2
 
-def setUpgradeBonus(Company):
-    assert type(Company) is Company , "Argument must be a company"
+def setUpgradeBonus(company):
+    assert type(company) is Company, "Argument must be a company"
     SoftAttack_Bonus = 1
     HardAttack_Bonus = 1
     SoftMeleeAttack_Bonus = 1
     HardMeleeAttack_Bonus = 1
     Defense_Bonus = 1
     Breakthrought_Bonus = 1
-    for el in Company.Upgrade: # Additionne tout les bonus des Upgrades
-        equip_ratio = el.Quantity / Company.Manpower
+    for el in company.Upgrade: # Additionne tout les bonus des Upgrades
+        equip_ratio = el.Quantity/company.Manpower
     # Cette opération est pour incorporer le :equip_ratio: dans les bonus
         SoftAttack_Bonus *= 1 + (el.SoftAttack_Bonus-1)*equip_ratio
         HardAttack_Bonus *= 1 + (el.HardAttack_Bonus-1)*equip_ratio
@@ -68,9 +69,9 @@ def setUpgradeBonus(Company):
         HardMeleeAttack_Bonus *= 1 + (el.HardMeleeAttack_Bonus-1)*equip_ratio
         Defense_Bonus *= 1 + (el.Defense_Bonus-1)*equip_ratio
         Breakthrought_Bonus *= 1 + (el.Breakthrought_Bonus-1)*equip_ratio
-    Company.SoftAttack = Company.SoftAttack * SoftAttack_Bonus
-    Company.HardAttack = Company.HardAttack * HardAttack_Bonus
-    Company.SoftMeleeAttack = Company.SoftMeleeAttack * SoftMeleeAttack_Bonus
-    Company.HardMeleeAttack = Company.HardMeleeAttack * HardMeleeAttack_Bonus
-    Company.Defense = Company.Defense * Defense_Bonus
-    Company.Breakthrought = Company.Breakthrought * Breakthrought_Bonus
+    company.SoftAttack = company.SoftAttack*SoftAttack_Bonus
+    company.HardAttack = company.HardAttack*HardAttack_Bonus
+    company.SoftMeleeAttack = company.SoftMeleeAttack*SoftMeleeAttack_Bonus
+    company.HardMeleeAttack = company.HardMeleeAttack*HardMeleeAttack_Bonus
+    company.Defense = company.Defense*Defense_Bonus
+    company.Breakthrought = company.Breakthrought*Breakthrought_Bonus

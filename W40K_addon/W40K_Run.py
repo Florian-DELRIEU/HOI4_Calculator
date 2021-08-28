@@ -1,14 +1,12 @@
-from W40K_Unit import *
 from W40K_Weapons import *
 from W40K_Company import *
 from W40K_Unit import *
 
-Guards = Unit(Quantity=100)
-Lasgun = Weapon(3,None,"Tir Rapide",Quantity=90,Name="Lasgun")
-PlasmaGun = Weapon(7,2,"Tir Rapide",Quantity=5,Name="PlasmaGun")
-BolterLD = Weapon(5,4,"Lourde",Quantity=5,Range=36,Name="Bolter Lourds")
-CCW = Weapon(Guards.F+1,4,"Melee",Name="CCW",Quantity=20)
+SpaceMarines = Unit(4,4,4,4,1,1,8,3,None,100)
+Bolter = Weapon(F=3,PA=5,Type="Tir Rapide",Quantity=100)
+ReacteurDorsaux = Upgrade(BRK=1.5,Quantity = 20)
 
-Comp1 = Company()
-Comp1.setUnit(Guards)
-Comp1.setEquipement([Lasgun,PlasmaGun,BolterLD,CCW])
+Comp = Company()
+Comp.setUnit(SpaceMarines)
+Comp.setEquipement([Bolter])
+Comp.setUpgrade([ReacteurDorsaux])
