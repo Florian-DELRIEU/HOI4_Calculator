@@ -166,7 +166,7 @@ class Tank:
         if self.Hardness >= 1: self.Hardness = 1
     # Armor
         self.Armor = np.mean((self.Blind_Av,self.Blind_Side,self.Blind_Arr))
-    def setWeapons(self,TurretList,SideList,HullList):
+    def setWeapons(self,TurretList=list,SideList=list,HullList=list):
         self.TurretWeapon = TurretList
         self.SideWeapon = SideList
         self.HullWeapon = HullList
