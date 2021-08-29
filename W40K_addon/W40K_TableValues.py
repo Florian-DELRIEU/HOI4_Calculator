@@ -1,4 +1,8 @@
-############ HARD & SOFT ATTACK
+#######################################################################################################################
+# SOFT & HARD ATTACK
+"""
+Nombre de :SoftAttack: en fonction de la :Force: de l'unité
+"""
 SoftAttack_F = dict()
 SoftAttack_F[1] = 10
 SoftAttack_F[2] = 11
@@ -10,7 +14,9 @@ SoftAttack_F[7] = 16.1
 SoftAttack_F[8] = 16.9
 SoftAttack_F[9] = 17.3
 SoftAttack_F[10] = 17.6
-
+"""
+Nombre de :HardAttack: en fonction de la :Force: de l'unité
+"""
 HardAttack_F = dict()
 HardAttack_F[1] = 0
 HardAttack_F[2] = 0
@@ -23,6 +29,11 @@ HardAttack_F[8] = 6.8
 HardAttack_F[9] = 13.5
 HardAttack_F[10] = 27
 
+#######################################################################################################################
+# SOFT & HARD MELEE ATTACK
+"""
+Nombre de :SoftMeleeAttack: en fonction de la :Force: de l'unité
+"""
 SoftMeleeAttack_F = dict()
 SoftMeleeAttack_F[1] = 10
 SoftMeleeAttack_F[2] = 11
@@ -34,7 +45,9 @@ SoftMeleeAttack_F[7] = 16.1
 SoftMeleeAttack_F[8] = 16.9
 SoftMeleeAttack_F[9] = 17.3
 SoftMeleeAttack_F[10] = 17.6
-
+"""
+Nombre de :HardMeleeAttack: en fonction de la :Force: de l'unité
+"""
 HardMeleeAttack_F = dict()
 HardMeleeAttack_F[1] = 0
 HardMeleeAttack_F[2] = 0
