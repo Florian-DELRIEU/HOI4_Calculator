@@ -103,9 +103,9 @@ class Tank:
         self.PC = PC
         self.Type = Type
         self.SpecialRules = SpecialRules
-        self.TurretWeapon = list()
-        self.HullWeapon = list()
-        self.SideWeapon = list()
+        self.TurretWeapon = []
+        self.HullWeapon = []
+        self.SideWeapon = []
     # HOI Stats
         self.HP = float()
         self.ORG = float()
@@ -141,18 +141,20 @@ class Tank:
             self.HardMeleeAttack = 2
             self.Defense = 5
             self.Breakthrought = 2
-        for weapon in self.HullWeapon:
-            weapon.SoftAttack *= 0.33
-            weapon.HardAttack *= 0.33
-            weapon.Defense *= 0.33
-            weapon.Breakthrought *= 0.33
-        for weapon in self.SideWeapon:
-            weapon.SoftAttack *= 0.66
-            weapon.HardAttack *= 0.66
-            weapon.Defense *= 0.66
-            weapon.Breakthrought *= 0.66
+        if len(self.HullWeapon) != 0:
+            for weapon in self.HullWeapon:
+                weapon.SoftAttack *= 0.33
+                weapon.HardAttack *= 0.33
+                weapon.Defense *= 0.33
+                weapon.Breakthrought *= 0.33
+        if len(self.SideWeapon) != 0:
+            for weapon in self.SideWeapon:
+                weapon.SoftAttack *= 0.66
+                weapon.HardAttack *= 0.66
+                weapon.Defense *= 0.66
+                weapon.Breakthrought *= 0.66
     # Organisation
-        if self.Type is "SuperHeavy":   self.ORG = 3
+        if self.Type == "SuperHeavy":   self.ORG = 3
         else:                           self.ORG = 2
         self.ORG *= self.Quantity
     # Hardness
@@ -166,7 +168,7 @@ class Tank:
         if self.Hardness >= 1: self.Hardness = 1
     # Armor
         self.Armor = np.mean((self.Blind_Av,self.Blind_Side,self.Blind_Arr))
-    def setWeapons(self,TurretList=list,SideList=list,HullList=list):
+    def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
         self.TurretWeapon = TurretList
         self.SideWeapon = SideList
         self.HullWeapon = HullList
