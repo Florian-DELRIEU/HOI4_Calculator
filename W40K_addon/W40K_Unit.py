@@ -1,5 +1,11 @@
 from W40K_addon.W40K_TableValues import *
 import numpy as np
+"""
+Ensemble des :class: pour Unité terrestre
+- :Unit: Infanterie ou Créature Monstrueuse
+- :Tank: Vehicule terrestre non marcheurs
+- :Walker: Marcheurs
+"""
 
 class Unit:
     def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=5,SvgInvu=None,Quantity=1,Type="Infantry",SpecialRules=list,
@@ -35,6 +41,9 @@ class Unit:
         self.Piercing = float()
         self.HOI4_Profil()
     def HOI4_Profil(self):
+        """
+        Determine le profil HOI IV en fonctions des stats W40K
+        """
         self.HP = self.PV*HPbonus_E[self.E] *self.Quantity
         self.ORG = self.Cd *self.Quantity
         self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC] *self.Quantity
@@ -83,6 +92,10 @@ class Unit:
         txt = str(self.Quantity) + " " + self.Name
         return txt
     def set_Quantity(self,Quantity):
+        """
+        Modifie la quantité de :Unit: et modifie les stats en fonction
+        :param Quantity: Nombre de cette unité
+        """
         self.Quantity = Quantity
         self.HOI4_Profil()
 
