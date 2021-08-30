@@ -17,7 +17,7 @@ class Battle:
             - Si l'un des deux camps n'as plus de PV ou d'Organisation
         :return: True ou False
         """
-        if (self.ATK.PV <= 0) or (self.DEF.PV <= 0) or (self.ATK.ORG <= 0) or (self.DEF.ORG <= 0):
+        if (self.ATK.HP <= 0) or (self.DEF.HP <= 0) or (self.ATK.ORG <= 0) or (self.DEF.ORG <= 0):
             return True
         else:
             return False
@@ -37,7 +37,7 @@ class Battle:
                 self._Round()
     def _Round(self):
         """
-        Lancement d'un round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
+        Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
         self.ATK.Attaque(self.DEF)  # ATK attaque
         self.DEF.Damage(self.ATK)   # DEF prend les dommages
@@ -54,8 +54,8 @@ class Battle:
         txt = """----------- round {} -----------------
 DivATK: {}/{}   {}/{}
 DivDEF: {}/{}   {}/{}""".format(self.roundCounter,
-                                self.ATK.PV,self.ATK._PVmax,self.ATK.ORG,self.ATK._ORG,
-                                self.DEF.PV,self.DEF._PVmax,self.DEF.ORG,self.DEF._ORG)
+                                self.ATK.PV,self.ATK.__HP,self.ATK.ORG,self.ATK.__ORG,
+                                self.DEF.PV,self.DEF.__HP,self.DEF.ORG,self.DEF.__ORG)
         if self.isFinnish():
             txt += """
 ----------- End of Battle -----------------
