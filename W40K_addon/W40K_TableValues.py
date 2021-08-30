@@ -4,16 +4,16 @@
 Nombre de :SoftAttack: en fonction de la :Force: de l'unité
 """
 SoftAttack_F = dict()
-SoftAttack_F[1] = 10
-SoftAttack_F[2] = 11
-SoftAttack_F[3] = 12.1
-SoftAttack_F[4] = 13.3
-SoftAttack_F[5] = 14.6
-SoftAttack_F[6] = 15.4
-SoftAttack_F[7] = 16.1
-SoftAttack_F[8] = 16.9
-SoftAttack_F[9] = 17.3
-SoftAttack_F[10] = 17.6
+SoftAttack_F[1] = 1.5
+SoftAttack_F[2] = 2.0
+SoftAttack_F[3] = 2.7
+SoftAttack_F[4] = 3.5
+SoftAttack_F[5] = 4.7
+SoftAttack_F[6] = 6.1
+SoftAttack_F[7] = 7.3
+SoftAttack_F[8] = 8.1
+SoftAttack_F[9] = 8.5
+SoftAttack_F[10] = 8.5
 """
 Nombre de :HardAttack: en fonction de la :Force: de l'unité
 """
@@ -21,13 +21,13 @@ HardAttack_F = dict()
 HardAttack_F[1] = 0
 HardAttack_F[2] = 0
 HardAttack_F[3] = 0
-HardAttack_F[4] = 0.5
-HardAttack_F[5] = 1.5
-HardAttack_F[6] = 2.3
-HardAttack_F[7] = 3.4
-HardAttack_F[8] = 6.8
-HardAttack_F[9] = 13.5
-HardAttack_F[10] = 27
+HardAttack_F[4] = 0.8
+HardAttack_F[5] = 1
+HardAttack_F[6] = 1.3
+HardAttack_F[7] = 1.8
+HardAttack_F[8] = 2.3
+HardAttack_F[9] = 3.1
+HardAttack_F[10] = 4.2
 
 #######################################################################################################################
 # SOFT & HARD MELEE ATTACK
