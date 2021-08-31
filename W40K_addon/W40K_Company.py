@@ -114,6 +114,8 @@ class Regiment:
         self.NbATK = float()
         self.isDefending = True
         self.set_STR()
+    def __repr__(self):
+        return self.Name
     def setCompanies(self,CompaniesList=[]):
         self.Companies = CompaniesList
         self.HOI4_Profil()
@@ -170,7 +172,7 @@ class Regiment:
         self.HP = truncDecimal(self.HP,1)
         if self.HP <= 0 : self.HP = 0
     # ORG Dégats
-        if self.Piercing > Striker.Armor:
+        if self.Piercing < Striker.Armor:
             self.ORG -= 3.5*NbDAMAGE # Moyenne de D6
         else:
             self.ORG -= 2.5*NbDAMAGE # Moyenne de D4

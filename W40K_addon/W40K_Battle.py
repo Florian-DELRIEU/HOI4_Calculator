@@ -43,8 +43,8 @@ class Battle:
     # Round
         self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque
         self.DEF.Attaque(self.ATK,self.CAC_level)  # DEF riposte
-        self.DEF.Damage(self.ATK)   # DEF prend les dommages
         self.ATK.Damage(self.DEF)   # ATK prend les dommages
+        self.DEF.Damage(self.ATK)   # DEF prend les dommages
     # Stats arrondis
         self.ATK.round_Stats()
         self.DEF.round_Stats()
