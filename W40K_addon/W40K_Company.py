@@ -84,8 +84,9 @@ class Company:
         print(txt)
 
 class Regiment:
-    def __init__(self,CompagnieList=[]):
+    def __init__(self,CompagnieList=[],Name=""):
         self.Companies = CompagnieList
+        self.Name = Name
     # Stats when stregth == 1
         self.__HP = float()
         self.__ORG = float()
@@ -102,12 +103,13 @@ class Regiment:
         self.Strength = 1
         self.HP = self.__HP
         self.ORG = self.__ORG
-        self.SoftAttack = self.__SoftAttack
-        self.SoftMeleeAttack = self.__SoftMeleeAttack
-        self.HardAttack = self.__HardAttack
-        self.HardMeleeAttack = self.__HardMeleeAttack
-        self.Breakthrought = self.__Breakthrought
-        self.Defense = self.__Defense
+        self.SoftAttack = float()
+        self.SoftMeleeAttack = float()
+        self.HardAttack = float()
+        self.HardMeleeAttack = float()
+        self.Breakthrought = float()
+        self.Defense = float()
+        self.set_STR()
     # Battle
         self.NbATK = float()
         self.isDefending = True
@@ -128,15 +130,6 @@ class Regiment:
         self.__Piercing = np.mean([el.Piercing for el in self.Companies])
         self.__Breakthrought = np.sum([el.Breakthrought for el in self.Companies])
         self.__Defense = np.sum([el.Defense for el in self.Companies])
-    # current Stats
-        self.HP = self.Strength* self.__HP
-        self.ORG = self.Strength* self.__ORG
-        self.SoftAttack = self.Strength* self.__SoftAttack
-        self.SoftMeleeAttack = self.Strength* self.__SoftMeleeAttack
-        self.HardAttack = self.Strength* self.__HardAttack
-        self.HardMeleeAttack = self.Strength* self.__HardMeleeAttack
-        self.Breakthrought = self.Strength* self.__Breakthrought
-        self.Defense = self.Strength* self.__Defense
     def set_STR(self):
         self.Strength = self.HP / self.__HP
     # Maj des stats
