@@ -94,9 +94,9 @@ class Regiment:
         self.__SoftMeleeAttack = float()
         self.__HardAttack = float()
         self.__HardMeleeAttack = float()
-        self.__Hardness = float()
-        self.__Armor = float()
-        self.__Piercing = float()
+        self.Hardness = float()
+        self.Armor = float()
+        self.Piercing = float()
         self.__Breakthrought = float()
         self.__Defense = float()
     # Current Stats
@@ -125,9 +125,9 @@ class Regiment:
         self.__SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Companies])
         self.__HardAttack = np.sum([el.HardAttack for el in self.Companies])
         self.__HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Companies])
-        self.__Hardness = np.mean([el.Hardness for el in self.Companies])
-        self.__Armor = np.mean([el.Armor for el in self.Companies])
-        self.__Piercing = np.mean([el.Piercing for el in self.Companies])
+        self.Hardness = np.mean([el.Hardness for el in self.Companies])
+        self.Armor = np.mean([el.Armor for el in self.Companies])
+        self.Piercing = np.mean([el.Piercing for el in self.Companies])
         self.__Breakthrought = np.sum([el.Breakthrought for el in self.Companies])
         self.__Defense = np.sum([el.Defense for el in self.Companies])
     def set_STR(self):
@@ -142,11 +142,11 @@ class Regiment:
     def Attaque(self,Target,CAC_level):
         assert type(Target) == Regiment
         self.set_STR()
-        NbRangeATK = Target.__Hardness * self.HardAttack + (1 - Target.__Hardness) * self.SoftAttack  # Calcul du nbr d'attaque en fonction du Hardness
-        NbMeleeATK = Target.__Hardness * self.HardMeleeAttack + (1 - Target.__Hardness) * self.SoftMeleeAttack
+        NbRangeATK = Target.Hardness*self.HardAttack + (1 - Target.Hardness)*self.SoftAttack  # Calcul du nbr d'attaque en fonction du Hardness
+        NbMeleeATK = Target.Hardness*self.HardMeleeAttack + (1 - Target.Hardness)*self.SoftMeleeAttack
         NbATK = NbMeleeATK*CAC_level + NbRangeATK
         # Piercing ?
-        if self.__Piercing <= Target.__Armor:
+        if self.Piercing <= Target.Armor:
             NbATK /= 2  # si perce pas
         else:
             self.NbATK = NbATK  # si perce
@@ -170,13 +170,23 @@ class Regiment:
         self.HP = truncDecimal(self.HP,1)
         if self.HP <= 0 : self.HP = 0
     # ORG Dégats
-        if self.__Piercing > Striker.__Armor:
+        if self.Piercing > Striker.Armor:
             self.ORG -= 3.5*NbDAMAGE # Moyenne de D6
         else:
             self.ORG -= 2.5*NbDAMAGE # Moyenne de D4
         self.ORG = truncDecimal(self.ORG,1)
         if self.ORG <= 0 : self.ORG = 0
-
+    def round_Stats(self):
+        self.HP = round(self.HP,2)
+        self.ORG = round(self.ORG,2)
+        self.__HP = round(self.__HP, 2)
+        self.__ORG = round(self.__ORG, 2)
+        self.Defense = round(self.Defense,2)
+        self.Breakthrought = round(self.Breakthrought,2)
+        self.SoftAttack = round(self.SoftAttack,2)
+        self.HardAttack = round(self.HardAttack,2)
+        self.SoftMeleeAttack = round(self.SoftMeleeAttack,2)
+        self.HardMeleeAttack = round(self.HardMeleeAttack,2)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
@@ -194,5 +204,5 @@ class Regiment:
                    self.Defense, self.Breakthrought,
                    self.SoftAttack, self.HardAttack,
                    self.SoftMeleeAttack, self.HardMeleeAttack,
-                   self.__Hardness, self.__Armor)
+                   self.Hardness, self.Armor)
         print(txt)

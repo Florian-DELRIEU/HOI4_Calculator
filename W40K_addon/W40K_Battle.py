@@ -40,22 +40,25 @@ class Battle:
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
+    # Round
         self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque
-        self.DEF.Damage(self.ATK)   # DEF prend les dommages
         self.DEF.Attaque(self.ATK,self.CAC_level)  # DEF riposte
+        self.DEF.Damage(self.ATK)   # DEF prend les dommages
         self.ATK.Damage(self.DEF)   # ATK prend les dommages
+    # Stats arrondis
+        self.ATK.round_Stats()
+        self.DEF.round_Stats()
     # Log de fin de round
         self.roundCounter += 1
         self.printLOG()
     def printLOG(self):
         """
         log pour chaque heure de combats
-            - résulat des PV et ORG de chaques divisions
         """
-        txt = """----------- round {} -----------------
+        txt = """----------- round {} -----------------""".format(self.roundCounter)
+        txt+= """
 DivATK: {}/{}   {}/{}
-DivDEF: {}/{}   {}/{}""".format(self.roundCounter,
-                                self.ATK.HP,self.ATK._Regiment__HP,self.ATK.ORG,self.ATK._Regiment__ORG,
+DivDEF: {}/{}   {}/{}""".format(self.ATK.HP,self.ATK._Regiment__HP,self.ATK.ORG,self.ATK._Regiment__ORG,
                                 self.DEF.HP,self.DEF._Regiment__HP,self.DEF.ORG,self.DEF._Regiment__ORG)
         if self.isFinnish():
             txt += """
