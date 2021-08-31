@@ -40,7 +40,7 @@ class Division:
         self.set_STR() # MAJ des stats
         NbATK = Target.HARD*self.HA + (1-Target.HARD)*self.SA  # Calcul du nbr d'attaque en fonction du Hardness
     # Piercing ?
-        if self.PRC <= Target.ARM: NbATK /= 2  # si perce pas
+        if self.PRC <= Target.ARM: self.NbATK = NbATK/2  # si perce pas
         else: self.NbATK = NbATK                     # si perce
         self.NbATK /= 10 # les attaques sont divisé par 10 (voir wiki)
     def Damage(self,Striker):
