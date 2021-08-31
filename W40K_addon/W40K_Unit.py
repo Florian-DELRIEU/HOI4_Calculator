@@ -1,4 +1,5 @@
 from W40K_addon.W40K_TableValues import *
+from W40K_addon.W40K_Bonus import *
 import numpy as np
 """
 Ensemble des :class: pour Unité terrestre
@@ -114,6 +115,8 @@ class Unit:
                     Quantity=Quantity)
         New.HOI4_Profil()
         return New
+    def Bonus(self):
+        setUnitBonus(self)
 
 ########################################################################################################################
 ########################################################################################################################

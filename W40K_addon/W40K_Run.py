@@ -19,4 +19,4 @@ RegB = Regiment([CompB,CompB],"Ultramarines")
 RegB.isDefending = False
 
 BattleA = Battle(RegB,RegA)
-BattleA.Round(1)
+BattleA.Round(-1)

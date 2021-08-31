@@ -87,3 +87,9 @@ def setUpgradeBonus(company):
     company.HardMeleeAttack = company.HardMeleeAttack*HardMeleeAttack_Bonus
     company.Defense = company.Defense*Defense_Bonus
     company.Breakthrought = company.Breakthrought*Breakthrought_Bonus
+
+def setUnitBonus(Unit):
+    assert type(Unit) == Unit
+    for rule in Unit.SpecialRules:
+        if rule == "And they shall know no fear":
+            Unit.ORG *= 2
