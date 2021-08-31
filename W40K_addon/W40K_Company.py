@@ -101,7 +101,6 @@ class Regiment:
         self.__Defense = float()
     # Current Stats
         self.Strength = 1
-        self.HP = self.__HP
         self.SoftAttack = float()
         self.SoftMeleeAttack = float()
         self.HardAttack = float()
@@ -109,6 +108,7 @@ class Regiment:
         self.Breakthrought = float()
         self.Defense = float()
         self.HOI4_Profil()
+        self.HP = self.__HP
         self.ORG = self.__ORG
     # Battle
         self.NbATK = float()
