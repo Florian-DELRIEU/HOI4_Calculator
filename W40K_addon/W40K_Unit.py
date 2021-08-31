@@ -98,6 +98,22 @@ class Unit:
         """
         self.Quantity = Quantity
         self.HOI4_Profil()
+    def __copy__(self,Quantity):
+        New = Unit( CT=self.CT,
+                    CC=self.CC,
+                    F=self.F,
+                    Cd=self.Cd,
+                    E=self.E,
+                    PV = self.PV,
+                    A=self.A,
+                    Svg=self.Svg,
+                    SvgInvu=self.SvgInvu,
+                    Name=self.Name,
+                    SpecialRules=self.SpecialRules,
+                    Type=self.Type,
+                    Quantity=Quantity)
+        New.HOI4_Profil()
+        return New
 
 ########################################################################################################################
 ########################################################################################################################
@@ -209,6 +225,18 @@ class Tank:
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
         self.HOI4_Profil()
+    def __copy__(self,Quantity=None):
+        if Quantity==None: Quantity = self.Quantity
+        New = Tank(CT=self.CT,
+                   Blind_Av=self.Blind_Av,
+                   Blind_Side=self.Blind_Side,
+                   Blind_Arr=self.Blind_Arr,
+                   PC = self.PC,
+                   SpecialRules=self.SpecialRules,
+                   Type=self.Type,
+                   Quantity=Quantity)
+        New.HOI4_Profil()
+        return New
 
 ########################################################################################################################
 ########################################################################################################################
@@ -276,3 +304,16 @@ class Walker:
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
         self.HOI4_Profil()
+    def __copy__(self,Quantity):
+        New = Walker(CT=self.CT,
+                     CC=self.CC,
+                     Blind_Av=self.Blind_Av,
+                     Blind_Side=self.Blind_Side,
+                     Blind_Arr=self.Blind_Arr,
+                     PC = self.PC,
+                     A=self.A,
+                     SpecialRules=self.SpecialRules,
+                     Type=self.Type,
+                     Quantity=Quantity)
+        New.HOI4_Profil()
+        return New

@@ -11,6 +11,7 @@ class Battle:
         self.ATK = ATK
         self.DEF = DEF
         self.roundCounter = 0
+        self.CAC_level = 0
     def isFinnish(self):
         """
         Check si le combat est terminé
@@ -39,10 +40,10 @@ class Battle:
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
-        self.ATK.Attaque(self.DEF)  # ATK attaque
-        self.DEF.Damage(self.ATK)   # DEF prend les dommages
-        self.DEF.Attaque(self.ATK)  # DEF riposte
-        self.ATK.Damage(self.DEF)   # ATK prend les dommages
+        self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque
+        self.DEF.Damage(self.ATK,self.CAC_level)   # DEF prend les dommages
+        self.DEF.Attaque(self.ATK,self.CAC_level)  # DEF riposte
+        self.ATK.Damage(self.DEF,self.CAC_level)   # ATK prend les dommages
     # Log de fin de round
         self.roundCounter += 1
         self.printLOG()

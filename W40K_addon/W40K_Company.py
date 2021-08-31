@@ -135,12 +135,12 @@ class Regiment:
         self.HardMeleeAttack = self.__HardMeleeAttack * self.Strength
         self.Breakthrought = self.__Breakthrought * self.Strength
         self.Defense = self.__Defense * self.Strength
-    def Attaque(self,Target):
+    def Attaque(self,Target,CAC_level):
         assert Target is Regiment
         self.set_STR()
         NbRangeATK = Target.__Hardness * self.HardAttack + (1 - Target.__Hardness) * self.SoftAttack  # Calcul du nbr d'attaque en fonction du Hardness
         NbMeleeATK = Target.__Hardness * self.HardMeleeAttack + (1 - Target.__Hardness) * self.SoftMeleeAttack
-        NbATK = NbMeleeATK + NbRangeATK
+        NbATK = NbMeleeATK*CAC_level + NbRangeATK
         # Piercing ?
         if self.__Piercing <= Target.__Armor:
             NbATK /= 2  # si perce pas
