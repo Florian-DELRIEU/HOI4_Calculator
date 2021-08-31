@@ -22,7 +22,7 @@ class Battle:
             return True
         else:
             return False
-    def Round(self,Nb=1):
+    def Round(self,Nb=1,LogLevel=True):
         """
         Definit le nombre de lancement de round
         :param Nb: Nombre de round souhaité (-1 si jusqu'a fin du combat)
@@ -31,20 +31,30 @@ class Battle:
         if Nb != -1:
             i = 1
             while i <= Nb: # Lancement de :Nb: rounds
-                self._Round()
+                self._Round(Loglevel=LogLevel)
                 i += 1
         else: # Lancement des rounds jusqu'a fin du combat
             while not self.isFinnish():
-                self._Round()
-    def _Round(self):
+                self._Round(Loglevel=LogLevel)
+    def _Round(self,Loglevel):
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
+        print("""----------- round {} -----------------""".format(self.roundCounter))
     # Round
         self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque
+        txt = "ATK shot {} SA + {} HA // {} SMA + {} HMA".format(self.ATK.SoftAttack,self.ATK.HardAttack,
+                                                                 self.ATK.SoftMeleeAttack*self.CAC_level,
+                                                                 self.ATK.HardMeleeAttack*self.CAC_level)
         self.DEF.Attaque(self.ATK,self.CAC_level)  # DEF riposte
-        self.ATK.Damage(self.DEF)   # ATK prend les dommages
+        txt+= "\nDEF shot {} SA + {} HA // {} SMA + {} HMA".format(self.DEF.SoftAttack, self.DEF.HardAttack,
+                                                                 self.DEF.SoftMeleeAttack*self.CAC_level,
+                                                                 self.DEF.HardMeleeAttack*self.CAC_level)
         self.DEF.Damage(self.ATK)   # DEF prend les dommages
+        txt+= "\nATK: {} --->> // {} DEF".format(self.ATK.NbATK,self.DEF.Defense)
+        self.ATK.Damage(self.DEF)   # ATK prend les dommages
+        txt+= "\nDEF: {} --->> // {} ATK".format(self.DEF.NbATK,self.ATK.Breakthrought)
+        if Loglevel: print(txt)
     # Stats arrondis
         self.ATK.round_Stats()
         self.DEF.round_Stats()
@@ -55,8 +65,7 @@ class Battle:
         """
         log pour chaque heure de combats
         """
-        txt = """----------- round {} -----------------""".format(self.roundCounter)
-        txt+= """
+        txt= """
 DivATK: {}/{}   {}/{}
 DivDEF: {}/{}   {}/{}""".format(self.ATK.HP,self.ATK._Regiment__HP,self.ATK.ORG,self.ATK._Regiment__ORG,
                                 self.DEF.HP,self.DEF._Regiment__HP,self.DEF.ORG,self.DEF._Regiment__ORG)

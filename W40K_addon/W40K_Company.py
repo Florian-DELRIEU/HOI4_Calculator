@@ -153,6 +153,7 @@ class Regiment:
         else:
             self.NbATK = NbATK  # si perce
         self.NbATK /= 10  # les attaques sont divisé par 10 (voir wiki)
+        self.NbATK = round(self.NbATK,2)
     def Damage(self,Striker):
         """
         Calcul du nombre de touche et des dégats
