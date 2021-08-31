@@ -3,9 +3,9 @@ import numpy as np
 from MyPack.Utilities import *
 
 class Company:
-    def __init__(self):
-        self.Unit = None
-        self.Equipement = list()
+    def __init__(self,Unit=None,Equipement=[]):
+        self.Unit = Unit
+        self.Equipement = Equipement
         self.Upgrade = list()
         self.Manpower = float()
         self.Quantity_Equipement = float()
@@ -172,3 +172,23 @@ class Regiment:
             self.ORG -= 2.5*NbDAMAGE # Moyenne de D4
         self.ORG = truncDecimal(self.ORG,1)
         if self.ORG <= 0 : self.ORG = 0
+
+    def Show_HOI_Stats(self):
+        self.HOI4_Profil()
+        txt = """
+        HP              = {}
+        ORG             = {}
+        Defense         = {}   
+        Breakthrought   = {}
+        SoftAttack      = {}
+        HardAttack      = {}
+        SoftMA          = {}
+        HardMA          = {}
+        Hardness        = {}
+        Armor           = {}
+        """.format(self.HP, self.ORG,
+                   self.Defense, self.Breakthrought,
+                   self.SoftAttack, self.HardAttack,
+                   self.SoftMeleeAttack, self.HardMeleeAttack,
+                   self.__Hardness, self.__Armor)
+        print(txt)

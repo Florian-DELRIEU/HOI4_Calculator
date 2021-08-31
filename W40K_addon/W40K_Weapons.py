@@ -2,7 +2,7 @@ from W40K_addon.W40K_TableValues import *
 from W40K_addon.W40K_Bonus import *
 
 class Weapon:
-    def __init__(self, F=3, PA=None, Type="Tir rapide", Range = 24, Cadence = 2,Quantity=1,Name=""):
+    def __init__(self, F=3, PA=None, Type="Tir rapide", Range = 24, Cadence = 2,Quantity=1,Name="",SpecialsRules=[]):
         self.Quantity = Quantity
     # Profils W40K
         self.F = F
@@ -11,7 +11,7 @@ class Weapon:
         self.Cadence = Cadence
         self.Type = Type
         self.Name = Name
-        self.SpecialsRules = []
+        self.SpecialsRules = SpecialsRules
     # Profils HOI VI
         self.SoftAttack = float()
         self.HardAttack = float()

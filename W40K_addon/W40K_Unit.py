@@ -166,6 +166,10 @@ class Tank:
                 weapon.HardAttack *= 0.66
                 weapon.Defense *= 0.66
                 weapon.Breakthrought *= 0.66
+        self.SoftAttack = np.sum([el.SoftAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
+        self.HardAttack = np.sum([el.HardAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
+        self.Defense = np.sum([el.Defense for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
+        self.Breakthrought = np.sum([el.Breakthrought for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
     # Organisation
         if self.Type == "SuperHeavy":   self.ORG = 3
         else:                           self.ORG = 2

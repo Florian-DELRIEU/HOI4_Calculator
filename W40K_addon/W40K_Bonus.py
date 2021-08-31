@@ -1,11 +1,12 @@
 from W40K_addon.W40K_Company import *
+from W40K_addon.W40K_Weapons import *
 
 def setWeaponsBonus(Object):
     """
     Verifie les règles spéciales des :class Weapons: pour ajouté les bonus
     :param Object: class weapons
     """
-    assert type(Object) == Weapon , "Object must be :class Weapon:"
+    #assert type(Object) == Weapon , "Object must be :class Weapon:"
 # Weapons Specials rules
     for rule in Object.SpecialsRules:
         if rule == "Perforant":
