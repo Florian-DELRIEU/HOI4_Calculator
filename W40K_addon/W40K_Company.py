@@ -102,18 +102,18 @@ class Regiment:
     # Current Stats
         self.Strength = 1
         self.HP = self.__HP
-        self.ORG = self.__ORG
         self.SoftAttack = float()
         self.SoftMeleeAttack = float()
         self.HardAttack = float()
         self.HardMeleeAttack = float()
         self.Breakthrought = float()
         self.Defense = float()
-        self.set_STR()
+        self.HOI4_Profil()
+        self.ORG = self.__ORG
     # Battle
         self.NbATK = float()
         self.isDefending = True
-        self.HOI4_Profil()
+        self.set_STR()
     def setCompanies(self,CompaniesList=[]):
         self.Companies = CompaniesList
         self.HOI4_Profil()

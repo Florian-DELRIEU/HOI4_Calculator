@@ -55,8 +55,8 @@ class Battle:
         txt = """----------- round {} -----------------
 DivATK: {}/{}   {}/{}
 DivDEF: {}/{}   {}/{}""".format(self.roundCounter,
-                                self.ATK.HP,self.ATK.__HP,self.ATK.ORG,self.ATK.__ORG,
-                                self.DEF.HP,self.DEF.__HP,self.DEF.ORG,self.DEF.__ORG)
+                                self.ATK.HP,self.ATK._Regiment__HP,self.ATK.ORG,self.ATK._Regiment__ORG,
+                                self.DEF.HP,self.DEF._Regiment__HP,self.DEF.ORG,self.DEF._Regiment__ORG)
         if self.isFinnish():
             txt += """
 ----------- End of Battle -----------------
