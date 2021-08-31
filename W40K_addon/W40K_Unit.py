@@ -9,7 +9,7 @@ Ensemble des :class: pour Unité terrestre
 """
 
 class Unit:
-    def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=5,SvgInvu=None,Quantity=1,Type="Infantry",SpecialRules=list,
+    def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=5,SvgInvu=None,Quantity=1,Type="Infantry",SpecialRules=[],
                  Name = ""):
         """
         Default is Guardsman
@@ -73,6 +73,7 @@ class Unit:
         if self.Svg is None:
             self.Defense *= 0.7
             self.Breakthrought *= 0.7
+        self.Bonus()
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

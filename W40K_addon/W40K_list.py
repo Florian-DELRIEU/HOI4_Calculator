@@ -1,5 +1,6 @@
 from W40K_addon.W40K_Unit import *
 from W40K_addon.W40K_Company import *
+from W40K_addon.W40K_Bonus import *
 
 # Units
 Gardes =        Unit(3,3,3,3,1,1,7,5,Name="Gardes")

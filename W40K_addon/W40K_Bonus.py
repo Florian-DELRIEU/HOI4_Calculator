@@ -1,5 +1,6 @@
 from W40K_addon.W40K_Company import *
 from W40K_addon.W40K_Weapons import *
+from W40K_addon.W40K_Unit import *
 
 def setWeaponsBonus(Object):
     """
@@ -88,8 +89,8 @@ def setUpgradeBonus(company):
     company.Defense = company.Defense*Defense_Bonus
     company.Breakthrought = company.Breakthrought*Breakthrought_Bonus
 
-def setUnitBonus(Unit):
-    assert type(Unit) == Unit
-    for rule in Unit.SpecialRules:
+def setUnitBonus(unit):
+    #assert type(unit) == Unit
+    for rule in unit.SpecialRules:
         if rule == "And they shall know no fear":
-            Unit.ORG *= 2
+            unit.ORG *= 2

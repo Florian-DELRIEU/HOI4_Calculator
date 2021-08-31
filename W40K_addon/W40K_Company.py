@@ -46,7 +46,6 @@ class Company:
             self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
                             /(self.Quantity_Equipement+self.Manpower)
         # End
-        self.Bonus()
         self.round_Stats()
     def round_Stats(self):
         self.Defense = round(self.Defense,2)
