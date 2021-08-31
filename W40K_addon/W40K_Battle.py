@@ -5,7 +5,7 @@ class Battle:
     Objet contenant les divisions permettant de lancer les round et les logs
     """
     def __init__(self, ATK, DEF):
-        assert type(ATK) == Company and type(DEF) == Company , "campA and campB must be division class"
+        assert type(ATK) == Regiment and type(DEF) == Regiment , "campA and campB must be regiment class"
         assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
         assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
         self.ATK = ATK
@@ -41,9 +41,9 @@ class Battle:
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
         self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque
-        self.DEF.Damage(self.ATK,self.CAC_level)   # DEF prend les dommages
+        self.DEF.Damage(self.ATK)   # DEF prend les dommages
         self.DEF.Attaque(self.ATK,self.CAC_level)  # DEF riposte
-        self.ATK.Damage(self.DEF,self.CAC_level)   # ATK prend les dommages
+        self.ATK.Damage(self.DEF)   # ATK prend les dommages
     # Log de fin de round
         self.roundCounter += 1
         self.printLOG()
@@ -55,8 +55,8 @@ class Battle:
         txt = """----------- round {} -----------------
 DivATK: {}/{}   {}/{}
 DivDEF: {}/{}   {}/{}""".format(self.roundCounter,
-                                self.ATK.PV,self.ATK.__HP,self.ATK.ORG,self.ATK.__ORG,
-                                self.DEF.PV,self.DEF.__HP,self.DEF.ORG,self.DEF.__ORG)
+                                self.ATK.HP,self.ATK.__HP,self.ATK.ORG,self.ATK.__ORG,
+                                self.DEF.HP,self.DEF.__HP,self.DEF.ORG,self.DEF.__ORG)
         if self.isFinnish():
             txt += """
 ----------- End of Battle -----------------

@@ -84,8 +84,8 @@ class Company:
         print(txt)
 
 class Regiment:
-    def __init__(self):
-        self.Companies = []
+    def __init__(self,CompagnieList=[]):
+        self.Companies = CompagnieList
     # Stats when stregth == 1
         self.__HP = float()
         self.__ORG = float()
@@ -100,21 +100,23 @@ class Regiment:
         self.__Defense = float()
     # Current Stats
         self.Strength = 1
-        self.HP = float()
-        self.ORG = float()
-        self.SoftAttack = float()
-        self.SoftMeleeAttack = float()
-        self.HardAttack = float()
-        self.HardMeleeAttack = float()
-        self.Breakthrought = float()
-        self.Defense = float()
+        self.HP = self.__HP
+        self.ORG = self.__ORG
+        self.SoftAttack = self.__SoftAttack
+        self.SoftMeleeAttack = self.__SoftMeleeAttack
+        self.HardAttack = self.__HardAttack
+        self.HardMeleeAttack = self.__HardMeleeAttack
+        self.Breakthrought = self.__Breakthrought
+        self.Defense = self.__Defense
     # Battle
         self.NbATK = float()
         self.isDefending = True
-    def setCompanies(self,CompaniesList):
+        self.HOI4_Profil()
+    def setCompanies(self,CompaniesList=[]):
         self.Companies = CompaniesList
         self.HOI4_Profil()
     def HOI4_Profil(self):
+    # Default Stats
         self.__HP = np.sum([el.HP for el in self.Companies])
         self.__ORG = np.sum([el.ORG for el in self.Companies])
         self.__SoftAttack = np.sum([el.SoftAttack for el in self.Companies])
@@ -126,6 +128,15 @@ class Regiment:
         self.__Piercing = np.mean([el.Piercing for el in self.Companies])
         self.__Breakthrought = np.sum([el.Breakthrought for el in self.Companies])
         self.__Defense = np.sum([el.Defense for el in self.Companies])
+    # current Stats
+        self.HP = self.Strength* self.__HP
+        self.ORG = self.Strength* self.__ORG
+        self.SoftAttack = self.Strength* self.__SoftAttack
+        self.SoftMeleeAttack = self.Strength* self.__SoftMeleeAttack
+        self.HardAttack = self.Strength* self.__HardAttack
+        self.HardMeleeAttack = self.Strength* self.__HardMeleeAttack
+        self.Breakthrought = self.Strength* self.__Breakthrought
+        self.Defense = self.Strength* self.__Defense
     def set_STR(self):
         self.Strength = self.HP / self.__HP
     # Maj des stats
@@ -136,7 +147,7 @@ class Regiment:
         self.Breakthrought = self.__Breakthrought * self.Strength
         self.Defense = self.__Defense * self.Strength
     def Attaque(self,Target,CAC_level):
-        assert Target is Regiment
+        assert type(Target) == Regiment
         self.set_STR()
         NbRangeATK = Target.__Hardness * self.HardAttack + (1 - Target.__Hardness) * self.SoftAttack  # Calcul du nbr d'attaque en fonction du Hardness
         NbMeleeATK = Target.__Hardness * self.HardMeleeAttack + (1 - Target.__Hardness) * self.SoftMeleeAttack
@@ -163,10 +174,10 @@ class Regiment:
     # Calcul des dégats entre les PV et l'ORG
     # PV Dégats
         self.HP -= 1.5*NbDAMAGE # Moyenne de D2
-        self.HP = truncDecimal(self.PV,1)
+        self.HP = truncDecimal(self.HP,1)
         if self.HP <= 0 : self.HP = 0
     # ORG Dégats
-        if self.__Piercing > Striker.ARM:
+        if self.__Piercing > Striker.__Armor:
             self.ORG -= 3.5*NbDAMAGE # Moyenne de D6
         else:
             self.ORG -= 2.5*NbDAMAGE # Moyenne de D4
