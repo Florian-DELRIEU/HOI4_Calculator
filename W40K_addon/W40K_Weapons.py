@@ -59,14 +59,14 @@ class Weapon:
     def set_Quantity(self,Quantity):
         self.Quantity = Quantity
         self.HOI4_Profil()
-    def __copy__(self):
+    def __copy__(self,Quantity):
         NewWeapon = Weapon()
         NewWeapon.F = self.F
         NewWeapon.PA = self.PA
         NewWeapon.Type = self.Type
         NewWeapon.Range = self.Range
         NewWeapon.Name = self.Name
-        NewWeapon.Quantity = self.Quantity
+        NewWeapon.Quantity = Quantity
         NewWeapon.HOI4_Profil()
         return NewWeapon
 
