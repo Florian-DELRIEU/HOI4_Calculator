@@ -122,7 +122,7 @@ class Regiment:
     def HOI4_Profil(self):
     # Default Stats
         self.__HP = np.sum([el.HP for el in self.Companies])
-        self.__ORG = np.sum([el.ORG for el in self.Companies])
+        self.__ORG = np.mean([el.ORG for el in self.Companies])
         self.__SoftAttack = np.sum([el.SoftAttack for el in self.Companies])
         self.__SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Companies])
         self.__HardAttack = np.sum([el.HardAttack for el in self.Companies])

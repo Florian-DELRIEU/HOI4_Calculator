@@ -46,7 +46,7 @@ class Unit:
         Determine le profil HOI IV en fonctions des stats W40K
         """
         self.HP = self.PV*HPbonus_E[self.E] *self.Quantity
-        self.ORG = self.Cd *self.Quantity
+        self.ORG = self.Cd
         self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC] *self.Quantity
         self.HardMeleeAttack = HMA_SMA_prop[self.F]* self.SoftMeleeAttack* HardAttack_CC_CT[self.CC]
     # Hardness & Armor
