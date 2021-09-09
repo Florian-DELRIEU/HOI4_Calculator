@@ -1,4 +1,4 @@
-from W40K_addon.W40K_list import *
+from W40K_addon.W40K_saved import *
 from W40K_addon.W40K_Company import *
 from W40K_addon.W40K_Battle import *
 
