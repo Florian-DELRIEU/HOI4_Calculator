@@ -46,7 +46,7 @@ class Unit:
         Determine le profil HOI IV en fonctions des stats W40K
         """
         self.HP = self.PV*HPbonus_E[self.E] *self.Quantity
-        self.ORG = self.Cd
+        self.ORG = self.Cd * 10
         self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC] *self.Quantity
         self.HardMeleeAttack = HMA_SMA_prop[self.F]* self.SoftMeleeAttack* HardAttack_CC_CT[self.CC]
     # Hardness & Armor
@@ -191,8 +191,8 @@ class Tank:
         self.Defense = np.sum([el.Defense for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Breakthrought = np.sum([el.Breakthrought for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
     # Organisation
-        if self.Type == "SuperHeavy":   self.ORG = 3
-        else:                           self.ORG = 2
+        if self.Type == "SuperHeavy":   self.ORG = 30
+        else:                           self.ORG = 20
         self.ORG *= self.Quantity
     # Hardness
         if self.Type == "Chariot":      self.Hardness = 0.80
@@ -277,7 +277,7 @@ class Walker:
         self.Piercing = float()
     def HOI4_Profil(self):
         self.HP = self.PC * self.Quantity
-        self.ORG = 1*self.Quantity
+        self.ORG = 10
         self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC]*self.Quantity
         self.HardMeleeAttack = HMA_SMA_prop[self.F]*self.SoftMeleeAttack*HardAttack_CC_CT[self.CC]*self.Quantity
     # Piercing
