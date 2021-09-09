@@ -1,6 +1,7 @@
 from W40K_addon.W40K_Company import *
 from W40K_addon.W40K_Weapons import *
 from W40K_addon.W40K_Unit import *
+import numpy as np
 
 def setWeaponsBonus(Object):
     """
@@ -98,5 +99,6 @@ def setUnitBonus(unit):
 def round_Stats(Object):
     Dico = Object.__dict__
     for key in Dico:
-        if type(Dico[key]) == (int or float):
-            Dico[key] = round(Dico(key),2)
+        try:    Dico[key] = round(Dico[key],2)
+        except: pass
+        
