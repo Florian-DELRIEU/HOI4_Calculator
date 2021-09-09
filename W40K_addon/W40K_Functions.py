@@ -94,3 +94,9 @@ def setUnitBonus(unit):
     for rule in unit.SpecialRules:
         if rule == "And they shall know no fear":
             unit.ORG *= 2
+
+def round_Stats(Object):
+    Dico = Object.__dict__
+    for key in Dico:
+        if type(Dico[key]) == (int or float):
+            Dico[key] = round(Dico(key),2)

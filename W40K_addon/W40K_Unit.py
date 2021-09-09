@@ -1,5 +1,5 @@
 from W40K_addon.W40K_TableValues import *
-from W40K_addon.W40K_Bonus import *
+from W40K_addon.W40K_Functions import *
 import numpy as np
 """
 Ensemble des :class: pour Unité terrestre

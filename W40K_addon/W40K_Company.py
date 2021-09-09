@@ -46,14 +46,7 @@ class Company:
             self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
                             /(self.Quantity_Equipement+self.Manpower)
         # End
-        self.round_Stats()
-    def round_Stats(self):
-        self.Defense = round(self.Defense,2)
-        self.Breakthrought = round(self.Breakthrought,2)
-        self.SoftAttack = round(self.SoftAttack,2)
-        self.HardAttack = round(self.HardAttack,2)
-        self.SoftMeleeAttack = round(self.SoftMeleeAttack,2)
-        self.HardMeleeAttack = round(self.HardMeleeAttack,2)
+        round_Stats(self)
     def setUnit(self,Unit):
         self.Unit = Unit
         self.HOI4_Profil()
@@ -167,6 +160,8 @@ class Regiment:
     # Defense de la cible
         if DEF > NbDAMAGE: NbDAMAGE *= 0.1
         else:              NbDAMAGE = self.Defense*0.1 + (NbDAMAGE-self.Defense)*0.4
+    # Arrondissement des dégats
+        round_Stats(self)
     # Calcul des dégats entre les PV et l'ORG
     # PV Dégats
         self.HP -= 1.5*NbDAMAGE # Moyenne de D2
@@ -179,17 +174,6 @@ class Regiment:
             self.ORG -= 2.5*NbDAMAGE # Moyenne de D4
         self.ORG = truncDecimal(self.ORG,1)
         if self.ORG <= 0 : self.ORG = 0
-    def round_Stats(self):
-        self.HP = round(self.HP,2)
-        self.ORG = round(self.ORG,2)
-        self.__HP = round(self.__HP, 2)
-        self.__ORG = round(self.__ORG, 2)
-        self.Defense = round(self.Defense,2)
-        self.Breakthrought = round(self.Breakthrought,2)
-        self.SoftAttack = round(self.SoftAttack,2)
-        self.HardAttack = round(self.HardAttack,2)
-        self.SoftMeleeAttack = round(self.SoftMeleeAttack,2)
-        self.HardMeleeAttack = round(self.HardMeleeAttack,2)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
