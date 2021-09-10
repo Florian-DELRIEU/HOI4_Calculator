@@ -40,6 +40,9 @@ class Battle:
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
+    # Stats arrondis
+        round_Stats(self.ATK)
+        round_Stats(self.DEF)
         print("""----------- round {} -----------------""".format(self.roundCounter))
     # Round
         self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque
@@ -55,9 +58,6 @@ class Battle:
         self.ATK.Damage(self.DEF)   # ATK prend les dommages
         txt+= "\nDEF: {} --->> // {} ATK".format(self.DEF.NbATK,self.ATK.Breakthrought)
         if Loglevel: print(txt)
-    # Stats arrondis
-        self.ATK.round_Stats()
-        self.DEF.round_Stats()
     # Log de fin de round
         self.roundCounter += 1
         self.printLOG()
