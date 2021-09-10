@@ -73,7 +73,7 @@ class Unit:
         if self.Svg is None:
             self.Defense *= 0.7
             self.Breakthrought *= 0.7
-        self.Bonus()
+        setUnitBonus(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
@@ -116,8 +116,6 @@ class Unit:
                     Quantity=Quantity)
         New.HOI4_Profil()
         return New
-    def Bonus(self):
-        setUnitBonus(self)
 
 ########################################################################################################################
 ########################################################################################################################
@@ -193,7 +191,6 @@ class Tank:
     # Organisation
         if self.Type == "SuperHeavy":   self.ORG = 30
         else:                           self.ORG = 20
-        self.ORG *= self.Quantity
     # Hardness
         if self.Type == "Chariot":      self.Hardness = 0.80
         elif self.Type == "Tank":       self.Hardness = 0.90
