@@ -101,4 +101,11 @@ def round_Stats(Object):
     for key in Dico:
         try:    Dico[key] = round(Dico[key],2)
         except: pass
-        
+
+def set_Quantity(Object,Quantity):
+    """
+    Modifie la quantité de :Unit: et modifie les stats en fonction
+    :param Quantity: Nombre de cette unité
+    """
+    Object.Quantity = Quantity
+    Object.HOI4_Profil()

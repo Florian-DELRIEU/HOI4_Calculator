@@ -8,7 +8,7 @@ Ensemble des :class: pour Unité terrestre
 - :Walker: Marcheurs
 """
 
-class Unit:
+class Infantry:
     def __init__(self,CC=3,CT=3,F=3,E=3,PV=1,A=1,Cd=7,Svg=5,SvgInvu=None,Quantity=1,Type="Infantry",SpecialRules=[],
                  Name = ""):
         """
@@ -94,26 +94,21 @@ class Unit:
         txt = str(self.Quantity) + " " + self.Name
         return txt
     def set_Quantity(self,Quantity):
-        """
-        Modifie la quantité de :Unit: et modifie les stats en fonction
-        :param Quantity: Nombre de cette unité
-        """
-        self.Quantity = Quantity
-        self.HOI4_Profil()
+        set_Quantity(self,Quantity)
     def __copy__(self,Quantity):
-        New = Unit( CT=self.CT,
-                    CC=self.CC,
-                    F=self.F,
-                    Cd=self.Cd,
-                    E=self.E,
-                    PV = self.PV,
-                    A=self.A,
-                    Svg=self.Svg,
-                    SvgInvu=self.SvgInvu,
-                    Name=self.Name,
-                    SpecialRules=self.SpecialRules,
-                    Type=self.Type,
-                    Quantity=Quantity)
+        New = Infantry(CT=self.CT,
+                       CC=self.CC,
+                       F=self.F,
+                       Cd=self.Cd,
+                       E=self.E,
+                       PV = self.PV,
+                       A=self.A,
+                       Svg=self.Svg,
+                       SvgInvu=self.SvgInvu,
+                       Name=self.Name,
+                       SpecialRules=self.SpecialRules,
+                       Type=self.Type,
+                       Quantity=Quantity)
         New.HOI4_Profil()
         return New
 
@@ -223,9 +218,7 @@ class Tank:
                    self.SoftMeleeAttack,self.HardMeleeAttack,
                    self.Hardness,self.Armor)
         print(txt)
-    def set_Quantity(self,Quantity):
-        self.Quantity = Quantity
-        self.HOI4_Profil()
+    def set_Quantity(self,Quantity): set_Quantity(self,Quantity)
     def __copy__(self,Quantity=None):
         if Quantity==None: Quantity = self.Quantity
         New = Tank(CT=self.CT,
@@ -303,8 +296,7 @@ class Walker:
                    self.Hardness,self.Armor)
         print(txt)
     def set_Quantity(self,Quantity):
-        self.Quantity = Quantity
-        self.HOI4_Profil()
+        set_Quantity(self,Quantity)
     def __copy__(self,Quantity):
         New = Walker(CT=self.CT,
                      CC=self.CC,

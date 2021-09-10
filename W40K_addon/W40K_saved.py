@@ -3,8 +3,8 @@ from W40K_addon.W40K_Company import *
 from W40K_addon.W40K_Functions import *
 
 # Units
-Gardes =        Unit(3,3,3,3,1,1,7,5,Name="Gardes")
-SpaceMarines =  Unit(4,4,4,4,1,1,9,3,Name="Space Marines",SpecialRules=["And they shall know no fear"])
+Gardes =        Infantry(3, 3, 3, 3, 1, 1, 7, 5, Name="Gardes")
+SpaceMarines =  Infantry(4, 4, 4, 4, 1, 1, 9, 3, Name="Space Marines", SpecialRules=["And they shall know no fear"])
 LemanRuss = Tank(3,14,12,10,3,Type="Heavy Tank")
 Predator = Tank(4,13,11,10,3,Quantity=1,Type="Tank")
 
