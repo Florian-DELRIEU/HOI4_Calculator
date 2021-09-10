@@ -2,6 +2,8 @@ from W40K_addon.W40K_Company import *
 from W40K_addon.W40K_Weapons import *
 from W40K_addon.W40K_Unit import *
 import numpy as np
+from MyPack.Convert import Dict2CSV
+from MyPack.Utilities import getFromDict
 
 def setWeaponsBonus(Object):
     """
@@ -109,3 +111,19 @@ def set_Quantity(Object,Quantity):
     """
     Object.Quantity = Quantity
     Object.HOI4_Profil()
+
+"""
+def saveInCSV(Object):
+    Dico1 = Object.__dict__
+    Dico2 = getFromDict(Dico1,["HP","ORG",
+                               "SoftAttack","HardAttack","SoftMeleeAttack","HardMeleeAttack",
+                               "Breaktrhought","Defense","Armor","Piercing","Hardness"
+                               ])
+
+    if type(Object) == Infantry: Dict2CSV(Dico2,"Saved_Infantry.csv")
+    elif type(Object) == Tank: Dict2CSV(Dico2,"Saved_Tank.csv")
+    elif type(Object) == Walker: Dict2CSV(Dico2,"Saved_Walker.csv")
+    elif type(Object) == Weapon: Dict2CSV(Dico2,"Saved_Weapon.csv")
+    elif type(Object) == Company: Dict2CSV(Dico2,"Saved_Company.csv")
+    else: return TypeError , "Object must be Infantry, Walker, Tank, Weapon or Company. Save is not possible"
+"""
