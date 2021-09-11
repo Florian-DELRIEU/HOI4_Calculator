@@ -1,6 +1,6 @@
-from W40K_addon.W40K_Weapons import *
-import numpy as np
 from MyPack.Utilities import *
+from W40K.FuncAndTables.Functions import *
+from W40K.FuncAndTables.TableValues import *
 
 class Company:
     def __init__(self,Unit=None,Equipement=[]):
@@ -22,9 +22,6 @@ class Company:
         self.Breakthrought = float()
         self.Defense = float()
         self.HOI4_Profil()
-    def check_lists(self):
-        for el in self.Equipement:
-            assert type(el) is Weapon , "Each element of Equipement list must be a :Weapon class:"
     def HOI4_Profil(self):
         if self.Unit is None:
             pass
