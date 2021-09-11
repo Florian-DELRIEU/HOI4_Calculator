@@ -1,0 +1,7 @@
+Weapons,Lasgun,Bolter,PlasmaGun,KrakGrenades,FragGrenades,BolterLD,CanonLaser
+SoftAttack,0.27,0.39,0.9,0.28,0.12,0.65,1.27
+HardAttack,0,0.08,0.22,0.05,0.41,0.13,0.56
+SoftMeleeAttack,0,0,0,0,0,0,0
+HardMeleeAttack,0,0,0,0,0,0,0
+Defense,0.61,0.8,1.56,0.48,0.24,1.44,5.28
+Breakthrought,0.12,0.17,0.31,0.12,0.06,0.23,0.87

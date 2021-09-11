@@ -1,0 +1,12 @@
+Units,Gardes,SpaceMarines,LemanRuss,Predator
+HP,1.0,1.1,3,3
+ORG,70,180,20,20
+SoftAttack,0.0,0.0,0.0,0.0
+HardAttack,0.0,0.0,0.0,0.0
+SoftMeleeAttack,1.0,1.2,0.0,1
+HardMeleeAttack,0.05,0.144,0.0,0.5
+Defense,0.549,0.73,0.0,0.0
+Breakthrought,0.108,0.15,0.0,0.0
+Armor,0,2,12.0,11.333333333333334
+Piercing,7,8,0.0,0.0
+Hardness,0.0,0.1,0,0.9

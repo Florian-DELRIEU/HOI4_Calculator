@@ -1,5 +1,5 @@
 from W40K.FuncAndTables.TableValues import *
-from W40K.FuncAndTables.Functions import setWeaponsBonus
+from W40K.FuncAndTables.Functions import setWeaponsBonus, round_Stats
 
 class Weapon:
     def __init__(self, F=3, PA=None, Type="Tir rapide", Range = 24, Cadence = 2,Quantity=1,Name="",SpecialsRules=[]):
@@ -42,6 +42,7 @@ class Weapon:
         if self.PA == 1 : self.Piercing += 2
     # End
         self.Bonus()
+        round_Stats(self)
     def Bonus(self):
         setWeaponsBonus(self)
     def Show_HOI_Stats(self):
