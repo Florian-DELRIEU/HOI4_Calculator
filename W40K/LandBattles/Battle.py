@@ -1,5 +1,6 @@
 from W40K.FuncAndTables.Functions import round_Stats
-from Company import Regiment
+from W40K.LandBattles.Company import Regiment
+from W40K.LandBattles.Tactics.Tactics_func import *
 
 class Battle:
     """
@@ -9,6 +10,8 @@ class Battle:
         assert type(ATK) == Regiment and type(DEF) == Regiment , "campA and campB must be regiment class"
         assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
         assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
+        self.ATK_Tactic = None
+        self.DEF_Tactic = None
         self.ATK = ATK
         self.DEF = DEF
         self.roundCounter = 0
@@ -41,6 +44,8 @@ class Battle:
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
+        if self.roundCounter%12 == 0:
+            choose_Tactics(self)
     # Stats arrondis
         round_Stats(self.ATK)
         round_Stats(self.DEF)
