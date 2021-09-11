@@ -1,5 +1,4 @@
 from MyPack.Utilities import *
-#from W40K.Class.Weapons import *
 from W40K.FuncAndTables.Functions import *
 from W40K.FuncAndTables.TableValues import *
 

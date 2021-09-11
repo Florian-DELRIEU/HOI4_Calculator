@@ -1,6 +1,6 @@
-from W40K.saved import *
-from W40K.Company import Company,Regiment
-from W40K.Battle import Battle
+from W40K.UnitCreator.saved import *
+from W40K.LandBattles.Company import Company,Regiment
+from W40K.LandBattles.Battle import Battle
 
 CompA = Company(Unit=Gardes.__copy__(100),
                 Equipement=[Lasgun.__copy__(95),

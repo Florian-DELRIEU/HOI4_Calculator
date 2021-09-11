@@ -1,5 +1,5 @@
-from W40K.Class.Unit import *
-from W40K.Class.Weapons import *
+from Class.Unit import Infantry, Tank, Walker
+from Class.Weapons import Weapon
 
 # Units
 Gardes =        Infantry(3, 3, 3, 3, 1, 1, 7, 5, Name="Gardes")
