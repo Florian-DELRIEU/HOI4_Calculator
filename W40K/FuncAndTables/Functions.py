@@ -1,10 +1,3 @@
-from W40K.Company import *
-from W40K.Class.Weapons import *
-from W40K.Class.Unit import *
-import numpy as np
-from MyPack.Convert import Dict2CSV
-from MyPack.Utilities import getFromDict
-
 def setWeaponsBonus(Object):
     """
     Verifie les règles spéciales des :class Weapons: pour ajouté les bonus
@@ -67,6 +60,7 @@ def setWeaponsBonus(Object):
         Object.Breakthrought *= 1.4
 
 def setUpgradeBonus(company):
+    from W40K.Company import Company
     assert type(company) == Company, "Argument must be a company"
 # Coefs des bonus à 1 de base
     SoftAttack_Bonus = 1
@@ -111,6 +105,12 @@ def set_Quantity(Object,Quantity):
     """
     Object.Quantity = Quantity
     Object.HOI4_Profil()
+
+def check_lists(self):
+    from W40K.Class.Weapons import Weapon
+    for el in self.Equipement:
+        assert type(el) is Weapon , "Each element of Equipement list must be a :Weapon class:"
+
 
 """
 def saveInCSV(Object):
