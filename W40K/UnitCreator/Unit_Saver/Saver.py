@@ -1,5 +1,5 @@
 from MyPack.Convert import Dict2CSV
-import W40K.UnitCreator.Main_Converter as main
+import W40K.UnitCreator.Unit_list as main
 from W40K.UnitCreator.Class.Unit import Infantry,Tank,Walker
 from W40K.UnitCreator.Class.Weapons import Weapon
 
