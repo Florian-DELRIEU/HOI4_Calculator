@@ -1,6 +1,6 @@
-from W40K_addon.W40K_Weapons import *
-import numpy as np
 from MyPack.Utilities import *
+from W40K.Class.Weapons import *
+from W40K.Class.FuncAndTables.Functions import *
 
 class Company:
     def __init__(self,Unit=None,Equipement=[]):

@@ -1,6 +1,5 @@
-from W40K_addon.W40K_Unit import *
-from W40K_addon.W40K_Company import *
-from W40K_addon.W40K_Functions import *
+from W40K.Class.Unit import *
+from W40K.Class.Weapons import *
 
 # Units
 Gardes =        Infantry(3, 3, 3, 3, 1, 1, 7, 5, Name="Gardes")

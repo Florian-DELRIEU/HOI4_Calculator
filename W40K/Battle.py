@@ -1,4 +1,5 @@
-from W40K_addon.W40K_Company import *
+from W40K.Class.FuncAndTables.Functions import round_Stats
+from W40K.Company import Regiment
 
 class Battle:
     """
