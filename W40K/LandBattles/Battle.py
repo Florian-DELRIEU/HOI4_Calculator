@@ -16,6 +16,7 @@ class Battle:
         self.DEF = DEF
         self.roundCounter = 0
         self.CAC_level = 0
+        self.CAC_limit = 0
     def isFinnish(self):
         """
         Check si le combat est terminé
@@ -46,19 +47,21 @@ class Battle:
         """
         if self.roundCounter%12 == 0:
             choose_Tactics(self)
+        update_CAC(self)
     # Stats arrondis
         round_Stats(self.ATK)
         round_Stats(self.DEF)
+        round_Stats(self)
         print("""----------- round {} -----------------""".format(self.roundCounter))
     # Round
         self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque
         txt = "ATK shot {} SA + {} HA // {} SMA + {} HMA".format(self.ATK.SoftAttack,self.ATK.HardAttack,
-                                                                 self.ATK.SoftMeleeAttack*self.CAC_level,
-                                                                 self.ATK.HardMeleeAttack*self.CAC_level)
+                                                                 round(self.ATK.SoftMeleeAttack*self.CAC_level,2),
+                                                                 round(self.ATK.HardMeleeAttack*self.CAC_level,2))
         self.DEF.Attaque(self.ATK,self.CAC_level)  # DEF riposte
         txt+= "\nDEF shot {} SA + {} HA // {} SMA + {} HMA".format(self.DEF.SoftAttack, self.DEF.HardAttack,
-                                                                 self.DEF.SoftMeleeAttack*self.CAC_level,
-                                                                 self.DEF.HardMeleeAttack*self.CAC_level)
+                                                                 round(self.DEF.SoftMeleeAttack*self.CAC_level,2),
+                                                                 round(self.DEF.HardMeleeAttack*self.CAC_level,2))
         self.DEF.Damage(self.ATK)   # DEF prend les dommages
         txt+= "\nATK: {} --->> // {} DEF".format(self.ATK.NbATK,self.DEF.Defense)
         self.ATK.Damage(self.DEF)   # ATK prend les dommages

@@ -1,6 +1,7 @@
 from W40K.LandBattles.Tactics.Tactics_list import Tactic
 import W40K.LandBattles.Tactics.Tactics_list as Tactics
 import random as rd
+import numpy as np
 
 
 # Extrait les tactics de :Tactic_list: DEF et ATK séparés
@@ -42,3 +43,15 @@ def apply_Tactics(Battle):
     ATK.HardMeleeAttack *= ATK_Tac.Bonus_HMA
     ATK.Breakthrought *= ATK_Tac.Bonus_BRK
     ATK.Defense *= ATK_Tac.Bonus_DEF
+    set_CAC_limit(Battle)
+
+def set_CAC_limit(Battle):
+    DEF_Tac = Battle.DEF_Tactic
+    ATK_Tac = Battle.ATK_Tactic
+    Battle.CAC_limit = Battle.CAC_limit + np.sum(DEF_Tac.CAC + ATK_Tac.CAC)
+
+def update_CAC(Battle):
+    CAC_current = Battle.CAC_level
+    CAC_limit = Battle.CAC_limit
+    CAC_drift = (CAC_limit - CAC_current) / 10
+    Battle.CAC_level = CAC_current + CAC_drift
