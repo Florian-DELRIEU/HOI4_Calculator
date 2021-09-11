@@ -7,7 +7,7 @@ CompA = Company(Unit=Gardes.__copy__(100),
                             PlasmaGun.__copy__(5),
                             FragGrenades.__copy__(100),
                             KrakGrenades.__copy__(100)])
-RegA = Regiment([CompA,CompA],"101st Regiment")
+RegA = Regiment([CompA,CompA,CompA,CompA],"101st Regiment")
 
 CompB = Company(Unit=SpaceMarines.__copy__(100),
                 Equipement=[Bolter.__copy__(90),

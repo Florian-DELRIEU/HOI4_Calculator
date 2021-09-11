@@ -49,9 +49,13 @@ def set_CAC_limit(Battle):
     DEF_Tac = Battle.DEF_Tactic
     ATK_Tac = Battle.ATK_Tactic
     Battle.CAC_limit = Battle.CAC_limit + np.sum(DEF_Tac.CAC + ATK_Tac.CAC)
+    if Battle.CAC_limit < -0.5: Battle.CAC_limit = -.5
+    elif Battle.CAC_limit > 1.5: Battle.CAC_limit = 1.5
 
 def update_CAC(Battle):
     CAC_current = Battle.CAC_level
     CAC_limit = Battle.CAC_limit
     CAC_drift = (CAC_limit - CAC_current) / 10
     Battle.CAC_level = CAC_current + CAC_drift
+    if Battle.CAC_level < 0: Battle.CAC_limit = 0
+    elif Battle.CAC_level > 1: Battle.CAC_limit = 1
