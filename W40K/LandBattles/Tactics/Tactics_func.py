@@ -57,5 +57,5 @@ def update_CAC(Battle):
     CAC_limit = Battle.CAC_limit
     CAC_drift = (CAC_limit - CAC_current) / 10
     Battle.CAC_level = CAC_current + CAC_drift
-    if Battle.CAC_level < 0: Battle.CAC_limit = 0
-    elif Battle.CAC_level > 1: Battle.CAC_limit = 1
+    if Battle.CAC_level < 0: Battle.CAC_level = 0
+    elif Battle.CAC_level > 1: Battle.CAC_level = 1
