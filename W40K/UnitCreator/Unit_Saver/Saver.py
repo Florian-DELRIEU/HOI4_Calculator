@@ -1,3 +1,6 @@
+"""
+Extraits les :class Unit et Weapons: depuis le fichier :Unit_list: pour sauvegarder leurs profil HOI IV dans deux fichiers CSV distincs 
+"""
 from MyPack.Convert import Dict2CSV
 import W40K.UnitCreator.Unit_list as main
 from W40K.UnitCreator.Class.Unit import Infantry,Tank,Walker
