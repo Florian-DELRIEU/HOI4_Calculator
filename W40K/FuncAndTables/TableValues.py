@@ -146,16 +146,16 @@ Breakthrought_PA[1] = 1.30
 
 #################### HP Bonus Endurance
 HPbonus_E = dict()
-HPbonus_E[1] = 0.8
-HPbonus_E[2] = 0.9
+HPbonus_E[1] = 0.4
+HPbonus_E[2] = 0.7
 HPbonus_E[3] = 1.0
-HPbonus_E[4] = 1.1
-HPbonus_E[5] = 1.2
-HPbonus_E[6] = 1.3
-HPbonus_E[7] = 1.4
-HPbonus_E[8] = 1.5
-HPbonus_E[9] = 1.6
-HPbonus_E[10] = 1.7
+HPbonus_E[4] = 1.5
+HPbonus_E[5] = 2.3
+HPbonus_E[6] = 3.4
+HPbonus_E[7] = 5.1
+HPbonus_E[8] = 7.6
+HPbonus_E[9] = 11.4
+HPbonus_E[10] = 17.1
 
 HMA_SMA_prop = dict()
 "Proportion de HMA par rapport au SMA enf fonction de F"
