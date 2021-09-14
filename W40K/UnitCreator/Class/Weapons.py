@@ -39,7 +39,7 @@ class Weapon:
     # Piercing
         self.Piercing = self.F + 4
         if self.PA == 2 : self.Piercing += 1
-        if self.PA == 1 : self.Piercing += 2
+        elif self.PA == 1 : self.Piercing += 2
     # End
         self.Bonus()
         round_Stats(self)

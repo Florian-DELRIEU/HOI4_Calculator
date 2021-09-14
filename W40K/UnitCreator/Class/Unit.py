@@ -197,6 +197,7 @@ class Tank:
         if self.Hardness >= 1: self.Hardness = 1
     # Armor
         self.Armor = np.mean((self.Blind_Av,self.Blind_Side,self.Blind_Arr))
+        round_Stats(self)
     def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
         self.TurretWeapon = TurretList
         self.SideWeapon = SideList
