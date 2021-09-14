@@ -23,8 +23,8 @@ def setWeaponsBonus(Object):
             Object.SoftAttack *= 1.2
             Object.HardAttack *= 1.05
 # Weapons Cadence
-    Object.SoftAttack *= 1.3**Object.Cadence
-    Object.HardAttack *= 1.3**Object.Cadence
+    Object.SoftAttack *= Object.Cadence
+    Object.HardAttack *= Object.Cadence
 # Weapons type
     if Object.Type == "Lourde":
         Object.Defense *= 1.2
