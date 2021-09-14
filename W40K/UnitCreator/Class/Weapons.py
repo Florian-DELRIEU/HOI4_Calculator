@@ -28,7 +28,6 @@ class Weapon:
         if self.Type == "Melee":
             self.SoftMeleeAttack , self.HardMeleeAttack = SoftMeleeAttack_F[self.F] , HardMeleeAttack_F[self.F]
             self.SoftAttack , self.HardAttack = 0 , 0
-            self.Cadence = 1
             self.Range = None
         else:
             self.SoftMeleeAttack, self.HardMeleeAttack = 0, 0
@@ -36,6 +35,9 @@ class Weapon:
             self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA] *self.Quantity
         self.Defense = Defense_F[self.F]*Defense_PA[self.PA] *self.Quantity
         self.Breakthrought = Breakthrought_F[self.F]*Breakthrought_PA[self.PA] *self.Quantity
+    # Cadence
+        if self.Type == "Tir Rapide":
+            self.Cadence = 2
     # Piercing
         self.Piercing = self.F + 4
         if self.PA == 2 : self.Piercing += 1
