@@ -8,10 +8,15 @@ LemanRuss = Tank(3,14,12,10,3,Type="Heavy")
 Predator = Tank(4,13,11,10,3,Quantity=1,Type="Tank")
 
 # Weapons
-Lasgun = Weapon(3,None,"Tir rapide",24)
-Bolter = Weapon(4,5,"Tir rapide",24)
-PlasmaGun = Weapon(7,2,"Tir rapide",24)
-KrakGrenades = Weapon(6,4,"Assaut",Range=8,Cadence=1,SpecialsRules=["Krak Grenade"])
-FragGrenades = Weapon(3,None,"Assaut",Range=8,Cadence=1,SpecialsRules=["Blast 3'"])
-BolterLD = Weapon(5,4,"Lourde",Range=36,Cadence=3)
-CanonLaser = Weapon(9,1,"Lourde",Range=48,Cadence=1)
+Lasgun = Weapon(3,None,"Tir rapide",24,Name="Lasgun")
+Bolter = Weapon(4,5,"Tir rapide",24,Name="Bolter")
+PlasmaGun = Weapon(7,2,"Tir rapide",24,Name="Plasma Gun")
+KrakGrenades = Weapon(6,4,"Assaut",Range=8,Cadence=1,SpecialsRules=["Krak Grenade"],Name="Krak Grenade")
+FragGrenades = Weapon(3,None,"Assaut",Range=8,Cadence=1,SpecialsRules=["Blast 3'"],Name="Frag Grenade")
+BolterLD = Weapon(5,4,"Lourde",Range=36,Cadence=3,Name="Bolter LD")
+CanonLaser = Weapon(9,1,"Lourde",Range=48,Cadence=1,Name="Canon Laser")
+
+
+#### testing
+KrakGrenadesA = Weapon(6,4,"Assaut",Range=8,Cadence=1,SpecialsRules=["Krak Grenade"],Name="Krak Grenade")
+KrakGrenadesB = KrakGrenadesA.__copy__(100)
