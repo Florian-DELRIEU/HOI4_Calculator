@@ -1,6 +1,7 @@
 from W40K.FuncAndTables.Functions import round_Stats
 from W40K.LandBattles.Company import Regiment
 from W40K.LandBattles.Tactics.Tactics_func import *
+from MyPack.Utilities import AskUser
 
 class Battle:
     """
@@ -40,36 +41,60 @@ class Battle:
                 i += 1
         else: # Lancement des rounds jusqu'a fin du combat
             while not self.isFinnish():
-                self._Round(Loglevel=LogLevel)
-    def _Round(self,Loglevel):
+                self._Round(Loglevel=LogLevel,PauseEachRound=True)
+    def _Round(self,Loglevel,PauseEachRound=False):
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
+        txt = """----------- round {} -----------------""".format(self.roundCounter)
         if self.roundCounter%12 == 0:
+            previous_CAC_level = self.CAC_limit
             choose_Tactics(self)
+            if Loglevel:
+                txt += "\nNew tactics"
+                txt += "\n- {} choose {} tactic".format(self.ATK.Name,self.ATK_Tactic)
+                txt += "\n- {} choose {} tactic".format(self.DEF.Name,self.DEF_Tactic)
+                txt += "\n"
+                txt += "\nOld CAC limit = {}".format(previous_CAC_level)
         update_CAC(self)
+        if self.roundCounter%12 == 0 and Loglevel:
+            txt += "\n- Cac changes by ATK = {}".format(self.ATK_Tactic.CAC)
+            txt += "\n- Cac changes by DEF = {}".format(self.DEF_Tactic.CAC)
+            txt += "\nNew CAC limit = {}".format(self.CAC_limit)
+        txt += "\nNew cac_level = {}".format(self.CAC_level)
+        txt += "\n"
     # Stats arrondis
         round_Stats(self.ATK)
         round_Stats(self.DEF)
         round_Stats(self)
-        print("""----------- round {} -----------------""".format(self.roundCounter))
-    # Round
+    # ATK Round
         self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque
-        txt = "ATK shot {} SA + {} HA // {} SMA + {} HMA".format(self.ATK.SoftAttack,self.ATK.HardAttack,
-                                                                 round(self.ATK.SoftMeleeAttack*self.CAC_level,2),
-                                                                 round(self.ATK.HardMeleeAttack*self.CAC_level,2))
-        self.DEF.Attaque(self.ATK,self.CAC_level)  # DEF riposte
-        txt+= "\nDEF shot {} SA + {} HA // {} SMA + {} HMA".format(self.DEF.SoftAttack, self.DEF.HardAttack,
-                                                                 round(self.DEF.SoftMeleeAttack*self.CAC_level,2),
-                                                                 round(self.DEF.HardMeleeAttack*self.CAC_level,2))
+        if Loglevel:
+            txt += "\n{} round".format(self.ATK.Name)
+            txt += "\n - Shots: {} SA + {} HA = {}".format(self.ATK.SoftAttack,self.ATK.HardAttack,
+                                                         self.ATK.SoftAttack+self.ATK.HardAttack)
+            txt += "\n - Melee: {} SMA + {} HMA = {}".format(round(self.ATK.SoftMeleeAttack*self.CAC_level,2),
+                                                             round(self.ATK.HardMeleeAttack*self.CAC_level,2),
+                    round(self.ATK.SoftMeleeAttack*self.CAC_level,2)+round(self.ATK.SoftMeleeAttack*self.CAC_level,2))
+    # DEF Round
+        self.DEF.Attaque(self.DEF,self.CAC_level)  # DEF riposte
+        if Loglevel:
+            txt += "\n{} round".format(self.DEF.Name)
+            txt += "\n - Shots: {} SA + {} HA = {}".format(self.DEF.SoftAttack, self.DEF.HardAttack,
+                                                           self.DEF.SoftAttack + self.DEF.HardAttack)
+            txt += "\n - Melee: {} SMA + {} HMA = {}".format(round(self.DEF.SoftMeleeAttack*self.CAC_level, 2),
+                                                             round(self.DEF.HardMeleeAttack*self.CAC_level, 2),
+                                                             round(self.DEF.SoftMeleeAttack*self.CAC_level, 2) + round(
+                                                                 self.DEF.SoftMeleeAttack*self.CAC_level, 2))
         self.DEF.Damage(self.ATK)   # DEF prend les dommages
-        txt+= "\nATK: {} --->> // {} DEF".format(self.ATK.NbATK,self.DEF.Defense)
+        if Loglevel: txt+= "\n{} takes {} hits (-{} defenses)".format(self.DEF.Name,self.ATK.NbATK,self.DEF.Defense)
         self.ATK.Damage(self.DEF)   # ATK prend les dommages
-        txt+= "\nDEF: {} --->> // {} ATK".format(self.DEF.NbATK,self.ATK.Breakthrought)
-        if Loglevel: print(txt)
+        if Loglevel: txt+= "\n{} takes {} hits (-{} breakthrought)".format(self.ATK.Name,self.DEF.NbATK,self.ATK.Breakthrought)
+        print(txt)
     # Log de fin de round
         self.roundCounter += 1
         self.printLOG()
+        if PauseEachRound: AskUser("pausing ...","Click Enter")
     def printLOG(self):
         """
         log pour chaque heure de combats

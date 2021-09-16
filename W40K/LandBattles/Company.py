@@ -152,8 +152,8 @@ class Regiment:
         self.set_STR() # MAJ
         NbDAMAGE = Striker.NbATK #Recupere le nombre d'attaque de l'attaquant
     # Attaquant ou defenseur ?
-        if self.isDefending: DEF = self.Defense  # Si defend alors utilise DEFENSE stat
-        else:                DEF = self.Breakthrought  # si attaque alors utilise BREAKTOUGHT stat
+        if self.isDefending: DEF = self.Defense         # Si defend alors utilise DEFENSE stat
+        else:                DEF = self.Breakthrought   # si attaque alors utilise BREAKTOUGHT stat
     # Defense de la cible
         if DEF > NbDAMAGE: NbDAMAGE *= 0.1
         else:              NbDAMAGE = self.Defense*0.1 + (NbDAMAGE-self.Defense)*0.4
