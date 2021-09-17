@@ -20,3 +20,7 @@ MARM_39 = Bataillon(PV=2,ORG=10,SA=19,HA=14,DEF=5,BRK=36,ARM=60,PRC=61,HARD=.9,W
                     Fuel_use=3.6,IC=600,Name="Medium Armor 36")
 HARM_39 = Bataillon(PV=2,ORG=10,SA=15,HA=12,DEF=6,BRK=36,ARM=70,PRC=35,HARD=.95,Width=2,Supply_use=0.3,
                     Fuel_use=4.4,IC=1000,Name="Heavy Armor 36")
+
+## SUPPORT
+S_ART_36 = Bataillon(PV=0.2, ORG=0, SA=17.5, HA=1.2, DEF=6, BRK=3.6, ARM=0, PRC=5, HARD=0, Width=0, Supply_use=0.16,
+                   Fuel_use=0,IC=42, Name="Support Artillerie 36")
