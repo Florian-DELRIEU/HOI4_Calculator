@@ -1,4 +1,4 @@
-from LandBattleCalculator import *
+from Class import *
 from DivisionList import *
 
 DivA = Infantery_72

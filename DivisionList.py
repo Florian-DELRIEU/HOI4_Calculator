@@ -1,7 +1,7 @@
 """
 Fichier regroupant les différents types de divisions
 """
-from LandBattleCalculator import *
+from Class import *
 
 Infantery_72 = Division(176.2,46.667)
 Infantery_72.Name = "Div. Infanterie"

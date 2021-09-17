@@ -26,6 +26,14 @@ def Compare_Division(DivA, DivB):
     txt +="\n \n"
     print(txt)
 
+def Analyze_Bataillon(Bataillon):
+    Bat = Bataillon
+    txt = "Analyzer"
+    txt += "\n======= {} ========".format(Batision.Name)
+    txt += "\n HA/SA = {} % ".format(divide(Bat.HA, Bat.SA)*100)
+    txt += "\n BRK/DEF = {} ".format(divide(Bat.BRK, Bat.DEF))
+    txt += "\n \n"
+    print(txt)
 
 ##### TESTING
 Analyse_Division(Infantery_72)
