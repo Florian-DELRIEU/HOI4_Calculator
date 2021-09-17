@@ -1,17 +1,20 @@
 class Tactic:
-    def __init__(self,SA=1,HA=1,SMA=1,HMA=1,BRK=1,DEF=1,CAC=0,isDefenseTactic=True,Name=""):
+    def __init__(self,ATK_Damage=1,ATK_Defense=1,DEF_Damage=1,DEF_Defense=1,CAC=0,weight=1,isDefenseTactic=True,Name=""):
         self.Name = Name
     # is Defense ?
         self.isDefenseTactic = isDefenseTactic
     # Bonus
-        self.Bonus_SA = SA
-        self.Bonus_HA = HA
-        self.Bonus_SMA = SMA
-        self.Bonus_HMA = HMA
-        self.Bonus_BRK = BRK
-        self.Bonus_DEF = DEF
+        self.ATK_Damage = ATK_Damage
+        self.ATK_Defense = ATK_Defense
+        self.DEF_Damage = DEF_Damage
+        self.DEF_Defense = DEF_Defense
     # CAC
         self.CAC = CAC
+        self.weight = weight
 
     def __repr__(self):
         return self.Name
+
+#    def change_weight(self):
+#       from W40K.LandBattles.Tactics.Tactics_func import change_weight
+#        change_weight(self)

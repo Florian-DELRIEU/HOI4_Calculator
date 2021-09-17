@@ -1,11 +1,11 @@
 from W40K.LandBattles.Tactics.Tactics_list import Tactic
-import W40K.LandBattles.Tactics.Tactics_list as Tactics
+import W40K.LandBattles.Tactics.Tactics_list as tac
 import random as rd
 import numpy as np
 
 
 # Extrait les tactics de :Tactic_list: DEF et ATK séparés
-DICO = Tactics.__dict__
+DICO = tac.__dict__
 LIST_atk = list()
 LIST_def = list()
 for key in DICO.keys():
@@ -18,7 +18,10 @@ for key in DICO.keys():
 ########################################################################################################################
 
 def choose_Tactics(Battle):
+    change_weight(Battle)
     #assert type(Battle) is Battle , "Battle must be an :battle: type"
+    ATK_tactic_weight = [el.weight for el in LIST_atk]
+    DEF_tactic_weight = [el.weight for el in LIST_def]
     Battle.ATK_Tactic = rd.choice(LIST_atk)
     Battle.DEF_Tactic = rd.choice(LIST_def)
     apply_Tactics(Battle)
@@ -26,23 +29,17 @@ def choose_Tactics(Battle):
 def apply_Tactics(Battle):
     DEF = Battle.DEF
     DEF_Tac = Battle.DEF_Tactic
-# Bonus for DEF
-    DEF.SoftAttack *= DEF_Tac.Bonus_SA
-    DEF.HardAttack *= DEF_Tac.Bonus_HA
-    DEF.SoftMeleeAttack *= DEF_Tac.Bonus_SMA
-    DEF.HardMeleeAttack *= DEF_Tac.Bonus_HMA
-    DEF.Breakthrought *= DEF_Tac.Bonus_BRK
-    DEF.Defense *= DEF_Tac.Bonus_DEF
-######################################
     ATK = Battle.ATK
     ATK_Tac = Battle.ATK_Tactic
+# Bonus for DEF
+    DEF.SoftAttack = DEF.SoftAttack * DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
+    DEF.HardAttack = DEF.HardAttack * DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
+    DEF.Defense = DEF.Defense * DEF_Tac.DEF_Defense * ATK_Tac.DEF_Defense
 # Bonus for ATK
-    ATK.SoftAttack *= ATK_Tac.Bonus_SA
-    ATK.HardAttack *= ATK_Tac.Bonus_HA
-    ATK.SoftMeleeAttack *= ATK_Tac.Bonus_SMA
-    ATK.HardMeleeAttack *= ATK_Tac.Bonus_HMA
-    ATK.Breakthrought *= ATK_Tac.Bonus_BRK
-    ATK.Defense *= ATK_Tac.Bonus_DEF
+    ATK.SoftAttack = ATK.SoftAttack * ATK_Tac.ATK_Damage * ATK_Tac.ATK_Damage
+    ATK.HardAttack = ATK.HardAttack * ATK_Tac.ATK_Damage * ATK_Tac.ATK_Damage
+    ATK.Defense = ATK.Defense * ATK_Tac.ATK_Defense * ATK_Tac.ATK_Defense
+# Cac limit
     set_CAC_limit(Battle)
 
 def set_CAC_limit(Battle):
@@ -59,3 +56,9 @@ def update_CAC(Battle):
     Battle.CAC_level = CAC_current + CAC_drift
     if Battle.CAC_level < 0: Battle.CAC_level = 0
     elif Battle.CAC_level > 1: Battle.CAC_level = 1
+
+def change_weight(Battle):
+    DEF_Tac = Battle.DEF_Tactic
+    ATK_Tac = Battle.ATK_Tactic
+    if Battle.CAC_level > 0.3:
+        tac.CloseQuarterAttack.weight = 1
