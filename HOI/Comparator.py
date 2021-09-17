@@ -68,5 +68,5 @@ Analyse_Division(Armored_432)
 Compare_Division(Infantery_72,Armored_432)
 
 Analyze_Bataillon(CAV_36)
-Analyze_Bataillon(M_INF_36)
-Compare_Bataillon(CAV_36,M_INF_36)
+Analyze_Bataillon(MOT_36)
+Compare_Bataillon(CAV_36, MOT_36)
