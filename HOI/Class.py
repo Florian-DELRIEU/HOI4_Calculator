@@ -70,6 +70,24 @@ class Division:
         self.ORG = truncDecimal(self.ORG,1)
         if self.ORG <= 0 : self.ORG = 0
 
+class Bataillon:
+    def __init__(self,PV,ORG,SA,HA,DEF,BRK,ARM,PRC,HARD,Width,Supply_use,Fuel_use,IC,Name=""):
+        self.PV = PV
+        self.ORG = ORG
+        self.SA = SA
+        self.HA = HA
+        self.DEF = DEF
+        self.BRK = BRK
+        self.ARM = ARM
+        self.PRC = PRC
+        self.HARD = HARD
+        self.Width = Width
+        self.Supply_use = Supply_use
+        self.Fuel_use = Fuel_use
+        self.IC = IC
+        self.Name = Name
+
+
 #######################################################################################################################
 #######################################################################################################################
 

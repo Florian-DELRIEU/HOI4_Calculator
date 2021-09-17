@@ -1,4 +1,5 @@
 from DivisionList import *
+from BataillonList import *
 from MyPack.Math import divide
 
 def Analyse_Division(Division):
@@ -29,9 +30,13 @@ def Compare_Division(DivA, DivB):
 def Analyze_Bataillon(Bataillon):
     Bat = Bataillon
     txt = "Analyzer"
-    txt += "\n======= {} ========".format(Batision.Name)
+    txt += "\n======= {} ========".format(Bataillon.Name)
     txt += "\n HA/SA = {} % ".format(divide(Bat.HA, Bat.SA)*100)
+    txt += "\n - SA: {} /IC || {}/Width ".format(divide(Bat.SA,Bat.IC),divide(Bat.SA,Bat.Width))
+    txt += "\n - HA: {} /IC || {}/Width ".format(divide(Bat.HA,Bat.IC),divide(Bat.HA,Bat.Width))
     txt += "\n BRK/DEF = {} ".format(divide(Bat.BRK, Bat.DEF))
+    txt += "\n - DEF: {} /IC || {}/Width ".format(divide(Bat.DEF,Bat.IC),divide(Bat.DEF,Bat.Width))
+    txt += "\n - BRK: {} /IC || {}/Width ".format(divide(Bat.BRK,Bat.IC),divide(Bat.BRK,Bat.Width))
     txt += "\n \n"
     print(txt)
 
@@ -40,3 +45,6 @@ Analyse_Division(Infantery_72)
 Analyse_Division(Armored_432)
 
 Compare_Division(Infantery_72,Armored_432)
+
+Analyze_Bataillon(CAV_36)
+Analyze_Bataillon(M_INF_36)
