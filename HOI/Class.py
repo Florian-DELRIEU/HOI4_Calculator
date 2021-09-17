@@ -6,7 +6,7 @@ class Division:
     self._Stat : stats de la division quand elle est en pleine santé "strenght = 1"
     self.Stat  : Stats de la division
     """
-    def __init__(self,PV,ORG):
+    def __init__(self,PV=176.2,ORG=46.667):
         self._PVmax = PV
         self._ORG = ORG
         self._SA = 100 # Soft Attack
