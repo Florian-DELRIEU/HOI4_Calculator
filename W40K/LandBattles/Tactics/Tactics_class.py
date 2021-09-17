@@ -14,7 +14,4 @@ class Tactic:
 
     def __repr__(self):
         return self.Name
-
-#    def change_weight(self):
-#       from W40K.LandBattles.Tactics.Tactics_func import change_weight
-#        change_weight(self)
+    

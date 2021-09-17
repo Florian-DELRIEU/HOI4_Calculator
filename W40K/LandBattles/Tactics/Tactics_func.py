@@ -22,8 +22,8 @@ def choose_Tactics(Battle):
     #assert type(Battle) is Battle , "Battle must be an :battle: type"
     ATK_tactic_weight = [el.weight for el in LIST_atk]
     DEF_tactic_weight = [el.weight for el in LIST_def]
-    Battle.ATK_Tactic = rd.choice(LIST_atk)
-    Battle.DEF_Tactic = rd.choice(LIST_def)
+    Battle.ATK_Tactic = rd.choices(LIST_atk,ATK_tactic_weight)
+    Battle.DEF_Tactic = rd.choices(LIST_def,DEF_tactic_weight)
     apply_Tactics(Battle)
 
 def apply_Tactics(Battle):
