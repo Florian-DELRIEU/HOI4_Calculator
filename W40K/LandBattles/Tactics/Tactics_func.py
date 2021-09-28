@@ -1,19 +1,9 @@
 from W40K.LandBattles.Tactics.Tactics_list import Tactic
-import W40K.LandBattles.Tactics.Tactics_list as tac
 import random as rd
 import numpy as np
+from  W40K.LandBattles.Tactics.Tactics_list import ATK_list, ATK_HB_list, ATK_CQ_list, ATK_SB_list, ATK_TW_list
+from  W40K.LandBattles.Tactics.Tactics_list import DEF_list, DEF_HB_list, DEF_CQ_list, DEF_SB_list, DEF_TW_list
 
-
-# Extrait les tactics de :Tactic_list: DEF et ATK séparés
-DICO = tac.__dict__
-LIST_atk = list()
-LIST_def = list()
-for key in DICO.keys():
-    if type(DICO[key]) in [Tactic]:
-        if not DICO[key].isDefenseTactic:
-            LIST_atk.append(DICO[key]) # List d'Attaquand
-        elif DICO[key].isDefenseTactic:
-            LIST_def.append(DICO[key]) # List de Defenseur
 
 ########################################################################################################################
 
@@ -25,10 +15,10 @@ def choose_Tactics(Battle):
     """
     change_weight(Battle)
     #assert type(Battle) is Battle , "Battle must be an :battle: type"
-    ATK_tactic_weight = [el.weight for el in LIST_atk]
-    DEF_tactic_weight = [el.weight for el in LIST_def]
-    Battle.ATK_Tactic = rd.choices(LIST_atk,ATK_tactic_weight)
-    Battle.DEF_Tactic = rd.choices(LIST_def,DEF_tactic_weight)
+    ATK_tactic_weight = [el.weight for el in ATK_list]
+    DEF_tactic_weight = [el.weight for el in DEF_list]
+    Battle.ATK_Tactic = rd.choices(ATK_list,ATK_tactic_weight)
+    Battle.DEF_Tactic = rd.choices(DEF_list,DEF_tactic_weight)
     apply_Tactics(Battle)
 
 def apply_Tactics(Battle):
