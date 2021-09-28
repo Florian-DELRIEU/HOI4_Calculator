@@ -18,6 +18,11 @@ for key in DICO.keys():
 ########################################################################################################################
 
 def choose_Tactics(Battle):
+    """
+    Choisi une tactique selon une sélection pondéré
+        - run apply_tactics
+        - run set_CAC_limit
+    """
     change_weight(Battle)
     #assert type(Battle) is Battle , "Battle must be an :battle: type"
     ATK_tactic_weight = [el.weight for el in LIST_atk]
@@ -60,5 +65,3 @@ def update_CAC(Battle):
 def change_weight(Battle):
     DEF_Tac = Battle.DEF_Tactic
     ATK_Tac = Battle.ATK_Tactic
-    if Battle.CAC_level > 0.3:
-        tac.CloseQuarterAttack.weight = 1
