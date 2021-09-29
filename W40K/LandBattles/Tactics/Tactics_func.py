@@ -36,11 +36,9 @@ def choose_Tactics(Battle):
         DEF_tactic_list = DEF_TW_tactics
     else: return NameError , "Wrong phase name"
     winner = Initiative_round(Battle)
-    _choose_tactics(ATK_tactic_list,DEF_tactic_list,winner)
-    ATK_tactic_weight = [el.weight for el in ATK_tactic_list]
-    DEF_tactic_weight = [el.weight for el in DEF_tactic_list]
-    Battle.ATK_Tactic = rd.choices(ATK_tactic_list,ATK_tactic_weight)
-    Battle.DEF_Tactic = rd.choices(DEF_tactic_list,DEF_tactic_weight)
+    ATK_Tactic, DEF_Tactic = _choose_tactics(ATK_tactic_list,DEF_tactic_list,winner)
+    Battle.ATK_Tactic = ATK_Tactic
+    Battle.DEF_Tactic = DEF_Tactic
     apply_Tactics(Battle)
 
 def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
@@ -51,8 +49,10 @@ def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
         DEF_tactic_weight = [el.weight for el in DEF_tactic_list]
         DEF_Tactic = rd.choices(DEF_tactic_list, DEF_tactic_weight)[0]
     # Change weight
-        Counter_tactic = [el for el in ATK_tactic_list if el.Name == DEF_Tactic.CounteredBy][0]
-        Counter_tactic.weight *= 1.35
+        try:
+            Counter_tactic = [el for el in ATK_tactic_list if el.Name == DEF_Tactic.CounteredBy][0]
+            Counter_tactic.weight *= 1.35
+        except: pass
     # ATK choice
         ATK_tactic_weight = [el.weight for el in ATK_tactic_list]
         ATK_Tactic = rd.choices(ATK_tactic_list, ATK_tactic_weight)[0]
@@ -61,14 +61,14 @@ def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
         ATK_tactic_weight = [el.weight for el in ATK_tactic_list]
         ATK_Tactic = rd.choices(ATK_tactic_list, ATK_tactic_weight)[0]
     # Change weight
-        Counter_tactic = [el for el in DEF_tactic_list if el.Name == ATK_Tactic.CounteredBy][0]
-        Counter_tactic.weight *= 1.35
+        try:
+            Counter_tactic = [el for el in DEF_tactic_list if el.Name == ATK_Tactic.CounteredBy][0]
+            Counter_tactic.weight *= 1.35
+        except: pass
     # DEF choice
         DEF_tactic_weight = [el.weight for el in DEF_tactic_list]
         DEF_Tactic = rd.choices(ATK_tactic_list, DEF_tactic_weight)[0]
     return ATK_Tactic , DEF_Tactic
-
-
 
 def Initiative_round(Battle):
     ATK_weight = int()
@@ -77,7 +77,7 @@ def Initiative_round(Battle):
     else:   pass  # Need Leader upgrade
     if Battle.DEF_Leader is None:   DEF_weight = 1
     else:   pass  # Need Leader upgrade
-    winner = rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])
+    winner = rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
     return winner
 
 def apply_Tactics(Battle):
