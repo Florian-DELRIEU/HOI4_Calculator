@@ -18,7 +18,7 @@ class Battle:
         self.roundCounter = 0
         self.CAC_level = 0
         self.CAC_limit = 0
-        self.Battle_phase = None  # Phase de bataille en cours
+        self.Phase = "Default"  # Phase de bataille en cours
     def isFinnish(self):
         """
         Check si le combat est terminé

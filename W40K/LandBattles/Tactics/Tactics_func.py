@@ -1,8 +1,8 @@
 from W40K.LandBattles.Tactics.Tactics_list import Tactic
 import random as rd
 import numpy as np
-from  W40K.LandBattles.Tactics.Tactics_list import ATK_list, ATK_HB_list, ATK_CQ_list, ATK_SB_list, ATK_TW_list
-from  W40K.LandBattles.Tactics.Tactics_list import DEF_list, DEF_HB_list, DEF_CQ_list, DEF_SB_list, DEF_TW_list
+from  W40K.LandBattles.Tactics.Tactics_list import ATK_tactics, ATK_HB_tactics, ATK_CQ_tactics, ATK_SB_tactics, ATK_TW_tactics
+from  W40K.LandBattles.Tactics.Tactics_list import DEF_tactics, DEF_HB_tactics, DEF_CQ_tactics, DEF_SB_tactics, DEF_TW_tactics
 
 
 ########################################################################################################################
@@ -10,15 +10,35 @@ from  W40K.LandBattles.Tactics.Tactics_list import DEF_list, DEF_HB_list, DEF_CQ
 def choose_Tactics(Battle):
     """
     Choisi une tactique selon une sélection pondéré
+        - run change-weight
+        - run SELF
         - run apply_tactics
         - run set_CAC_limit
     """
     change_weight(Battle)
     #assert type(Battle) is Battle , "Battle must be an :battle: type"
-    ATK_tactic_weight = [el.weight for el in ATK_list]
-    DEF_tactic_weight = [el.weight for el in DEF_list]
-    Battle.ATK_Tactic = rd.choices(ATK_list,ATK_tactic_weight)
-    Battle.DEF_Tactic = rd.choices(DEF_list,DEF_tactic_weight)
+    ATK_tactic_list = list()
+    DEF_tactic_list = list()
+    if Battle.Phase == "Default":
+        ATK_tactic_list = ATK_tactics
+        DEF_tactic_list = DEF_tactics
+    elif Battle.Phase == "Close Quarter Combat":
+        ATK_tactic_list = ATK_CQ_tactics
+        DEF_tactic_list = DEF_CQ_tactics
+    elif Battle.Phase == "Seize Bridge":
+        ATK_tactic_list = ATK_SB_tactics
+        DEF_tactic_list = DEF_SB_tactics
+    elif Battle.Phase == "Hold Bridge":
+        ATK_tactic_list = ATK_HB_tactics
+        DEF_tactic_list = DEF_HB_tactics
+    elif Battle.Phase == "Tactical Withdraw":
+        ATK_tactic_list = ATK_TW_tactics
+        DEF_tactic_list = DEF_TW_tactics
+    else: return NameError , "Wrong phase name"
+    ATK_tactic_weight = [el.weight for el in ATK_tactics]
+    DEF_tactic_weight = [el.weight for el in DEF_tactics]
+    Battle.ATK_Tactic = rd.choices(ATK_tactic_list,ATK_tactic_weight)
+    Battle.DEF_Tactic = rd.choices(DEF_tactic_list,DEF_tactic_weight)
     apply_Tactics(Battle)
 
 def apply_Tactics(Battle):
@@ -53,5 +73,4 @@ def update_CAC(Battle):
     elif Battle.CAC_level > 1: Battle.CAC_level = 1
 
 def change_weight(Battle):
-    DEF_Tac = Battle.DEF_Tactic
-    ATK_Tac = Battle.ATK_Tactic
+    pass

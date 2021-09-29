@@ -1,8 +1,6 @@
 class Tactic:
-    def __init__(self,ATK_Damage=1,ATK_Defense=1,DEF_Damage=1,DEF_Defense=1,CAC=0,weight=1,isDefenseTactic=True,Name=""):
+    def __init__(self,ATK_Damage=1,ATK_Defense=1,DEF_Damage=1,DEF_Defense=1,CAC=0,weight=1,Name=""):
         self.Name = Name
-    # is Defense ?
-        self.isDefenseTactic = isDefenseTactic
     # Bonus
         self.ATK_Damage = ATK_Damage
         self.ATK_Defense = ATK_Defense
