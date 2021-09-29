@@ -2,19 +2,27 @@ from W40K.LandBattles.Tactics.Tactics_class import Tactic
 
 ## ATTACKS
 ATK_tactics = [
-Tactic(ATK_Damage=1.05,CAC=0,Name="Attaque"),
-Tactic(ATK_Damage=1.25,CAC=0.5,Name="Assaut"),
-Tactic(DEF_Damage=0.75,CAC=0.3,Name="Shock"),
+Tactic(ATK_Damage=1.05,CAC=0,Name="Attaque",
+    CounteredBy="Counter Attack"),
+Tactic(ATK_Damage=1.25,CAC=0.5,Name="Assaut",
+        CounteredBy="Counter Attack",
+        BeginPhase="Close Quarter Combat"),
+Tactic(DEF_Damage=0.75,CAC=0.3,Name="Shock",
+       CounteredBy="Ambush"),
 Tactic(ATK_Damage=1.1,DEF_Damage=0.95,CAC=.1,Name="Infiltration Assaut"),
 Tactic(ATK_Damage=1.15,DEF_Damage=1,CAC=0,Name="Well-Planned Attack"),
 Tactic(ATK_Damage=1.20,DEF_Damage=1.05,CAC=0.3,Name="Relentless Assault"),
 Tactic(ATK_Damage=1.15,DEF_Damage=1,CAC=0.3,Name="Unexpected Thrust"),
 Tactic(ATK_Damage=1.10,DEF_Damage=0.8,CAC=-.5,Name="Suppressive Barrage"),
 # Need requirements
-Tactic(DEF_Damage=1.05,ATK_Damage=1.25,CAC=0,weight=0,Name="Encirclement"),
-Tactic(DEF_Damage=0.85,ATK_Damage=1.25,CAC=0.1,weight=0,Name="Breakthrough"),
-Tactic(DEF_Damage=0.85,ATK_Damage=1.15,CAC=.2,weight=0,Name="Blitz"),
-Tactic(DEF_Damage=0.95,ATK_Damage=1.2,CAC=.3,weight=0,Name="Seize Bridge"),
+Tactic(DEF_Damage=1.05,ATK_Damage=1.25,CAC=0,weight=0,Name="Encirclement",
+       CounteredBy="Tactical Withdrawal"),
+Tactic(DEF_Damage=0.85,ATK_Damage=1.25,CAC=0.1,weight=0,Name="Breakthrough",
+       CounteredBy="Backhand Blow"),
+Tactic(DEF_Damage=0.85,ATK_Damage=1.15,CAC=.2,weight=0,Name="Blitz",
+       CounteredBy="Elastic Defense"),
+Tactic(DEF_Damage=0.95,ATK_Damage=1.2,CAC=.3,weight=0,Name="Seize Bridge",
+       BeginPhase="Seize Bridge"),
 Tactic(DEF_Damage=1.1,ATK_Damage=1.1,CAC=.5,weight=0,Name="Mass Charge"),
 ]
 
@@ -22,15 +30,18 @@ Tactic(DEF_Damage=1.1,ATK_Damage=1.1,CAC=.5,weight=0,Name="Mass Charge"),
 DEF_tactics = [
 Tactic(DEF_Damage=1.05,Name="Defense"),
 Tactic(DEF_Damage=1.25,CAC=0.3,Name="Counter Attack"),
-Tactic(ATK_Damage=0.75,DEF_Damage=0.95,CAC=-0.3,Name="Tactic Withdrawal"),
-Tactic(ATK_Damage=0.75,DEF_Damage=1.15,CAC=-0.1,Name="Delay"),
-Tactic(ATK_Damage=0.75,DEF_Damage=1,CAC=0.1,Name="Ambush"),
+Tactic(ATK_Damage=0.75,DEF_Damage=0.95,CAC=-0.3,Name="Tactic Withdrawal",
+       BeginPhase="Tactic Withdraw"),
+Tactic(ATK_Damage=0.75,DEF_Damage=1.15,CAC=-0.1,CounteredBy="Shock",Name="Delay"),
+Tactic(ATK_Damage=0.75,DEF_Damage=1,CAC=0.1,Name="Ambush",
+       CounteredBy="Breakthrough"),
 Tactic(ATK_Damage=0.85,DEF_Damage=1.1,CAC=-0.3,Name="Elastic Defense"),
 Tactic(ATK_Damage=0.80,DEF_Damage=1.2,CAC=0.1,Name="Backhand Blow"),
 Tactic(ATK_Damage=0.3,DEF_Damage=.4,CAC=.5,Name="Guerrilla Tactics"),
 Tactic(ATK_Damage=0.9,DEF_Damage=1.1,CAC=-0.5,Name="Overwhelming Fire"),
 # Need Requirement
-Tactic(ATK_Damage=1.2,DEF_Damage=.95,CAC=0,weight=0,Name="Hold Bridge"),
+Tactic(ATK_Damage=1.2,DEF_Damage=.95,CAC=0,weight=0,Name="Hold Bridge",
+       BeginPhase="Hold Bridge"),
 ]
 
 
@@ -39,7 +50,8 @@ Tactic(ATK_Damage=1.2,DEF_Damage=.95,CAC=0,weight=0,Name="Hold Bridge"),
 ATK_CQ_tactics = [
 Tactic(ATK_Damage=1.1,DEF_Damage=1.05,CAC=0.3,Name="Close Quarter Attack"),
 Tactic(ATK_Damage=1.2,DEF_Damage=1.2,CAC=0.5,Name="Close Quarter Storm"),
-Tactic(ATK_Damage=1.05,DEF_Damage=1.05,CAC=-0.3,Name="Close Quarter Withdraw"),
+Tactic(ATK_Damage=1.05,DEF_Damage=1.05,CAC=-0.3,Name="Close Quarter Withdraw",
+       BeginPhase="Default"),
 ]
 
 ## Close Quarter Defense
@@ -53,14 +65,15 @@ Tactic(ATK_Damage=0.8,DEF_Damage=1,Name="Close Quarter Local Strongpoint"),
 ## Tactical withdraw Attack
 ATK_TW_tactics = [
 Tactic(ATK_Damage=0.75,DEF_Damage=0.9,CAC=0,Name="Tactical withdraw Attack"),
-Tactic(ATK_Damage=0.85,DEF_Damage=0.95,CAC=0.2,Name="Tactical withdraw Pursuit"),
-Tactic(ATK_Damage=0.95,DEF_Damage=0.90,CAC=0.4,Name="Tactical withdraw Intercept"),
+Tactic(ATK_Damage=0.85,DEF_Damage=0.95,CAC=0.2,Name="Pursuit"),
+Tactic(ATK_Damage=0.95,DEF_Damage=0.90,CAC=0.4,Name="Intercept",
+       BeginPhase="Default"),
 ]
 
 ## Tactical withdraw Defend
 DEF_TW_tactics = [
-Tactic(ATK_Damage=0.7,DEF_Damage=0.95,CAC=-0.3,Name="Tactical withdraw Withdrawal"),
-Tactic(ATK_Damage=0.6,DEF_Damage=0.9,CAC=-0.5,Name="Tactical withdraw Evade"),
+Tactic(ATK_Damage=0.7,DEF_Damage=0.95,CAC=-0.3,Name="Withdrawal"),
+Tactic(ATK_Damage=0.6,DEF_Damage=0.9,CAC=-0.5,Name="Evade"),
 ]
 
 
@@ -75,7 +88,9 @@ Tactic(ATK_Damage=1.2,DEF_Damage=0.9,CAC=0,Name="Defend Bridge"),
 DEF_SB_tactics = [
 Tactic(ATK_Damage=1,DEF_Damage=0.95,CAC=0.1,Name="Bridge Assaut"),
 Tactic(ATK_Damage=1.25,DEF_Damage=0.9,CAC=0.3,Name="Bridge Reckless Assaut"),
-Tactic(ATK_Damage=1.1,DEF_Damage=0.95,CAC=0.5,Name="Recapture Bridge"),
+Tactic(ATK_Damage=1.1,DEF_Damage=0.95,CAC=0.5,Name="Recapture Bridge",
+       CounteredBy="Defend Bridge",
+       BeginPhase="Hold Bridge"),
 ]
 
 
@@ -84,11 +99,13 @@ Tactic(ATK_Damage=1.1,DEF_Damage=0.95,CAC=0.5,Name="Recapture Bridge"),
 ATK_HB_tactics = [
 Tactic(ATK_Damage=1.1,DEF_Damage=1,CAC=0.1,Name="Attack Bridge"),
 Tactic(ATK_Damage=1.2,DEF_Damage=1,CAC=0.3,Name="Rush Bridge"),
-Tactic(ATK_Damage=1.2,DEF_Damage=1.05,CAC=0.5,Name="Bridge Storm Assaut"),
+Tactic(ATK_Damage=1.2,DEF_Damage=1.05,CAC=0.5,Name="Storm Bridge",
+       CounteredBy="Defend Bridge",
+       BeginPhase="Seize Bridge"),
 ]
 
 ## Hold Bridge Defend
 DEF_HB_tactics = [
-Tactic(ATK_Damage=1.2,DEF_Damage=0.9,CAC=0,Name="Hold Assaut"),
-Tactic(ATK_Damage=1.1,DEF_Damage=1.05,CAC=0,Name="Defend Assaut"),
+Tactic(ATK_Damage=1.2,DEF_Damage=0.9,CAC=0,Name="Hold Bridge"),
+Tactic(ATK_Damage=1.1,DEF_Damage=1.05,CAC=0,Name="Defend Bridge"),
 ]
