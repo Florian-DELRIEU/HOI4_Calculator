@@ -35,11 +35,50 @@ def choose_Tactics(Battle):
         ATK_tactic_list = ATK_TW_tactics
         DEF_tactic_list = DEF_TW_tactics
     else: return NameError , "Wrong phase name"
-    ATK_tactic_weight = [el.weight for el in ATK_tactics]
-    DEF_tactic_weight = [el.weight for el in DEF_tactics]
+    winner = Initiative_round(Battle)
+    _choose_tactics(ATK_tactic_list,DEF_tactic_list,winner)
+    ATK_tactic_weight = [el.weight for el in ATK_tactic_list]
+    DEF_tactic_weight = [el.weight for el in DEF_tactic_list]
     Battle.ATK_Tactic = rd.choices(ATK_tactic_list,ATK_tactic_weight)
     Battle.DEF_Tactic = rd.choices(DEF_tactic_list,DEF_tactic_weight)
     apply_Tactics(Battle)
+
+def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
+    ATK_Tactic = Tactic()
+    DEF_Tactic = Tactic()
+    if Initiative_winner == "ATK":
+    # DEF choice
+        DEF_tactic_weight = [el.weight for el in DEF_tactic_list]
+        DEF_Tactic = rd.choices(DEF_tactic_list, DEF_tactic_weight)[0]
+    # Change weight
+        Counter_tactic = [el for el in ATK_tactic_list if el.Name == DEF_Tactic.CounteredBy][0]
+        Counter_tactic.weight *= 1.35
+    # ATK choice
+        ATK_tactic_weight = [el.weight for el in ATK_tactic_list]
+        ATK_Tactic = rd.choices(ATK_tactic_list, ATK_tactic_weight)[0]
+    if Initiative_winner == "DEF":
+    # ATK choice
+        ATK_tactic_weight = [el.weight for el in ATK_tactic_list]
+        ATK_Tactic = rd.choices(ATK_tactic_list, ATK_tactic_weight)[0]
+    # Change weight
+        Counter_tactic = [el for el in DEF_tactic_list if el.Name == ATK_Tactic.CounteredBy][0]
+        Counter_tactic.weight *= 1.35
+    # DEF choice
+        DEF_tactic_weight = [el.weight for el in DEF_tactic_list]
+        DEF_Tactic = rd.choices(ATK_tactic_list, DEF_tactic_weight)[0]
+    return ATK_Tactic , DEF_Tactic
+
+
+
+def Initiative_round(Battle):
+    ATK_weight = int()
+    DEF_weight = int()
+    if Battle.ATK_Leader is None:   ATK_weight = 1
+    else:   pass  # Need Leader upgrade
+    if Battle.DEF_Leader is None:   DEF_weight = 1
+    else:   pass  # Need Leader upgrade
+    winner = rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])
+    return winner
 
 def apply_Tactics(Battle):
     DEF = Battle.DEF
