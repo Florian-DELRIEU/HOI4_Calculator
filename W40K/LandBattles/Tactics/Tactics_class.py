@@ -1,5 +1,5 @@
 class Tactic:
-    def __init__(self,ATK_Damage=1,ATK_Defense=1,DEF_Damage=1,DEF_Defense=1,CAC=0,weight=1,CounteredBy=None,Name="",
+    def __init__(self,ATK_Damage=1,ATK_Defense=1,DEF_Damage=1,DEF_Defense=1,CAC=0,weight=4,CounteredBy=None,Name="",
                  BeginPhase=None):
         self.Name = Name
         self.CounteredBy = CounteredBy

@@ -4,7 +4,7 @@ from W40K.LandBattles.Tactics.Tactics_class import Tactic
 ATK_tactics = [
 Tactic(ATK_Damage=1.05,CAC=0,Name="Attaque",
     CounteredBy="Counter Attack"),
-Tactic(ATK_Damage=1.25,CAC=0.5,Name="Assaut",
+Tactic(ATK_Damage=1.25,CAC=0.5,weight=2,Name="Assaut",
         CounteredBy="Counter Attack",
         BeginPhase="Close Quarter Combat"),
 Tactic(DEF_Damage=0.75,CAC=0.3,Name="Shock",
@@ -38,7 +38,7 @@ Tactic(ATK_Damage=0.75,DEF_Damage=1,CAC=0.1,Name="Ambush",
 Tactic(ATK_Damage=0.85,DEF_Damage=1.1,CAC=-0.3,Name="Elastic Defense"),
 Tactic(ATK_Damage=0.80,DEF_Damage=1.2,CAC=0.1,Name="Backhand Blow"),
 Tactic(ATK_Damage=0.3,DEF_Damage=.4,CAC=.5,Name="Guerrilla Tactics"),
-Tactic(ATK_Damage=0.9,DEF_Damage=1.1,CAC=-0.5,Name="Overwhelming Fire"),
+Tactic(ATK_Damage=0.9,DEF_Damage=1.1,CAC=-0.5,weight=2,Name="Overwhelming Fire"),
 # Need Requirement
 Tactic(ATK_Damage=1.2,DEF_Damage=.95,CAC=0,weight=0,Name="Hold Bridge",
        BeginPhase="Hold Bridge"),
@@ -49,15 +49,15 @@ Tactic(ATK_Damage=1.2,DEF_Damage=.95,CAC=0,weight=0,Name="Hold Bridge",
 ## Close Quarter Attack
 ATK_CQ_tactics = [
 Tactic(ATK_Damage=1.1,DEF_Damage=1.05,CAC=0.3,Name="Close Quarter Attack"),
-Tactic(ATK_Damage=1.2,DEF_Damage=1.2,CAC=0.5,Name="Close Quarter Storm"),
-Tactic(ATK_Damage=1.05,DEF_Damage=1.05,CAC=-0.3,Name="Close Quarter Withdraw",
+Tactic(ATK_Damage=1.2,DEF_Damage=1.2,weight=2,CAC=0.5,Name="Close Quarter Storm"),
+Tactic(ATK_Damage=1.05,DEF_Damage=1.05,weight=1,CAC=-0.3,Name="Close Quarter Withdraw",
        BeginPhase="Default"),
 ]
 
 ## Close Quarter Defense
 DEF_CQ_tactics = [
 Tactic(ATK_Damage=1.1,DEF_Damage=1.05,Name="Close Quarter Defense"),
-Tactic(ATK_Damage=0.8,DEF_Damage=1,Name="Close Quarter Local Strongpoint"),
+Tactic(ATK_Damage=0.8,DEF_Damage=1,weight=2,Name="Close Quarter Local Strongpoint"),
 ]
 
 
@@ -99,7 +99,7 @@ Tactic(ATK_Damage=1.1,DEF_Damage=0.95,CAC=0.5,Name="Recapture Bridge",
 ATK_HB_tactics = [
 Tactic(ATK_Damage=1.1,DEF_Damage=1,CAC=0.1,Name="Attack Bridge"),
 Tactic(ATK_Damage=1.2,DEF_Damage=1,CAC=0.3,Name="Rush Bridge"),
-Tactic(ATK_Damage=1.2,DEF_Damage=1.05,CAC=0.5,Name="Storm Bridge",
+Tactic(ATK_Damage=1.2,DEF_Damage=1.05,CAC=0.5,weight=2,Name="Storm Bridge",
        CounteredBy="Defend Bridge",
        BeginPhase="Seize Bridge"),
 ]
