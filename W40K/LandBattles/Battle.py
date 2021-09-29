@@ -8,17 +8,27 @@ class Battle:
     Objet contenant les divisions permettant de lancer les round et les logs
     """
     def __init__(self, ATK, DEF):
+    # Initials conditions
         assert type(ATK) == Regiment and type(DEF) == Regiment , "campA and campB must be regiment class"
         assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
         assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
-        self.ATK_Tactic = None
-        self.DEF_Tactic = None
+    # ATK team
         self.ATK = ATK
+        self.ATK_Tactic = None
+        self.ATK_Leader = None
+    # DEF Team
         self.DEF = DEF
+        self.DEF_Tactic = None
+        self.DEF_Leader = None
+    # Battle parameters
         self.roundCounter = 0
         self.CAC_level = 0
         self.CAC_limit = 0
         self.Phase = "Default"  # Phase de bataille en cours
+        self.Terrain = "Plain"
+
+
+
     def isFinnish(self):
         """
         Check si le combat est terminé
@@ -31,7 +41,8 @@ class Battle:
             return False
     def Round(self,Nb=1,LogLevel=True):
         """
-        Definit le nombre de lancement de round
+        -   Definit le nombre de lancement de round
+        -   run _Round
         :param Nb: Nombre de round souhaité (-1 si jusqu'a fin du combat)
         """
         assert type(Nb) is int , "Nb must be an :int:"

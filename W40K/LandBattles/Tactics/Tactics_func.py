@@ -73,4 +73,5 @@ def update_CAC(Battle):
     elif Battle.CAC_level > 1: Battle.CAC_level = 1
 
 def change_weight(Battle):
+    """Change tactics weight with regards to Generals skills and abilities and terrain"""
     pass
