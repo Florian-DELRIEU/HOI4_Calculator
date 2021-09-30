@@ -100,7 +100,7 @@ def setUnitBonus(unit):
     #assert type(unit) == Unit
     for rule in unit.SpecialRules:
         if rule == "And they shall know no fear":
-            unit.ORG *= 2
+            unit.ORG *= 1.2
 
 def round_Stats(Object):
     Dico = Object.__dict__

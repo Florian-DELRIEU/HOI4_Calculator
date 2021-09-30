@@ -39,6 +39,7 @@ def choose_Tactics(Battle):
     ATK_Tactic, DEF_Tactic = _choose_tactics(ATK_tactic_list,DEF_tactic_list,winner)
     Battle.ATK_Tactic = ATK_Tactic
     Battle.DEF_Tactic = DEF_Tactic
+    isCountered(Battle)
     apply_Tactics(Battle)
 
 def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
@@ -67,8 +68,29 @@ def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
         except: pass
     # DEF choice
         DEF_tactic_weight = [el.weight for el in DEF_tactic_list]
-        DEF_Tactic = rd.choices(ATK_tactic_list, DEF_tactic_weight)[0]
+        DEF_Tactic = rd.choices(DEF_tactic_list, DEF_tactic_weight)[0]
     return ATK_Tactic , DEF_Tactic
+
+def isCountered(Battle):
+    """
+    Chech if a tactic has been countered. Cancel countered ones
+    """
+    if Battle.DEF_Tactic.Name == Battle.ATK_Tactic.CounteredBy:
+        Cancel_Tactic(Battle.ATK_Tactic)
+        print("ATK tactic COUNTERED !!")
+    if Battle.ATK_Tactic.Name == Battle.DEF_Tactic.CounteredBy:
+        Cancel_Tactic(Battle.DEF_Tactic)
+        print("DEF tactic COUNTERED !!")
+
+def Cancel_Tactic(Tactic_to_cancel):
+    assert type(Tactic_to_cancel) is Tactic
+    Tactic_to_cancel.ATK_Damage = 1
+    Tactic_to_cancel.ATK_Defense = 1
+    Tactic_to_cancel.DEF_Damage = 1
+    Tactic_to_cancel.DEF_Defense = 1
+    Tactic_to_cancel.CAC = 0
+    Tactic_to_cancel.Begin_battle_phase = None
+
 
 def Initiative_round(Battle):
     ATK_weight = int()

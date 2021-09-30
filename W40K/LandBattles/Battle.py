@@ -53,7 +53,8 @@ class Battle:
                 i += 1
         else: # Lancement des rounds jusqu'a fin du combat
             while not self.isFinnish():
-                self._Round(Loglevel=LogLevel,PauseEachRound=False)
+                self._Round(Loglevel=LogLevel,PauseEachRound=True)
+
     def _Round(self,Loglevel,PauseEachRound=False):
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
