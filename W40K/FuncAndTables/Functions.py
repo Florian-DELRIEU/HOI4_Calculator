@@ -36,6 +36,8 @@ def setWeaponsBonus(Object):
     if Object.Type == "Salve":
         Object.Defense *= 1.1
         Object.Breakthrought = 1.1
+    if Object.Type == "Ordnance":
+        Object.SoftAttack *= 2
 # Weapon Range
     if Object.Range == (0 or None): pass # melee weapons
     if Object.Range <= 8:
@@ -99,7 +101,7 @@ def setUpgradeBonus(company):
 def setUnitBonus(unit):
     #assert type(unit) == Unit
     for rule in unit.SpecialRules:
-        if rule == "And they shall know no fear":
+        if rule == "Astartes":
             unit.ORG *= 1.2
 
 def round_Stats(Object):
