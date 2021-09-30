@@ -24,6 +24,8 @@ def setWeaponsBonus(Object):
             Object.HardAttack *= 1.05
         if rule == "Krak Grenade":
             Object.SoftAttack *= 0
+        if rule == "Fusion":
+            Object.HardAttack *= 1.5
 # Weapons Cadence
     Object.SoftAttack *= Object.Cadence
     Object.HardAttack *= Object.Cadence
@@ -37,7 +39,7 @@ def setWeaponsBonus(Object):
         Object.Defense *= 1.1
         Object.Breakthrought = 1.1
     if Object.Type == "Ordnance":
-        Object.SoftAttack *= 2
+        Object.SoftAttack *= 1.5
 # Weapon Range
     if Object.Range == (0 or None): pass # melee weapons
     if Object.Range <= 8:

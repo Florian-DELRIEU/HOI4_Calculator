@@ -11,6 +11,7 @@ Basilisk = Tank(3,12,10,10,3,Type="Tank")
 # Weapons
 Lasgun = Weapon(3,None,"Tir rapide",24,Name="Lasgun")
 Bolter = Weapon(4,5,"Tir rapide",24,Name="Bolter")
+MeltaGun = Weapon(8,1,Type="Assaut",SpecialsRules=["Fusion"],Range=12,Cadence=1)
 PlasmaGun = Weapon(7,2,"Tir rapide",24,Name="Plasma Gun")
 KrakGrenades = Weapon(6,4,"Assaut",Range=8,Cadence=1,SpecialsRules=["Krak Grenade"],Name="Krak Grenade")
 FragGrenades = Weapon(3,None,"Assaut",Range=8,Cadence=1,SpecialsRules=["Blast 3'"],Name="Frag Grenade")

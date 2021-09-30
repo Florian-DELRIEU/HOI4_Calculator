@@ -10,9 +10,18 @@ Guardsmens_100B = Company(Unit=         Gardes.__copy__(100),
                                         FragGrenades.__copy__(100),
                                         KrakGrenades.__copy__(100)])
 
+Guardsmens_100C = Company(Unit=         Gardes.__copy__(100),
+                          Equipement=[  Lasgun.__copy__(85),
+                                        PlasmaGun.__copy__(5),
+                                        BolterLD.__copy__(10),
+                                        FragGrenades.__copy__(100),
+                                        KrakGrenades.__copy__(100)])
+
 Spaces_100A = Company(Unit=         SpaceMarines.__copy__(100),
-                      Equipement=[  Bolter.__copy__(90),
+                      Equipement=[  Bolter.__copy__(85),
                                     PlasmaGun.__copy__(5),
+                                    CanonLaser.__copy__(2),
+                                    MeltaGun.__copy__(3),
                                     BolterLD.__copy__(5),
                                     FragGrenades.__copy__(100),
                                     KrakGrenades.__copy__(100)])
