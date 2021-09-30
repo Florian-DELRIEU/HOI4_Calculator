@@ -6,19 +6,19 @@ class Division:
     self._Stat : stats de la division quand elle est en pleine santé "strenght = 1"
     self.Stat  : Stats de la division
     """
-    def __init__(self,PV=176.2,ORG=46.667):
+    def __init__(self,PV,ORG,SA,HA,DEF,BRK,PRC,ARM,HARD,RTCH,Name=""):
         self._PVmax = PV
         self._ORG = ORG
-        self._SA = 100 # Soft Attack
-        self._HA = 10 # Hard Attack
-        self._DEF = 50 # Defense
-        self._BRK = 40 # Breakthought
+        self._SA = SA # Soft Attack
+        self._HA = HA # Hard Attack
+        self._DEF = DEF # Defense
+        self._BRK = BRK # Breakthought
         self.PV = self._PVmax
         self.ORG = self._ORG
-        self.PRC = 10 # Piercing
-        self.ARM = 10 # Armor
-        self.HARD = 0.1 # Hardness
-        self.RTCH = 0 # Retranchement
+        self.PRC = PRC # Piercing
+        self.ARM = ARM # Armor
+        self.HARD = HARD # Hardness
+        self.RTCH = RTCH # Retranchement
         self.NbATK = 0
         self.Name = ""
         self.set_STR()  # Mets a jour les stat en fonction des PV de la division

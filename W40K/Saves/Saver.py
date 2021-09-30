@@ -7,6 +7,7 @@ import W40K.UnitCreator.Unit_list as UnitsWeapons_List
 from W40K.UnitCreator.Class.Unit import Infantry,Tank,Walker
 from W40K.UnitCreator.Class.Weapons import Weapon
 from W40K.LandBattles.Company import Company
+from W40K.FuncAndTables.Functions import round_Stats
 
 
 DICO_1A = UnitsWeapons_List.__dict__    # toutes les variables et classes de main dans un dico
@@ -41,6 +42,7 @@ for key in DICO_2A.keys():
     assert type(cur) == Infantry or Tank or Walker
     cur_list = [cur.HP,cur.ORG,cur.SoftAttack,cur.HardAttack,cur.SoftMeleeAttack,cur.HardMeleeAttack,cur.Defense,
             cur.Breakthrought,cur.Armor,cur.Piercing,cur.Hardness]
+    round_Stats(cur)
     DICO_3A[key] = cur_list
 
 # Saves WEAPONS
@@ -52,6 +54,7 @@ for key in DICO_2B.keys():
     assert type(cur) == Weapon
     cur_list = [cur.SoftAttack,cur.HardAttack,cur.SoftMeleeAttack,cur.HardMeleeAttack,cur.Defense,
             cur.Breakthrought]
+    round_Stats(cur)
     DICO_3B[key] = cur_list
 
 # Saves COMPANIES
@@ -63,6 +66,7 @@ for key in DICO_2C.keys():
     assert type(cur) == Company
     cur_list = [cur.HP,cur.ORG,cur.SoftAttack,cur.HardAttack,cur.SoftMeleeAttack,cur.HardMeleeAttack,cur.Defense,
             cur.Breakthrought,cur.Armor,cur.Piercing,cur.Hardness]
+    round_Stats(cur)
     DICO_3C[key] = cur_list
 
 Dict2CSV(DICO_3A, "SaveUnit.csv")
