@@ -64,7 +64,7 @@ class Battle:
             previous_CAC_level = self.CAC_limit
             choose_Tactics(self)
             if Loglevel:
-                txt += "\nNew tactics"
+                txt += "\nNew tactics / Battle phase: {}".format(self.Phase)
                 txt += "\n- {} choose {} tactic".format(self.ATK.Name,self.ATK_Tactic)
                 txt += "\n- {} choose {} tactic".format(self.DEF.Name,self.DEF_Tactic)
                 txt += "\n"
