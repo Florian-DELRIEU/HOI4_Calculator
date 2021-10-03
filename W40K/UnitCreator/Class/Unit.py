@@ -147,26 +147,28 @@ class Tank:
         self.HOI4_Profil()
     def HOI4_Profil(self):
         self.HP = self.PC * self.Quantity
+    # Vehicule type
         if self.Type == "Chariot":
             self.SoftMeleeAttack = 0.1
             self.HardMeleeAttack = 0
             self.Defense = 1
             self.Breakthrought = 0.5
-        if self.Type == "Tank":
+        elif self.Type == "Tank":
             self.SoftMeleeAttack = 0.3
             self.HardMeleeAttack = 0.1
             self.Defense = 1.5
             self.Breakthrought = 1
-        if self.Type == "Heavy":
+        elif self.Type == "Heavy":
             self.SoftMeleeAttack = 0.5
             self.HardMeleeAttack = 0.2
             self.Defense = 3
             self.Breakthrought = 1.5
-        if self.Type == "SuperHeavy":
+        elif self.Type == "SuperHeavy":
             self.SoftMeleeAttack = 0.6
             self.HardMeleeAttack = 0.4
             self.Defense = 5
             self.Breakthrought = 2
+    # Weapons emplacement
         if len(self.HullWeapon) != 0:
             for weapon in self.HullWeapon:
                 weapon.SoftAttack *= 0.33
@@ -184,15 +186,15 @@ class Tank:
         self.Defense = np.sum([el.Defense for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Breakthrought = np.sum([el.Breakthrought for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
     # Organisation
-        if self.Type == "SuperHeavy":   self.ORG = 30
-        else:                           self.ORG = 20
+        if self.Type == "SuperHeavy":   self.ORG = 15
+        else:                           self.ORG = 10
     # Hardness
         if self.Type == "Chariot":      self.Hardness = 0.80
         elif self.Type == "Tank":       self.Hardness = 0.90
         elif self.Type == "Heavy":      self.Hardness = 0.95
         elif self.Type == "SuperHeavy": self.Hardness = 0.99
         else:                           pass
-        if self.Type == "Oppen-Topped": self.Hardness -= 0.1
+        if "Oppen-Topped" in self.SpecialRules: self.Hardness /= 2
         if self.Hardness <= 0: self.Hardness = 0
         if self.Hardness >= 1: self.Hardness = 1
     # Armor
