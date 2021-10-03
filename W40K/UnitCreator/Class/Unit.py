@@ -168,6 +168,11 @@ class Tank:
             self.HardMeleeAttack = 0.4
             self.Defense = 5
             self.Breakthrought = 2
+        elif self.Type == "Artillery":
+            self.SoftMeleeAttack = 0
+            self.HardMeleeAttack = 0
+            self.Defense = 3
+            self.Breakthrought = 2
     # Weapons emplacement
         if len(self.HullWeapon) != 0:
             for weapon in self.HullWeapon:
@@ -187,18 +192,21 @@ class Tank:
         self.Breakthrought = np.sum([el.Breakthrought for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
     # Organisation
         if self.Type == "SuperHeavy":   self.ORG = 15
+        elif self.Type == "Artillery":  self.ORG = 0
         else:                           self.ORG = 10
     # Hardness
         if self.Type == "Chariot":      self.Hardness = 0.80
         elif self.Type == "Tank":       self.Hardness = 0.90
         elif self.Type == "Heavy":      self.Hardness = 0.95
         elif self.Type == "SuperHeavy": self.Hardness = 0.99
+        elif self.Type == "Artillery":  self.Hardness = 0
         else:                           pass
         if "Oppen-Topped" in self.SpecialRules: self.Hardness /= 2
         if self.Hardness <= 0: self.Hardness = 0
         if self.Hardness >= 1: self.Hardness = 1
     # Armor
         self.Armor = np.mean((self.Blind_Av,self.Blind_Side,self.Blind_Arr))
+        if "Oppen-Topped" in self.SpecialRules: self.Armor /= 2
         round_Stats(self)
     def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
         self.TurretWeapon = TurretList

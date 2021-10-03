@@ -2,7 +2,7 @@ from W40K.FuncAndTables.TableValues import *
 from W40K.FuncAndTables.Functions import setWeaponsBonus, round_Stats
 
 class Weapon:
-    def __init__(self, F=3, PA=None, Type="Tir rapide", Range = 24, Cadence = 1,Quantity=1,Name="",SpecialsRules=[]):
+    def __init__(self, F=3, PA=None, Range = 24, Type="Tir rapide", Cadence = 1,Quantity=1,SpecialsRules=[],Name=""):
         self.Quantity = Quantity
     # Profils W40K
         self.F = F
