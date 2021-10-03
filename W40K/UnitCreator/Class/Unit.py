@@ -116,7 +116,7 @@ class Infantry:
 ########################################################################################################################
 
 class Tank:
-    def __init__(self,CT=3,Blind_Av=14,Blind_Side=13,Blind_Arr=10,PC=3,Quantity=1,Type="Heavy Tank",SpecialRules=list):
+    def __init__(self,CT=3,Blind_Av=14,Blind_Side=13,Blind_Arr=10,PC=3,Quantity=1,Type="Heavy Tank",SpecialRules=[]):
         """
         Default is Leman Russ battle tank
         """
