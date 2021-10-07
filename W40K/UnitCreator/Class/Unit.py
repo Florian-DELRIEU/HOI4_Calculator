@@ -1,4 +1,5 @@
 from W40K.FuncAndTables.TableValues import *
+from W40K.FuncAndTables.Stats_Functions import *
 from W40K.FuncAndTables.Functions import *
 import numpy as np
 """
@@ -45,34 +46,18 @@ class Infantry:
         """
         Determine le profil HOI IV en fonctions des stats W40K
         """
-        self.HP = self.PV*HPbonus_E[self.E] *self.Quantity
-        self.ORG = self.Cd * 10
-        self.SoftMeleeAttack = (self.A/10)*SoftAttack_CC_CT[self.CC] *self.Quantity
-        self.HardMeleeAttack = HMA_SMA_prop[self.F]* self.SoftMeleeAttack* HardAttack_CC_CT[self.CC]
+        self.HP = setHP(self)*self.Quantity
+        self.ORG = setORG(self)
+        self.SoftMeleeAttack = setSMA(self)*self.Quantity
+        self.HardMeleeAttack = setHMA(self)*self.Quantity
     # Hardness & Armor
-        if self.Svg == 3:
-            self.Hardness = 0.1
-            self.Armor = 2 * Armor_SvgInvu[self.SvgInvu]
-        elif self.Svg == 2:
-            self.Hardness = 0.2
-            self.Armor = 4 * Armor_SvgInvu[self.SvgInvu]
-        else:
-            self.Hardness = 0.0
-            self.Armor = 0 * Armor_SvgInvu[self.SvgInvu]
+        self.Hardness = setHardness(self)
+        self.Armor = setArmor(self)
     # Piercing
-        self.Piercing = self.F+4
+        self.Piercing = setPiercing(self)
     # Defense & Breakthrought
-        self.Defense = Defense_F[self.F] *self.Quantity
-        self.Breakthrought = Breakthrought_F[self.F] *self.Quantity
-        if self.Svg == 5:
-            self.Defense *= 0.9
-            self.Breakthrought *= 0.9
-        if self.Svg == 6:
-            self.Defense *= 0.8
-            self.Breakthrought *= 0.8
-        if self.Svg is None:
-            self.Defense *= 0.7
-            self.Breakthrought *= 0.7
+        self.Defense = setDefense(self)
+        self.Breakthrought = setBreakthrought(self)
         setUnitBonus(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
@@ -146,33 +131,19 @@ class Tank:
         self.Piercing = float()
         self.HOI4_Profil()
     def HOI4_Profil(self):
-        self.HP = self.PC * self.Quantity
-    # Vehicule type
-        if self.Type == "Chariot":
-            self.SoftMeleeAttack = 0.1
-            self.HardMeleeAttack = 0
-            self.Defense = 1
-            self.Breakthrought = 0.5
-        elif self.Type == "Tank":
-            self.SoftMeleeAttack = 0.3
-            self.HardMeleeAttack = 0.1
-            self.Defense = 1.5
-            self.Breakthrought = 1
-        elif self.Type == "Heavy":
-            self.SoftMeleeAttack = 0.5
-            self.HardMeleeAttack = 0.2
-            self.Defense = 3
-            self.Breakthrought = 1.5
-        elif self.Type == "SuperHeavy":
-            self.SoftMeleeAttack = 0.6
-            self.HardMeleeAttack = 0.4
-            self.Defense = 5
-            self.Breakthrought = 2
-        elif self.Type == "Artillery":
-            self.SoftMeleeAttack = 0
-            self.HardMeleeAttack = 0
-            self.Defense = 3
-            self.Breakthrought = 2
+        setHP(self)*self.Quantity
+        setORG(self)
+        setSMA(self)*self.Quantity
+        setHMA(self)*self.Quantity
+        # Hardness & Armor
+        setHardness(self)
+        setArmor(self)
+        # Piercing
+        setPiercing(self)
+        # Defense & Breakthrought
+        setDefense(self)
+        setBreakthrought(self)
+
     # Weapons emplacement
         if len(self.HullWeapon) != 0:
             for weapon in self.HullWeapon:
@@ -190,23 +161,6 @@ class Tank:
         self.HardAttack = np.sum([el.HardAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Defense = np.sum([el.Defense for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Breakthrought = np.sum([el.Breakthrought for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
-    # Organisation
-        if self.Type == "SuperHeavy":   self.ORG = 15
-        elif self.Type == "Artillery":  self.ORG = 0
-        else:                           self.ORG = 10
-    # Hardness
-        if self.Type == "Chariot":      self.Hardness = 0.80
-        elif self.Type == "Tank":       self.Hardness = 0.90
-        elif self.Type == "Heavy":      self.Hardness = 0.95
-        elif self.Type == "SuperHeavy": self.Hardness = 0.99
-        elif self.Type == "Artillery":  self.Hardness = 0
-        else:                           pass
-        if "Oppen-Topped" in self.SpecialRules: self.Hardness /= 2
-        if self.Hardness <= 0: self.Hardness = 0
-        if self.Hardness >= 1: self.Hardness = 1
-    # Armor
-        self.Armor = np.mean((self.Blind_Av,self.Blind_Side,self.Blind_Arr))
-        if "Oppen-Topped" in self.SpecialRules: self.Armor /= 2
         round_Stats(self)
     def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
         self.TurretWeapon = TurretList
@@ -277,18 +231,18 @@ class Walker:
         self.Armor = float()
         self.Piercing = float()
     def HOI4_Profil(self):
-        self.HP = self.PC * self.Quantity
-        self.ORG = 10
-        self.SoftMeleeAttack = self.A*SoftAttack_CC_CT[self.CC]*self.Quantity
-        self.HardMeleeAttack = HMA_SMA_prop[self.F]*self.SoftMeleeAttack*HardAttack_CC_CT[self.CC]*self.Quantity
-    # Piercing
-        self.Piercing = self.F + 4
-    # Defense & Breakthrought
-        self.Defense = Defense_F[self.F]*self.Quantity
-        self.Breakthrought = Breakthrought_F[self.F]*self.Quantity
-    # Hardness & Armor
-        self.Armor = np.mean(self.Blind_Av,self.Blind_Side,self.Blind_Arr)
-        self.Hardness = 0.7
+        setHP(self)*self.Quantity
+        setORG(self)
+        setSMA(self)*self.Quantity
+        setHMA(self)*self.Quantity
+        # Hardness & Armor
+        setHardness(self)
+        setArmor(self)
+        # Piercing
+        setPiercing(self)
+        # Defense & Breakthrought
+        setDefense(self)
+        setBreakthrought(self)
     # End
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
