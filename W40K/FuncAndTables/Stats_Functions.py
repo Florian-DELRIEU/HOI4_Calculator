@@ -12,17 +12,17 @@ def setORG(object):
     if type(object) == Infantry:
         ORG = object.Cd*10
     if type(object) == Tank:
-        if object.Type == "SuperHeavy":   ORG = 15
-        elif object.Type == "Artillerie": ORG = 0
-        else:                           ORG = 10
-    if type(object) == Walker:            ORG = 10
-    else:                               ORG = None
+        if object.Type == "SuperHeavy":     ORG = 15
+        elif object.Type == "Artillerie":   ORG = 0
+        else:                               ORG = 10
+    if type(object) == Walker:              ORG = 40
+    else:                                   ORG = None
     object.ORG = ORG
 ########################################################################################################################
 def setSA(object):
     if type(object) == Weapon:
         if object.Type == "Melee":          SA = 0
-        else:                               SA = (np.arctan(object.F/0.5)**6) * 1.2**(object.PA-1)
+        else:                               SA = (np.arctan(object.F/0.5)**6) * 1.2**(5-object.PA)
         SA *= object.Cadence
     else:                                   SA = None
     object.SoftAttack = SA
@@ -80,21 +80,23 @@ def setArmor(object):
 ########################################################################################################################
 def setHardness(object):
     if type(object) == Infantry:
-        if object.Svg == 3:               Hardness = 0.1
-        elif object.Svg == 2:             Hardness = 0.2
-        else:                           Hardness = 0
+        if object.Svg == 3:                         Hardness = 0.1
+        elif object.Svg == 2:                       Hardness = 0.2
+        else:                                       Hardness = 0
     if type(object) == Tank:
-        if   object.Type == "Chariot":    Hardness = 0.80
-        elif object.Type == "Tank":       Hardness = 0.90
-        elif object.Type == "Heavy":      Hardness = 0.95
-        elif object.Type == "SuperHeavy": Hardness = 0.99
-        elif object.Type == "Artillery":  Hardness = 0
-        else:                           Hardness = None
-        if "Oppen-Topped" in object.SpecialRules: Hardness /= 2
-        if object.Hardness <= 0:          Hardness = 0
-        if object.Hardness >= 1:          Hardness = 1
-    if type(object) == Walker:            Hardness = 0.7
-    else:                               Hardness = None
+        if   object.Type == "Chariot":              Hardness = 0.80
+        elif object.Type == "Tank":                 Hardness = 0.90
+        elif object.Type == "Heavy":                Hardness = 0.95
+        elif object.Type == "SuperHeavy":           Hardness = 0.99
+        elif object.Type == "Artillery":            Hardness = 0
+        else:                                       Hardness = None
+        if "Oppen-Topped" in object.SpecialRules:   Hardness /= 2
+        else:                                       Hardness = None
+        if object.Hardness <= 0:                    Hardness = 0
+        elif object.Hardness >= 1:                  Hardness = 1
+        else:                                       Hardness = None
+    if type(object) == Walker:                      Hardness = 0.7
+    else:                                           Hardness = None
     object.Hardness = Hardness
 ########################################################################################################################
 def setPiercing(object):

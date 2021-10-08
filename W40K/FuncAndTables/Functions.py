@@ -112,13 +112,23 @@ def round_Stats(Object):
         try:    Dico[key] = round(Dico[key],2)
         except: pass
 
-def set_Quantity(Object,Quantity):
+def set_Quantity(object,Quantity):
     """
     Modifie la quantité de :Unit: et modifie les stats en fonction
     :param Quantity: Nombre de cette unité
     """
-    Object.Quantity = Quantity
-    Object.HOI4_Profil()
+    previous_Quantity = object.Quantity
+    object.Quantity = Quantity
+    quantity_factor = Quantity/previous_Quantity
+# Add quantity
+    try:    object.HP *= quantity_factor  # si HP est présent
+    except: pass                          # sinon pass
+    object.SoftAttack *= quantity_factor
+    object.HardAttack *= quantity_factor
+    object.SoftMeleeAttack *= quantity_factor
+    object.HardMeleeAttack *= quantity_factor
+    object.Defense *= quantity_factor
+    object.Breakthrought *= quantity_factor
 
 def check_lists(self):
     from W40K.UnitCreator.Class.Weapons import Weapon

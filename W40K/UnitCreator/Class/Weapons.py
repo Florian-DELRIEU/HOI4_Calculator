@@ -1,6 +1,6 @@
 from W40K.FuncAndTables.TableValues import *
 from W40K.FuncAndTables.Stats_Functions import *
-from W40K.FuncAndTables.Functions import setWeaponsBonus, round_Stats
+from W40K.FuncAndTables.Functions import setWeaponsBonus, round_Stats, set_Quantity
 
 class Weapon:
     def __init__(self, F=3, PA=None, Range = 24, Type="Tir rapide", Cadence = 1,Quantity=1,SpecialsRules=[],Name=""):
@@ -53,8 +53,7 @@ class Weapon:
                    self.Piercing)
         print(txt)
     def set_Quantity(self,Quantity):
-        self.Quantity = Quantity
-        self.HOI4_Profil()
+        set_Quantity(self,Quantity)
     def __copy__(self,Quantity):
         NewWeapon = Weapon()
         NewWeapon.F = self.F
@@ -62,9 +61,9 @@ class Weapon:
         NewWeapon.Type = self.Type
         NewWeapon.Range = self.Range
         NewWeapon.Name = self.Name
-        NewWeapon.Quantity = Quantity
         NewWeapon.SpecialsRules = self.SpecialsRules
         NewWeapon.HOI4_Profil()
+        NewWeapon.set_Quantity(Quantity)
         return NewWeapon
 
 

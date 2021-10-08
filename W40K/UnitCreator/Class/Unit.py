@@ -77,8 +77,9 @@ class Infantry:
     def __repr__(self):
         txt = str(self.Quantity) + " " + self.Name
         return txt
-    def set_Quantity(self,Quantity):
-        set_Quantity(self,Quantity)
+
+    def set_Quantity(self, Quantity):
+        set_Quantity(Quantity)
     def __copy__(self,Quantity):
         New = Infantry(CT=self.CT,
                        CC=self.CC,
@@ -94,6 +95,7 @@ class Infantry:
                        Type=self.Type,
                        Quantity=Quantity)
         New.HOI4_Profil()
+        New.set_Quantity(Quantity)
         return New
 
 ########################################################################################################################
@@ -142,7 +144,6 @@ class Tank:
         # Defense & Breakthrought
         setDefense(self)
         setBreakthrought(self)
-
     # Weapons emplacement
         if len(self.HullWeapon) != 0:
             for weapon in self.HullWeapon:
@@ -182,7 +183,8 @@ class Tank:
                    self.SoftMeleeAttack,self.HardMeleeAttack,
                    self.Hardness,self.Armor)
         print(txt)
-    def set_Quantity(self,Quantity): set_Quantity(self,Quantity)
+    def set_Quantity(self,Quantity):
+        set_Quantity(self,Quantity)
     def __copy__(self,Quantity=None):
         if Quantity==None: Quantity = self.Quantity
         New = Tank(CT=self.CT,
@@ -194,6 +196,7 @@ class Tank:
                    Type=self.Type,
                    Quantity=Quantity)
         New.HOI4_Profil()
+        New.set_Quantity(Quantity)
         return New
 
 ########################################################################################################################
@@ -273,4 +276,5 @@ class Walker:
                      Type=self.Type,
                      Quantity=Quantity)
         New.HOI4_Profil()
+        New.set_Quantity(Quantity)
         return New
