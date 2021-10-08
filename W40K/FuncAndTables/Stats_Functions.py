@@ -109,8 +109,20 @@ def setPiercing(object):
     object.Piercing = PRC
 ########################################################################################################################
 def setDefense(object):
-    pass
+    if type(object) == Weapon:
+        DEF = 1.1**(object.F-3) * 1.1**(6-object.PA)
+    elif type(object) == Infantry:
+        DEF = 0.1* 1.1**(object.F - 3)
+    else:
+        DEF = None
+    object.Defense = DEF
 ########################################################################################################################
 def setBreakthrought(object):
-    pass
+    if type(object) == Weapon:
+        BRK = 1.1**(object.F-3) * 1.1**(6-object.PA)
+    elif type(object) == Infantry:
+        BRK = 0.1* 1.1**(object.F - 3)
+    else:
+        BRK = None
+    object.Breakthrought = BRK
 ########################################################################################################################

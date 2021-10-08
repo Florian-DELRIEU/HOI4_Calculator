@@ -45,18 +45,19 @@ class Infantry:
         """
         Determine le profil HOI IV en fonctions des stats W40K
         """
-        self.HP = setHP(self)*self.Quantity
-        self.ORG = setORG(self)
-        self.SoftMeleeAttack = setSMA(self)*self.Quantity
-        self.HardMeleeAttack = setHMA(self)*self.Quantity
-    # Hardness & Armor
-        self.Hardness = setHardness(self)
-        self.Armor = setArmor(self)
-    # Piercing
-        self.Piercing = setPiercing(self)
-    # Defense & Breakthrought
-        self.Defense = setDefense(self)
-        self.Breakthrought = setBreakthrought(self)
+    # Stats
+        setHP(self)
+        setORG(self)
+        setSMA(self)
+        setHMA(self)
+        setHardness(self)
+        setArmor(self)
+        setPiercing(self)
+        setDefense(self)
+        setBreakthrought(self)
+    # Bonus
+        self.Bonus()
+    def Bonus(self):
         setUnitBonus(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
@@ -79,7 +80,7 @@ class Infantry:
         return txt
 
     def set_Quantity(self, Quantity):
-        set_Quantity(Quantity)
+        setQuantity(Quantity)
     def __copy__(self,Quantity):
         New = Infantry(CT=self.CT,
                        CC=self.CC,
@@ -185,7 +186,7 @@ class Tank:
                    self.Hardness,self.Armor)
         print(txt)
     def set_Quantity(self,Quantity):
-        set_Quantity(self,Quantity)
+        setQuantity(self, Quantity)
     def __copy__(self,Quantity=None):
         if Quantity==None: Quantity = self.Quantity
         New = Tank(CT=self.CT,
@@ -264,7 +265,7 @@ class Walker:
                    self.Hardness,self.Armor)
         print(txt)
     def set_Quantity(self,Quantity):
-        set_Quantity(self,Quantity)
+        setQuantity(self, Quantity)
     def __copy__(self,Quantity):
         New = Walker(CT=self.CT,
                      CC=self.CC,

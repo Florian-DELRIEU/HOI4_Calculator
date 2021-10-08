@@ -1,3 +1,6 @@
+from W40K.UnitCreator.Class.Unit import Infantry,Tank,Walker
+from W40K.UnitCreator.Class.Weapons import Weapon
+
 def setWeaponsBonus(Object):
     """
     Verifie les règles spéciales des :class Weapons: pour ajouté les bonus
@@ -101,7 +104,6 @@ def setUpgradeBonus(company):
     company.Breakthrought = company.Breakthrought*Breakthrought_Bonus
 
 def setUnitBonus(unit):
-    #assert type(unit) == Unit
     for rule in unit.SpecialRules:
         if rule == "Astartes":
             unit.ORG *= 1.2
@@ -112,7 +114,7 @@ def round_Stats(Object):
         try:    Dico[key] = round(Dico[key],2)
         except: pass
 
-def set_Quantity(object,Quantity):
+def setQuantity(object, Quantity):
     """
     Modifie la quantité de :Unit: et modifie les stats en fonction
     :param Quantity: Nombre de cette unité
