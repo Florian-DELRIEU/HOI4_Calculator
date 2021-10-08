@@ -145,6 +145,13 @@ class Tank:
         setDefense(self)
         setBreakthrought(self)
     # Weapons emplacement
+        round_Stats(self)
+    def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
+        self.TurretWeapon = TurretList
+        self.SideWeapon = SideList
+        self.HullWeapon = HullList
+        self._setWeapons()
+    def _setWeapons(self):
         if len(self.HullWeapon) != 0:
             for weapon in self.HullWeapon:
                 weapon.SoftAttack *= 0.33
@@ -161,12 +168,6 @@ class Tank:
         self.HardAttack = np.sum([el.HardAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Defense = np.sum([el.Defense for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Breakthrought = np.sum([el.Breakthrought for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
-        round_Stats(self)
-    def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
-        self.TurretWeapon = TurretList
-        self.SideWeapon = SideList
-        self.HullWeapon = HullList
-        self.HOI4_Profil()
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
