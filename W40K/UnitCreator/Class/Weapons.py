@@ -1,4 +1,5 @@
 from W40K.FuncAndTables.TableValues import *
+from W40K.FuncAndTables.Stats_Functions import *
 from W40K.FuncAndTables.Functions import setWeaponsBonus, round_Stats
 
 class Weapon:
@@ -25,23 +26,15 @@ class Weapon:
         txt = str(self.Quantity) + " " + self.Name
         return txt
     def HOI4_Profil(self):
-        if self.Type == "Melee":
-            self.SoftMeleeAttack , self.HardMeleeAttack = SoftMeleeAttack_F[self.F] , HardMeleeAttack_F[self.F]
-            self.SoftAttack , self.HardAttack = 0 , 0
-            self.Range = None
-        else:
-            self.SoftMeleeAttack, self.HardMeleeAttack = 0, 0
-            self.SoftAttack = SoftAttack_F[self.F]*SoftAttack_PA[self.PA] *self.Quantity
-            self.HardAttack = HardAttack_F[self.F]*HardAttack_PA[self.PA] *self.Quantity
-        self.Defense = Defense_F[self.F]*Defense_PA[self.PA] *self.Quantity
-        self.Breakthrought = Breakthrought_F[self.F]*Breakthrought_PA[self.PA] *self.Quantity
     # Cadence
-        if self.Type == "Tir Rapide":
-            self.Cadence = 2
-    # Piercing
-        self.Piercing = self.F + 4
-        if self.PA == 2 : self.Piercing += 1
-        elif self.PA == 1 : self.Piercing += 2
+        if self.Type == "Tir Rapide":self.Cadence = 2
+        setSA(self)
+        setHA(self)
+        setSMA(self)
+        setHMA(self)
+        setDefense(self)
+        setBreakthrought(self)
+        setPiercing(self)
     # End
         self.Bonus()
         round_Stats(self)
