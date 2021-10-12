@@ -101,12 +101,12 @@ def setHardness(object):
     object.Hardness = Hardness
 ########################################################################################################################
 def setPiercing(object):
-    PRC = object.F+4
     if object.Class == "Weapon":
+        PRC = object.F+4
         if object.PA == 2:      PRC += 1
         elif object.PA == 1:    PRC += 2
         else:                   pass
-    else:                       pass
+    else:                       PRC = 0
     object.Piercing = PRC
 ########################################################################################################################
 def setDefense(object):

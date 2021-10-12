@@ -81,7 +81,7 @@ class Infantry:
         return txt
 
     def set_Quantity(self, Quantity):
-        setQuantity(Quantity)
+        setQuantity(self,Quantity)
     def __copy__(self,Quantity):
         New = Infantry(CT=self.CT,
                        CC=self.CC,
@@ -135,10 +135,10 @@ class Tank:
         self.Piercing = float()
         self.HOI4_Profil()
     def HOI4_Profil(self):
-        setHP(self)*self.Quantity
+        setHP(self)
         setORG(self)
-        setSMA(self)*self.Quantity
-        setHMA(self)*self.Quantity
+        setSMA(self)
+        setHMA(self)
         # Hardness & Armor
         setHardness(self)
         setArmor(self)
