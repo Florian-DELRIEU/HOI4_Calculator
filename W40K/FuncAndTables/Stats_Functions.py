@@ -3,7 +3,7 @@ import numpy as np
 def setHP(object):
     if object.Class == "Infantry":  HP = object.PV * 1.5**(object.E-3)
     elif object.Class == "Tank":    HP = object.PC
-    else:                       HP = None
+    else:                       return AttributeError ,"object.Class not found"
     object.HP = HP
 ########################################################################################################################
 def setORG(object):
@@ -13,8 +13,8 @@ def setORG(object):
         if object.Type == "SuperHeavy":     ORG = 15
         elif object.Type == "Artillerie":   ORG = 0
         else:                               ORG = 10
-    if object.Class == "Walker":              ORG = 40
-    else:                                   ORG = None
+    if object.Class == "Walker":            ORG = 40
+    else:                                   return AttributeError ,"object.Type not found"
     object.ORG = ORG
 ########################################################################################################################
 def setSA(object):
@@ -22,7 +22,7 @@ def setSA(object):
         if object.Type == "Melee":          SA = 0
         else:                               SA = (np.arctan(object.F/0.5)**6) * 1.2**(5-object.PA)
         SA *= object.Cadence
-    else:                                   SA = None
+    else:                                   return AttributeError ,"object.Type not found"
     object.SoftAttack = SA
 ########################################################################################################################
 def setHA(object):
@@ -30,7 +30,7 @@ def setHA(object):
         if object.Type == "Melee":          HA = 0
         else:                               HA = np.exp(object.F/2)/10 * ((1/object.PA**3)*216)**0.3
         HA *= object.Cadence
-    else:                                   HA = None
+    else:                                   return AttributeError ,"object.Type not found"
     object.HardAttack = HA
 ########################################################################################################################
 def setSMA(object):
@@ -41,11 +41,11 @@ def setSMA(object):
         elif object.Type == "Heavy":        SMA = 0.5
         elif object.Type == "SuperHeavy":   SMA = 0.6
         elif object.Type == "Artillery":    SMA = 0
-        else:                               SMA = None
+        else:                               return AttributeError ,"object.Type not found"
     elif object.Class == "Weapon":
         if object.Type == "Melee":          SMA = np.arctan(object.F/0.5)**6
         else:                               SMA = 0
-    else:                                   SMA = None
+    else:                                   return AttributeError ,"object.Class not found"
     object.SoftMeleeAttack = SMA
 ########################################################################################################################
 def setHMA(object):
@@ -57,11 +57,11 @@ def setHMA(object):
         elif object.Type == "Heavy":        HMA = 0.2
         elif object.Type == "SuperHeavy":   HMA = 0.4
         elif object.Type == "Artillery":    HMA = 0
-        else:                               HMA = None
+        else:                               return AttributeError ,"object.Type not found"
     elif object.Class == "Weapon":
         if object.Type == "Melee":          HMA = np.exp(object.F/2)/10
         else:                               HMA = 0
-    else:                                   HMA = None
+    else:                                   return AttributeError ,"object.Class not found"
     object.HardMeleeAttack = HMA
 ########################################################################################################################
 def setArmor(object):
@@ -73,28 +73,31 @@ def setArmor(object):
     elif object.Class == "Tank" or "Walker":
         Armor = np.mean((object.Blind_Av, object.Blind_Side, object.Blind_Arr))
         if "Oppen-Topped" in object.SpecialRules: Armor /= 2
-    else:                   Armor = None
+    else:                   return AttributeError ,"object.Class not found"
     object.Armor = Armor
 ########################################################################################################################
 def setHardness(object):
+# check class
     if object.Class == "Infantry":
         if object.Svg == 3:                         Hardness = 0.1
         elif object.Svg == 2:                       Hardness = 0.2
         else:                                       Hardness = 0
-    if object.Class == "Tank":
+    elif object.Class == "Tank":
         if   object.Type == "Chariot":              Hardness = 0.80
         elif object.Type == "Tank":                 Hardness = 0.90
         elif object.Type == "Heavy":                Hardness = 0.95
         elif object.Type == "SuperHeavy":           Hardness = 0.99
         elif object.Type == "Artillery":            Hardness = 0
-        else:                                       Hardness = None
-        if "Oppen-Topped" in object.SpecialRules:   Hardness /= 2
-        else:                                       Hardness = None
-        if object.Hardness <= 0:                    Hardness = 0
-        elif object.Hardness >= 1:                  Hardness = 1
-        else:                                       Hardness = None
-    if object.Class == "Walker":                      Hardness = 0.7
-    else:                                           Hardness = None
+        else:                                       return AttributeError ,"object.Type not found"
+    elif object.Class == "Walker":                  Hardness = 0.7
+    else:                                           return AttributeError ,"object.Class not found"
+# check rules
+    if "Oppen-Topped" in object.SpecialRules:   Hardness /= 2
+    else:                                       pass
+# check hardness out of bounds
+    if object.Hardness <= 0:                    Hardness = 0
+    elif object.Hardness >= 1:                  Hardness = 1
+    else:                                       pass
     object.Hardness = Hardness
 ########################################################################################################################
 def setPiercing(object):
@@ -112,7 +115,7 @@ def setDefense(object):
     elif object.Class == "Infantry":
         DEF = 0.1* 1.1**(object.F - 3)
     else:
-        DEF = None
+        return AttributeError ,"object.Class not found"
     object.Defense = DEF
 ########################################################################################################################
 def setBreakthrought(object):
@@ -121,6 +124,6 @@ def setBreakthrought(object):
     elif object.Class == "Infantry":
         BRK = 0.1* 1.1**(object.F - 3)
     else:
-        BRK = None
+        return AttributeError ,"object.Class not found"
     object.Breakthrought = BRK
 ########################################################################################################################
