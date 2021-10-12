@@ -15,6 +15,7 @@ class Infantry:
         Default is Guardsman
         """
         self.Quantity = Quantity
+        self.Class = "Infantry"
     # W40K Stats
         self.CC = CC
         self.CT = CT
@@ -108,6 +109,7 @@ class Tank:
         Default is Leman Russ battle tank
         """
         self.Quantity = Quantity
+        self.Class = "Tank"
     # W40K Stats
         self.CT = CT
         self.Blind_Av = Blind_Av
@@ -211,6 +213,7 @@ class Walker:
         Default is Sentinel
         """
         self.Quantity = Quantity
+        self.Class = "Walker"
     # W40K Stats
         self.CC = CC
         self.CT = CT

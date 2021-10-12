@@ -4,6 +4,7 @@ from W40K.FuncAndTables.Functions import *
 class Weapon:
     def __init__(self, F=3, PA=None, Range = 24, Type="Tir rapide", Cadence = 1,Quantity=1,SpecialsRules=[],Name=""):
         self.Quantity = Quantity
+        self.Class = "Weapons"
     # Profils W40K
         self.F = F
         self.PA = PA
