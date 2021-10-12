@@ -1,6 +1,3 @@
-from W40K.UnitCreator.Class.Unit import Infantry,Tank,Walker
-from W40K.UnitCreator.Class.Weapons import Weapon
-
 def setWeaponsBonus(Object):
     """
     Verifie les règles spéciales des :class Weapons: pour ajouté les bonus
