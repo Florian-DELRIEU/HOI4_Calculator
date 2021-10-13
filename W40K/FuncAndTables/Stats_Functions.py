@@ -1,4 +1,5 @@
 import numpy as np
+from MyPack.Utilities import truncDecimal
 ########################################################################################################################
 def setHP(object):
     if object.Class == "Infantry":  HP = object.PV * 1.5**(object.E-3)
@@ -20,15 +21,20 @@ def setORG(object):
 def setSA(object):
     if object.Class == "Weapon":
         if object.Type == "Melee":          SA = 0
-        else:                               SA = (np.arctan(object.F/0.5)**6) * 1.2**(5-object.PA)
+        else:                               SA = (np.arctan(object.F/0.5)**6)
+        try:                                SA *= 1.2**(5-object.PA)
+        except:                             pass
         SA *= object.Cadence
     else:                                   return AttributeError ,"object.Type not found"
-    object.SoftAttack = SA
+    object.SoftAttack = truncDecimal(SA,2)
 ########################################################################################################################
 def setHA(object):
     if object.Class == "Weapon":
         if object.Type == "Melee":          HA = 0
-        else:                               HA = np.exp(object.F/2)/10 * ((1/object.PA**3)*216)**0.3
+        elif object.F > 3:                  HA = np.exp(object.F/2)/10
+        else:                               HA = 0
+        try:                                HA *= ((1/object.PA**3)*216)**0.3
+        except:                             pass
         HA *= object.Cadence
     else:                                   return AttributeError ,"object.Type not found"
     object.HardAttack = HA
@@ -111,7 +117,9 @@ def setPiercing(object):
 ########################################################################################################################
 def setDefense(object):
     if object.Class == "Weapon":
-        DEF = 1.1**(object.F-3) * 1.1**(6-object.PA)
+        DEF = 1.1**(object.F-3)
+        try:    DEF *= 1.1**(6-object.PA)
+        except: pass
     elif object.Class == "Infantry":
         DEF = 0.1* 1.1**(object.F - 3)
     else:
@@ -120,7 +128,9 @@ def setDefense(object):
 ########################################################################################################################
 def setBreakthrought(object):
     if object.Class == "Weapon":
-        BRK = 1.1**(object.F-3) * 1.1**(6-object.PA)
+        BRK = 1.1**(object.F-3)
+        try:    BRK *= 1.1**(6-object.PA)
+        except: pass
     elif object.Class == "Infantry":
         BRK = 0.1* 1.1**(object.F - 3)
     else:

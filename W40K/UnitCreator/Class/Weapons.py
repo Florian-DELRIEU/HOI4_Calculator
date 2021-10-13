@@ -4,7 +4,7 @@ from W40K.FuncAndTables.Functions import *
 class Weapon:
     def __init__(self, F=3, PA=None, Range = 24, Type="Tir rapide", Cadence = 1,Quantity=1,SpecialsRules=[],Name=""):
         self.Quantity = Quantity
-        self.Class = "Weapons"
+        self.Class = "Weapon"
     # Profils W40K
         self.F = F
         self.PA = PA
@@ -27,7 +27,7 @@ class Weapon:
         return txt
     def HOI4_Profil(self):
     # Cadence
-        if self.Type == "Tir Rapide":self.Cadence = 2
+        if self.Type == "Tir rapide":self.Cadence = 2
         setSA(self)
         setHA(self)
         setSMA(self)

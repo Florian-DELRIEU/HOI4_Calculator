@@ -26,15 +26,12 @@ def setWeaponsBonus(Object):
             Object.SoftAttack *= 0
         if rule == "Fusion":
             Object.HardAttack *= 1.5
-# Weapons Cadence
-    Object.SoftAttack *= Object.Cadence
-    Object.HardAttack *= Object.Cadence
 # Weapons type
     if Object.Type == "Lourde":
         Object.Defense *= 1.2
     if Object.Type == "Assaut":
         Object.Breakthrought *= 1.2
-    if Object.Type == "Tir Rapide": pass
+    if Object.Type == "Tir rapide": pass
     if Object.Type == "Salve":
         Object.Defense *= 1.1
         Object.Breakthrought = 1.1
@@ -47,27 +44,27 @@ def setWeaponsBonus(Object):
         Object.HardAttack *= 0.4
         Object.Defense *= 0.4
         Object.Breakthrought *= 0.4
-    elif 8 < Object.Range >= 18:
+    elif 8 < Object.Range <= 18:
         Object.SoftAttack *= 0.6
         Object.HardAttack *= 0.6
         Object.Defense *= 0.6
         Object.Breakthrought *= 0.6
-    elif 18 < Object.Range >= 24:
+    elif 18 < Object.Range <= 24:
         Object.SoftAttack *= 0.8
         Object.HardAttack *= 0.8
         Object.Defense *= 0.8
         Object.Breakthrought *= 0.8
-    elif 24 < Object.Range >= 30:
+    elif 24 < Object.Range <= 30:
         Object.SoftAttack *= 1.2
         Object.HardAttack *= 1.2
         Object.Defense *= 1.2
         Object.Breakthrought *= 1.2
-    elif 30 < Object.Range >= 36:
+    elif 30 < Object.Range <= 36:
         Object.SoftAttack *= 1.4
         Object.HardAttack *= 1.4
         Object.Defense *= 1.4
         Object.Breakthrought *= 1.4
-    elif 36 < Object.Range >= 48:
+    elif 36 < Object.Range <= 48:
         Object.SoftAttack *= 1.4
         Object.HardAttack *= 1.4
         Object.Defense *= 1.4
