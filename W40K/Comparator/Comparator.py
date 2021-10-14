@@ -1,7 +1,7 @@
 from MyPack.Convert import Csv2Dict
 from MyPack.Math import divide
-from W40K.LandBattles.Company import Company
-from W40K.UnitCreator.Class.Unit import Infantry,Tank,Walker
+from W40K.Class.Company import Company
+from W40K.Class.Unit import Infantry,Tank,Walker
 
 def Extract_Company(Comp_name=str()):
     DATA = Csv2Dict("SaveCompanies.csv")

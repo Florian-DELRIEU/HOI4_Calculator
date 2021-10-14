@@ -1,5 +1,5 @@
-from W40K.UnitCreator.Unit_list import *
-from W40K.LandBattles.Company import Company
+from W40K.Lists.Unit_list import *
+from W40K.Class.Company import Company
 
 Guardsmens_100A = Company(Unit=         Gardes.__copy__(100),
                           Equipement=[  Lasgun.__copy__(100),

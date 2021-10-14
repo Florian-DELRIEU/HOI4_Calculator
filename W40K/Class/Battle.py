@@ -1,6 +1,6 @@
-from W40K.FuncAndTables.Functions import round_Stats
-from W40K.LandBattles.Company import Regiment
-from W40K.LandBattles.Tactics.Tactics_func import *
+from W40K.Functions.Functions import round_Stats
+from W40K.Class.Company import Regiment
+from W40K.Functions.Tactics_func import *
 from MyPack.Utilities import AskUser
 
 class Battle:

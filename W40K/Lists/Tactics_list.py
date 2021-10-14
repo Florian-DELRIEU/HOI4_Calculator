@@ -1,4 +1,4 @@
-from W40K.LandBattles.Tactics.Tactics_class import Tactic
+from W40K.Class.Tactics_class import Tactic
 
 ## ATTACKS
 ATK_tactics = [

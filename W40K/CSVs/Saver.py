@@ -2,12 +2,12 @@
 Extraits les :class Unit et Weapons: depuis le fichier :Unit_list: pour sauvegarder leurs profil HOI IV dans deux fichiers CSV distincs 
 """
 from MyPack.Convert import Dict2CSV
-import W40K.LandBattles.Companies_list as CompanyList
-import W40K.UnitCreator.Unit_list as UnitsWeapons_List
-from W40K.UnitCreator.Class.Unit import Infantry,Tank,Walker
-from W40K.UnitCreator.Class.Weapons import Weapon
-from W40K.LandBattles.Company import Company
-from W40K.FuncAndTables.Functions import round_Stats
+import W40K.Lists.Companies_list as CompanyList
+import W40K.Lists.Unit_list as UnitsWeapons_List
+from W40K.Class.Unit import Infantry,Tank,Walker
+from W40K.Class.Weapons import Weapon
+from W40K.Class.Company import Company
+from W40K.Functions.Functions import round_Stats
 
 
 DICO_1A = UnitsWeapons_List.__dict__    # toutes les variables et classes de main dans un dico
@@ -33,7 +33,7 @@ for key in DICO_1B.keys():
         DICO_2C[key] = DICO_1B[key]
 del DICO_1A , DICO_1B
 
-# Saves UNITS
+# CSVs UNITS
 fisrt_column_A = ["HP","ORG","SoftAttack","HardAttack","SoftMeleeAttack","HardMeleeAttack","Defense",
             "Breakthrought","Armor","Piercing","Hardness"]
 DICO_3A["Units"] = fisrt_column_A
@@ -45,7 +45,7 @@ for key in DICO_2A.keys():
     round_Stats(cur)
     DICO_3A[key] = cur_list
 
-# Saves WEAPONS
+# CSVs WEAPONS
 fisrt_column_B = ["SoftAttack","HardAttack","SoftMeleeAttack","HardMeleeAttack","Defense",
             "Breakthrought"]
 DICO_3B["Weapons"] = fisrt_column_B
@@ -57,7 +57,7 @@ for key in DICO_2B.keys():
     round_Stats(cur)
     DICO_3B[key] = cur_list
 
-# Saves COMPANIES
+# CSVs COMPANIES
 fisrt_column_C = ["HP","ORG","SoftAttack","HardAttack","SoftMeleeAttack","HardMeleeAttack","Defense",
             "Breakthrought","Armor","Piercing","Hardness"]
 DICO_3C["Companies"] = fisrt_column_C

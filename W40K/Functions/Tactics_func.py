@@ -1,8 +1,8 @@
-from W40K.LandBattles.Tactics.Tactics_list import Tactic
+from W40K.Lists.Tactics_list import Tactic
 import random as rd
 import numpy as np
-from  W40K.LandBattles.Tactics.Tactics_list import ATK_tactics, ATK_HB_tactics, ATK_CQ_tactics, ATK_SB_tactics, ATK_TW_tactics
-from  W40K.LandBattles.Tactics.Tactics_list import DEF_tactics, DEF_HB_tactics, DEF_CQ_tactics, DEF_SB_tactics, DEF_TW_tactics
+from  W40K.Lists.Tactics_list import ATK_tactics, ATK_HB_tactics, ATK_CQ_tactics, ATK_SB_tactics, ATK_TW_tactics
+from  W40K.Lists.Tactics_list import DEF_tactics, DEF_HB_tactics, DEF_CQ_tactics, DEF_SB_tactics, DEF_TW_tactics
 
 
 ########################################################################################################################

@@ -1,0 +1,7 @@
+Weapons,Lasgun,Bolter,MeltaGun,PlasmaGun,KrakGrenades,FragGrenades,BolterLD,CanonLaser,Earthshaker,Obusier,Autocanon
+SoftAttack,12.34,14.65,14.65,31.42,0.0,3.39,0.11496546608949237,35.14,31.37,30.51,38.19
+HardAttack,0.0,1.39,24.65,14.24,1.16,0.0,0.01658437042629788,63.21,17.64,10.7,13.36
+SoftMeleeAttack,0,0,0,0,0,0,0,0,0,0,0
+HardMeleeAttack,0,0,0,0,0,0,0,0,0,0,0
+Defense,0.8,0.97,1.56,1.71,0.64,0.4,0.005535624321396578,4.79,2.36,2.14,2.98
+Breakthrought,0.8,0.97,1.87,1.71,0.77,0.48,0.004613020267830481,3.99,2.36,2.14,2.48

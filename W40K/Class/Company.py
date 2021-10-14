@@ -1,6 +1,6 @@
 from MyPack.Utilities import *
-from W40K.FuncAndTables.Functions import *
-from W40K.FuncAndTables.TableValues import *
+from W40K.Functions.Functions import *
+from W40K.Functions.TableValues import *
 
 class Company:
     def __init__(self,Unit=None,Equipement=[]):
