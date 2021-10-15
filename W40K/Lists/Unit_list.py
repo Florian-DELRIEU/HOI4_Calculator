@@ -18,18 +18,22 @@ Earthshaker = Weapon(9,3,Type="Ordnance",Range=240,SpecialsRules=["Barrage","Bla
 Obusier = Weapon(8,3,Range=72,Type="Ordnance",Cadence=1,SpecialsRules=["Blast 5'"],Name="Obusier")
 Autocanon = Weapon(7,4,Range=48,Type="Lourde",Cadence=2,SpecialsRules=[],Name="Autocanon")
 
+# CAC weapons
+Astartes_CCW = Weapon(4,None,None,"Melee",Name="Astartes Knife")
+Bayonet = Weapon(3,None,None,"Melee",Name="Lasgun bayonet")
+
 # Vehicules and Artillerie
 LemanRuss_A = Tank(3,14,12,10,3,Type="Heavy").setWeapons(
-    TurretList=[Obusier],
-    HullList=[BolterLD],
-    SideList=[BolterLD,BolterLD])
+    TurretList=[Obusier.__copy__(1)],
+    HullList=[BolterLD.__copy__(1)],
+    SideList=[BolterLD.__copy__(2)])
 Predator_A = Tank(4,13,11,10,3,Quantity=1,Type="Tank").setWeapons(
-    TurretList=[Autocanon],
-    HullList=[BolterLD],
-    SideList=[BolterLD,BolterLD])
+    TurretList=[Autocanon.__copy__(1)],
+    HullList=[BolterLD.__copy__(1)],
+    SideList=[BolterLD.__copy__(2)])
 Basilisk = Tank(3,12,10,10,3,Type="Tank").setWeapons(
-    TurretList=[Earthshaker],
-    HullList=[BolterLD],)
+    TurretList=[Earthshaker.__copy__(1)],
+    HullList=[BolterLD.__copy__(1)],)
 Field_Earthshaker = Tank(3,11,11,11,3,Type="Tank").setWeapons(
-    TurretList=[Earthshaker],
-    HullList=[BolterLD],)
+    TurretList=[Earthshaker.__copy__(1)],
+    HullList=[BolterLD.__copy__(1)])

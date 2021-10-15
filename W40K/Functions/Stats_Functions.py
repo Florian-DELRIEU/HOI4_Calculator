@@ -10,18 +10,18 @@ def setHP(object):
 def setORG(object):
     if object.Class == "Infantry":
         ORG = object.Cd*10
-    if object.Class == "Tank":
+    elif object.Class == "Tank":
         if object.Type == "SuperHeavy":     ORG = 15
         elif object.Type == "Artillerie":   ORG = 0
         else:                               ORG = 10
-    if object.Class == "Walker":            ORG = 40
+    elif object.Class == "Walker":            ORG = 40
     else:                                   return AttributeError ,"object.Type not found"
     object.ORG = ORG
 ########################################################################################################################
 def setSA(object):
     if object.Class == "Weapon":
         if object.Type == "Melee":          SA = 0
-        else:                               SA = (np.arctan(object.F/0.5)**6)
+        else:                               SA = (np.arctan(object.F/0.5)**6) /10
         try:                                SA *= 1.2**(5-object.PA)
         except:                             pass
         SA *= object.Cadence
@@ -31,7 +31,7 @@ def setSA(object):
 def setHA(object):
     if object.Class == "Weapon":
         if object.Type == "Melee":          HA = 0
-        elif object.F > 3:                  HA = np.exp(object.F/2)/10
+        elif object.F > 3:                  HA = np.exp(object.F/2) /100
         else:                               HA = 0
         try:                                HA *= ((1/object.PA**3)*216)**0.3
         except:                             pass
@@ -49,7 +49,7 @@ def setSMA(object):
         elif object.Type == "Artillery":    SMA = 0
         else:                               return AttributeError ,"object.Type not found"
     elif object.Class == "Weapon":
-        if object.Type == "Melee":          SMA = np.arctan(object.F/0.5)**6
+        if object.Type == "Melee":          SMA = np.arctan(object.F/0.5)**6 /10
         else:                               SMA = 0
     else:                                   return AttributeError ,"object.Class not found"
     object.SoftMeleeAttack = SMA
@@ -65,7 +65,7 @@ def setHMA(object):
         elif object.Type == "Artillery":    HMA = 0
         else:                               return AttributeError ,"object.Type not found"
     elif object.Class == "Weapon":
-        if object.Type == "Melee":          HMA = np.exp(object.F/2)/10
+        if object.Type == "Melee":          HMA = np.exp(object.F/2) /100
         else:                               HMA = 0
     else:                                   return AttributeError ,"object.Class not found"
     object.HardMeleeAttack = HMA

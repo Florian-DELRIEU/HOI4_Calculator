@@ -39,7 +39,7 @@ def setWeaponsBonus(Object):
         Object.SoftAttack *= 1.5
 # Weapon Range
     if Object.Range == (0 or None): pass # melee weapons
-    if Object.Range <= 8:
+    elif Object.Range <= 8:
         Object.SoftAttack *= 0.4
         Object.HardAttack *= 0.4
         Object.Defense *= 0.4

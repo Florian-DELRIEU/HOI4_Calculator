@@ -95,7 +95,7 @@ class Infantry:
                        Name=self.Name,
                        SpecialRules=self.SpecialRules,
                        Type=self.Type,
-                       Quantity=Quantity)
+                       Quantity=1)
         New.HOI4_Profil()
         New.set_Quantity(Quantity)
         return New
