@@ -71,7 +71,7 @@ def setWeaponsBonus(Object):
         Object.Breakthrought *= 1.4
 
 def setUpgradeBonus(company):
-    from W40K.LandBattles.Company import Company
+    from W40K.Class.Company import Company
     assert type(company) == Company, "Argument must be a company"
 # Coefs des bonus à 1 de base
     SoftAttack_Bonus = 1
@@ -127,7 +127,7 @@ def setQuantity(object, Quantity):
     object.Breakthrought *= quantity_factor
 
 def check_lists(self):
-    from W40K.UnitCreator.Class.Weapons import Weapon
+    from W40K.Class.Weapons import Weapon
     for el in self.Equipement:
         assert type(el) is Weapon , "Each element of Equipement list must be a :Weapon class:"
 
