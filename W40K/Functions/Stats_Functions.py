@@ -1,5 +1,6 @@
 import numpy as np
 from MyPack.Utilities import truncDecimal
+
 ########################################################################################################################
 def setHP(object):
     if object.Class == "Infantry":  HP = object.PV * 1.5**(object.E-3)
@@ -55,7 +56,7 @@ def setSMA(object):
     object.SoftMeleeAttack = SMA
 ########################################################################################################################
 def setHMA(object):
-    if object.Class == "Infantry" and object.F >= 3:
+    if object.Class == "Infantry" and object.F >= 4:
                                             HMA = object.SoftMeleeAttack*1.6**(object.F-4)
     elif object.Class == "Tank":
         if object.Type == "Chariot":        HMA = 0
@@ -64,7 +65,7 @@ def setHMA(object):
         elif object.Type == "SuperHeavy":   HMA = 0.4
         elif object.Type == "Artillery":    HMA = 0
         else:                               return AttributeError ,"object.Type not found"
-    elif object.Class == "Weapon":
+    elif object.Class == "Weapon" and object.F >= 4:
         if object.Type == "Melee":          HMA = np.exp(object.F/2) /100
         else:                               HMA = 0
     else:                                   return AttributeError ,"object.Class not found"
@@ -136,4 +137,3 @@ def setBreakthrought(object):
     else:
         return AttributeError ,"object.Class not found"
     object.Breakthrought = BRK
-########################################################################################################################
