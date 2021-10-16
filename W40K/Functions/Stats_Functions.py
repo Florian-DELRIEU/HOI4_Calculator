@@ -6,7 +6,7 @@ def setHP(object):
     if object.Class == "Infantry":  HP = object.PV * 1.5**(object.E-3)
     elif object.Class == "Tank":    HP = object.PC
     else:                       return AttributeError ,"object.Class not found"
-    object.HP = HP
+    object.HP = HP/4
 ########################################################################################################################
 def setORG(object):
     if object.Class == "Infantry":
@@ -27,7 +27,7 @@ def setSA(object):
         except:                             pass
         SA *= object.Cadence
     else:                                   return AttributeError ,"object.Type not found"
-    object.SoftAttack = truncDecimal(SA,2)
+    object.SoftAttack = truncDecimal(SA,2)/10
 ########################################################################################################################
 def setHA(object):
     if object.Class == "Weapon":
@@ -38,7 +38,7 @@ def setHA(object):
         except:                             pass
         HA *= object.Cadence
     else:                                   return AttributeError ,"object.Type not found"
-    object.HardAttack = HA
+    object.HardAttack = HA/10
 ########################################################################################################################
 def setSMA(object):
     if object.Class == "Infantry":            SMA = (object.A/10)*1.3**(object.CC-3)
@@ -53,7 +53,7 @@ def setSMA(object):
         if object.Type == "Melee":          SMA = np.arctan(object.F/0.5)**6 /10
         else:                               SMA = 0
     else:                                   return AttributeError ,"object.Class not found"
-    object.SoftMeleeAttack = SMA
+    object.SoftMeleeAttack = SMA/10
 ########################################################################################################################
 def setHMA(object):
     if object.Class == "Infantry" and object.F >= 4:
@@ -71,7 +71,7 @@ def setHMA(object):
                                             HMA = np.exp(object.F/2)/100
         else:                               HMA = 0
     else:                                   return AttributeError ,"object.Class not found"
-    object.HardMeleeAttack = HMA
+    object.HardMeleeAttack = HMA/10
 ########################################################################################################################
 def setArmor(object):
     if object.Class == "Infantry":
@@ -127,7 +127,7 @@ def setDefense(object):
         DEF = 0.1* 1.1**(object.F - 3)
     else:
         return AttributeError ,"object.Class not found"
-    object.Defense = DEF
+    object.Defense = DEF/10
 ########################################################################################################################
 def setBreakthrought(object):
     if object.Class == "Weapon":
@@ -138,7 +138,7 @@ def setBreakthrought(object):
         BRK = 0.1* 1.1**(object.F - 3)
     else:
         return AttributeError ,"object.Class not found"
-    object.Breakthrought = BRK
+    object.Breakthrought = BRK/10
 ########################################################################################################################
 def bonus_CC(object):
     CC = object.Unit.CC

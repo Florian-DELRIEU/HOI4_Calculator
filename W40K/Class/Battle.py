@@ -61,14 +61,14 @@ class Battle:
         """
         txt = """----------- round {} -----------------""".format(self.roundCounter)
         if self.roundCounter%12 == 0:
-            previous_CAC_level = self.CAC_limit
+            previous_CAC_limit = self.CAC_limit
             choose_Tactics(self)
             if Loglevel:
                 txt += "\nNew tactics / Battle phase: {}".format(self.Phase)
                 txt += "\n- {} choose {} tactic".format(self.ATK.Name,self.ATK_Tactic)
                 txt += "\n- {} choose {} tactic".format(self.DEF.Name,self.DEF_Tactic)
                 txt += "\n"
-                txt += "\nOld CAC limit = {}".format(previous_CAC_level)
+                txt += "\nOld CAC limit = {}".format(previous_CAC_limit)
         update_CAC(self)
         if self.roundCounter%12 == 0 and Loglevel:
             txt += "\n- Cac changes by ATK = {}".format(self.ATK_Tactic.CAC)

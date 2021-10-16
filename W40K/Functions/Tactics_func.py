@@ -1,6 +1,7 @@
 from W40K.Lists.Tactics_list import Tactic
 import random as rd
 import numpy as np
+from MyPack.Utilities import truncDecimal
 from  W40K.Lists.Tactics_list import ATK_tactics, ATK_HB_tactics, ATK_CQ_tactics, ATK_SB_tactics, ATK_TW_tactics
 from  W40K.Lists.Tactics_list import DEF_tactics, DEF_HB_tactics, DEF_CQ_tactics, DEF_SB_tactics, DEF_TW_tactics
 
@@ -143,7 +144,7 @@ def update_CAC(Battle):
     CAC_current = Battle.CAC_level
     CAC_limit = Battle.CAC_limit
     CAC_drift = (CAC_limit - CAC_current) / 10
-    Battle.CAC_level = round(CAC_current + CAC_drift)
+    Battle.CAC_level += CAC_drift
     if Battle.CAC_level < 0: Battle.CAC_level = 0
     elif Battle.CAC_level > 1: Battle.CAC_level = 1
 
