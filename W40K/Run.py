@@ -1,6 +1,6 @@
-from W40K.LandBattles.Companies_list import *
-from W40K.LandBattles.Company import Regiment
-from W40K.LandBattles.Battle import Battle
+from W40K.Lists.Companies_list import *
+from W40K.Class.Regiment import Regiment
+from W40K.Class.Battle import Battle
 
 RegA = Regiment(Name = "101st Regiment",
                 CompagnieList = [
