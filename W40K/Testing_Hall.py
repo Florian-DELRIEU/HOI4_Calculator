@@ -15,6 +15,7 @@ Cadence_test = 1
 
 
 HMA = lambda F: np.exp(F/2) /100
+bonus_CC = lambda CC: np.exp((CC-3)/2.8)
 
 
-print(HMA(F_test))
+print(bonus_CC(CC_test))

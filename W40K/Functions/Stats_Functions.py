@@ -139,3 +139,13 @@ def setBreakthrought(object):
     else:
         return AttributeError ,"object.Class not found"
     object.Breakthrought = BRK
+########################################################################################################################
+def bonus_CC(object):
+    CC = object.Unit.CC
+    bonus = np.exp((CC-3)/2.8)
+    return bonus
+########################################################################################################################
+def bonus_CT(object):
+    CT = object.Unit.CT
+    bonus = np.exp((CT-3)/2.8)
+    return bonus

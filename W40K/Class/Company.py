@@ -1,10 +1,11 @@
 from MyPack.Utilities import *
 from W40K.Functions.Functions import *
-from W40K.Functions.TableValues import *
+from W40K.Functions.Stats_Functions import bonus_CC,bonus_CT
 
 class Company:
     def __init__(self,Unit=None,Equipement=[]):
         self.Unit = Unit
+        self.Class = "Company"
         self.Equipement = Equipement
         self.Upgrade = list()
         self.Manpower = float()
@@ -30,12 +31,12 @@ class Company:
             self.Quantity_Equipement = np.sum([el.Quantity for el in self.Equipement])
             self.HP = self.Unit.HP
             self.ORG = self.Unit.ORG
-            self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])*SoftAttack_CC_CT[self.Unit.CT]
-            self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])*HardAttack_CC_CT[self.Unit.CT]
-            self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])*SoftAttack_CC_CT[self.Unit.CC]\
-                                   + self.Unit.SoftMeleeAttack
-            self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*HardAttack_CC_CT[self.Unit.CC]\
-                                   + self.Unit.HardMeleeAttack
+            self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])*bonus_CT(self)
+            self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])*bonus_CT(self)
+            self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])*bonus_CC(self)\
+                                                                                + self.Unit.SoftMeleeAttack
+            self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*bonus_CC(self)\
+                                                                                + self.Unit.HardMeleeAttack
             self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
             self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
             self.Hardness = self.Unit.Hardness
