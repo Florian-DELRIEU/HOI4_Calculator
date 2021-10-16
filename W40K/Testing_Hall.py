@@ -14,4 +14,7 @@ Range_test = (np.arange(6)+1)*6
 Cadence_test = 1
 
 
-F = lambda x: 1.6**(x-3)
+HMA = lambda F: np.exp(F/2) /100
+
+
+print(HMA(F_test))

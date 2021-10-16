@@ -67,6 +67,8 @@ def setHMA(object):
         else:                               return AttributeError ,"object.Type not found"
     elif object.Class == "Weapon" and object.F >= 4:
         if object.Type == "Melee":          HMA = np.exp(object.F/2) /100
+        elif "Krak Grenade" in object.SpecialsRules:
+                                            HMA = np.exp(object.F/2)/100
         else:                               HMA = 0
     else:                                   return AttributeError ,"object.Class not found"
     object.HardMeleeAttack = HMA
@@ -99,12 +101,12 @@ def setHardness(object):
     elif object.Class == "Walker":                  Hardness = 0.7
     else:                                           return AttributeError ,"object.Class not found"
 # check rules
-    if "Oppen-Topped" in object.SpecialRules:   Hardness /= 2
-    else:                                       pass
+    if "Oppen-Topped" in object.SpecialRules:       Hardness /= 2
+    else:                                           pass
 # check hardness out of bounds
-    if object.Hardness <= 0:                    Hardness = 0
-    elif object.Hardness >= 1:                  Hardness = 1
-    else:                                       pass
+    if Hardness <= 0:                               Hardness = 0
+    elif Hardness >= 1:                             Hardness = 1
+    else:                                           pass
     object.Hardness = Hardness
 ########################################################################################################################
 def setPiercing(object):

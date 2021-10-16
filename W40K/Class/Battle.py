@@ -1,5 +1,5 @@
 from W40K.Functions.Functions import round_Stats
-from W40K.Class.Company import Regiment
+from W40K.Class.Regiment import Regiment
 from W40K.Functions.Tactics_func import *
 from MyPack.Utilities import AskUser
 

@@ -4,9 +4,9 @@ ORG,70,108.0
 SoftAttack,0.0,0.0
 HardAttack,0.0,0.0
 SoftMeleeAttack,0.1,0.13
-HardMeleeAttack,0.0625,0.13
+HardMeleeAttack,0.0,0.13
 Defense,0.1,0.11000000000000001
 Breakthrought,0.1,0.11000000000000001
 Armor,0,2
 Piercing,0,0
-Hardness,0,0
+Hardness,0,0.1
