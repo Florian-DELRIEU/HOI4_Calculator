@@ -40,6 +40,7 @@ class Weapon:
         self.Bonus()
         round_Stats(self)
     def Bonus(self):
+        """All changes in stats regarding to weapons type, specials rules, range, fire rate, etc..."""
         setWeaponsBonus(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()

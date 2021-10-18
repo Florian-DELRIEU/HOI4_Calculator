@@ -5,8 +5,8 @@ SoftAttack,0.0,0.0
 HardAttack,0.0,0.0
 SoftMeleeAttack,0.01,0.013000000000000001
 HardMeleeAttack,0.0,0.0013000000000000002
-Defense,0.01,0.011000000000000001
-Breakthrought,0.01,0.011000000000000001
+Defense,0.1,0.11000000000000001
+Breakthrought,0.1,0.11000000000000001
 Armor,0,2
 Piercing,0,0
 Hardness,0,0.1

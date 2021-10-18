@@ -120,22 +120,22 @@ def setPiercing(object):
 ########################################################################################################################
 def setDefense(object):
     if object.Class == "Weapon":
-        DEF = 1             #1.1**(object.F-3)
-        #try:    DEF *= 1.1**(6-object.PA)  # test si PA non nul
-        #except: pass
+        DEF = 1.1**(object.F-3)
+        try:    DEF *= 1.1**(6-object.PA)  # test si PA non nul
+        except: pass
     elif object.Class == "Infantry":
-        DEF = 1 #0.1* 1.1**(object.F - 3)
+        DEF = 1 * 1.1**(object.F - 3)
     else:
         return AttributeError ,"object.Class not found"
     object.Defense = DEF/10
 ########################################################################################################################
 def setBreakthrought(object):
     if object.Class == "Weapon":
-        BRK = 1 #1.1**(object.F-3)
-        #try:    BRK *= 1.1**(6-object.PA)
-        #except: pass
+        BRK = .1 * 1.1**(object.F-3)
+        try:    BRK *= 1.1**(6-object.PA)
+        except: pass
     elif object.Class == "Infantry":
-        BRK = 1 #0.1* 1.1**(object.F - 3)
+        BRK = 1 * 1.1**(object.F - 3)
     else:
         return AttributeError ,"object.Class not found"
     object.Breakthrought = BRK/10
