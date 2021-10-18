@@ -38,8 +38,8 @@ class Company:
                                                                                 + self.Unit.SoftMeleeAttack
             self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*bonus_CC(self)\
                                                                                 + self.Unit.HardMeleeAttack
-            self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
-            self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
+            self.Defense = self.Unit.Defense * np.sum([el.Defense for el in self.Equipement])
+            self.Breakthrought = self.Unit.Breakthrought * np.sum([el.Breakthrought for el in self.Equipement])
             self.Hardness = self.Unit.Hardness
             self.Armor = self.Unit.Armor
             self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\

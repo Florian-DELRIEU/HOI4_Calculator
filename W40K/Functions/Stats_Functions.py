@@ -135,7 +135,7 @@ def setBreakthrought(object):
         #try:    BRK *= 1.1**(6-object.PA)
         #except: pass
     elif object.Class == "Infantry":
-        BRK =1 #0.1* 1.1**(object.F - 3)
+        BRK = 1 #0.1* 1.1**(object.F - 3)
     else:
         return AttributeError ,"object.Class not found"
     object.Breakthrought = BRK/10
