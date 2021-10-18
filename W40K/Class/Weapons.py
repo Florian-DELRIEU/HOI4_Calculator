@@ -1,5 +1,6 @@
 from W40K.Functions.Stats_Functions import *
 from W40K.Functions.Functions import *
+from W40K.Functions.Weapons_bonuses import setWeaponsBonus
 
 class Weapon:
     def __init__(self, F=3, PA=None, Range = 24, Type="Tir rapide", Cadence = 1,Quantity=1,SpecialsRules=[],Name=""):

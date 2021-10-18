@@ -1,6 +1,7 @@
 from MyPack.Utilities import *
 from W40K.Functions.Functions import *
 from W40K.Functions.Stats_Functions import bonus_CC,bonus_CT
+from W40K.Functions.Upgrades_bonuses import setUpgradeBonus
 
 class Company:
     def __init__(self,Unit=None,Equipement=[]):
