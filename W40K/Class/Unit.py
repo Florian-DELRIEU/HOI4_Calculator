@@ -151,10 +151,20 @@ class Tank:
     # Weapons emplacement
         round_Stats(self)
     def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
-        self.TurretWeapon = TurretList
+        self.TurretWeapon = TurretList  # first Turret weapon considered as Main gun
         self.SideWeapon = SideList
         self.HullWeapon = HullList
+        self._setTankType()
         self._setWeapons()
+    def _setTankType(self):
+        if len(self.TurretWeapon) == 0: # if any turret weapon
+            if len(self.HullWeapon) != 0: # and have hull weapons
+                self.Type += " Destroyer"
+            elif len(self.SideWeapon) != 0: # if not hull weapons, have sides weapons ??
+                self.Type += " Really exist ?"
+        else: # if turret weapons exists
+            if self.TurretWeapon[0].Type == "Ordnance": # if main gun is an ordonance
+                self.Type += " SP Artillery"              # set tank type as SP artillery
     def _setWeapons(self):
         if len(self.HullWeapon) != 0:
             for weapon in self.HullWeapon:

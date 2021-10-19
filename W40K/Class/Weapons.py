@@ -1,6 +1,6 @@
 from W40K.Functions.Stats_Functions import *
 from W40K.Functions.Functions import *
-from W40K.Functions.Weapons_bonuses import setWeaponsBonus
+from W40K.Functions.Weapons_bonuses import setWeapons_SAHA_bonus,setWeapons_DEFBRK_bonus
 
 class Weapon:
     def __init__(self, F=3, PA=None, Range = 24, Type="Tir rapide", Cadence = 1,Quantity=1,SpecialsRules=[],Name=""):
@@ -29,19 +29,19 @@ class Weapon:
     def HOI4_Profil(self):
     # Cadence
         if self.Type == "Tir rapide":self.Cadence = 2
+    # Soft and Hard Attack
         setSA(self)
         setHA(self)
         setSMA(self)
         setHMA(self)
+        setWeapons_SAHA_bonus(self)
+        setPiercing(self)
+    # Defense and Break
         setDefense(self)
         setBreakthrought(self)
-        setPiercing(self)
+        setWeapons_DEFBRK_bonus(self)
     # End
-        self.Bonus()
         round_Stats(self)
-    def Bonus(self):
-        """All changes in stats regarding to weapons type, specials rules, range, fire rate, etc..."""
-        setWeaponsBonus(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

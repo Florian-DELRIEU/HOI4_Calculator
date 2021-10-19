@@ -119,26 +119,28 @@ def setPiercing(object):
     object.Piercing = PRC
 ########################################################################################################################
 def setDefense(object):
+    """
+    BRK of an weapons regarding this F and E
+    """
     if object.Class == "Weapon":
-        DEF = 1.1**(object.F-3)
-        try:    DEF *= 1.1**(6-object.PA)  # test si PA non nul
-        except: pass
+        pass
     elif object.Class == "Infantry":
-        DEF = 1 * 1.1**(object.F - 3)
+        pass
     else:
         return AttributeError ,"object.Class not found"
-    object.Defense = DEF/10
+    object.Defense = 1
 ########################################################################################################################
 def setBreakthrought(object):
+    """
+    BRK of an weapons regarding this F and E
+    """
     if object.Class == "Weapon":
-        BRK = .1 * 1.1**(object.F-3)
-        try:    BRK *= 1.1**(6-object.PA)
-        except: pass
+        pass
     elif object.Class == "Infantry":
-        BRK = 1 * 1.1**(object.F - 3)
+        pass
     else:
         return AttributeError ,"object.Class not found"
-    object.Breakthrought = BRK/10
+    object.Breakthrought = 1
 ########################################################################################################################
 def bonus_CC(object):
     CC = object.Unit.CC
