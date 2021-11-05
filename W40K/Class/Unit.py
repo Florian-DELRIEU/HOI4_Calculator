@@ -161,10 +161,9 @@ class Tank:
             if len(self.HullWeapon) != 0: # and have hull weapons
                 self.Type += " Destroyer"
             elif len(self.SideWeapon) != 0: # if not hull weapons, have sides weapons ??
-                self.Type += " Really exist ?"
-        else: # if turret weapons exists
-            if self.TurretWeapon[0].Type == "Ordnance": # if main gun is an ordonance
-                self.Type += " SP Artillery"              # set tank type as SP artillery
+                self.Type += " Defender"
+        elif self.TurretWeapon[0].Type == "Ordnance": # if main gun is an ordonance
+            self.Type += " SP Artillery"              # set tank type as SP artillery
     def _setWeapons(self):
         if len(self.HullWeapon) != 0:
             for weapon in self.HullWeapon:
@@ -201,7 +200,7 @@ class Tank:
     def set_Quantity(self,Quantity):
         setQuantity(self, Quantity)
     def __copy__(self,Quantity=None):
-        if Quantity==None: Quantity = self.Quantity
+        if Quantity is None: Quantity = self.Quantity
         New = Tank(CT=self.CT,
                    Blind_Av=self.Blind_Av,
                    Blind_Side=self.Blind_Side,
