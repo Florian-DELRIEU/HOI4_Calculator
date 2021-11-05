@@ -43,6 +43,7 @@ class Infantry:
         self.Armor = float()
         self.Piercing = float()
         self.HOI4_Profil()
+        round_Stats(self)
     def HOI4_Profil(self):
         """
         Determine le profil HOI IV en fonctions des stats W40K
@@ -61,6 +62,7 @@ class Infantry:
         self.Bonus()
     def Bonus(self):
         setUnitBonus(self)
+        round_Stats(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
@@ -105,6 +107,10 @@ class Infantry:
 ########################################################################################################################
 
 class Tank:
+    """
+    TODO
+        - add BRK and DEF bonuses for companies regarding tank stats in HOI
+    """
     def __init__(self,CT=3,Blind_Av=14,Blind_Side=13,Blind_Arr=10,PC=3,Quantity=1,Type="Heavy Tank",SpecialRules=[]):
         """
         Default is Leman Russ battle tank
@@ -135,6 +141,7 @@ class Tank:
         self.Armor = float()
         self.Piercing = float()
         self.HOI4_Profil()
+        round_Stats(self)
     def HOI4_Profil(self):
         setHP(self)
         setORG(self)
@@ -156,6 +163,7 @@ class Tank:
         self.HullWeapon = HullList
         self._setTankType()
         self._setWeapons()
+        round_Stats(self)
     def _setTankType(self):
         if len(self.TurretWeapon) == 0: # if any turret weapon
             if len(self.HullWeapon) != 0: # and have hull weapons
@@ -247,6 +255,8 @@ class Walker:
         self.Hardness = float()
         self.Armor = float()
         self.Piercing = float()
+        self.HOI4_Profil()
+        round_Stats(self)
     def HOI4_Profil(self):
         setHP(self)*self.Quantity
         setORG(self)

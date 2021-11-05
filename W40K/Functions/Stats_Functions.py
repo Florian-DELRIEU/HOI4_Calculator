@@ -123,9 +123,11 @@ def setDefense(object):
     BRK of an weapons regarding this F and E
     """
     if object.Class == "Weapon":
-        pass
+        DEF = 0.1
+    elif "Tank" in object.Class:
+        DEF = 1
     elif object.Class == "Infantry":
-        pass
+        DEF = 1
     else:
         return AttributeError ,"object.Class not found"
     object.Defense = 1
@@ -135,9 +137,11 @@ def setBreakthrought(object):
     BRK of an weapons regarding this F and E
     """
     if object.Class == "Weapon":
-        pass
+        BRK = 0.1
+    elif "Tank" in object.Class:
+        BRK = 1
     elif object.Class == "Infantry":
-        pass
+        BRK = 1
     else:
         return AttributeError ,"object.Class not found"
     object.Breakthrought = 1

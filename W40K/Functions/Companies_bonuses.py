@@ -45,3 +45,9 @@ def setCompanies_DEFBRK_bonus(object):
         elif object.Unit.Type == "SuperHeavy Destroyer":
             object.Defense *= 7
             object.Breaktrought *= 4
+
+    elif object.Unit.Class == "Walker":
+        pass
+
+    else:
+        return AttributeError , "Company class not found, must be Infantry, Tank or Walker"
