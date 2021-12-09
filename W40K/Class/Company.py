@@ -1,4 +1,4 @@
-from MyPack.Utilities import *
+from MyPack2.Utilities import *
 from W40K.Functions.Functions import *
 from W40K.Functions.Stats_Functions import bonus_CC,bonus_CT
 from W40K.Functions.Upgrades_bonuses import setUpgradeBonus
@@ -7,10 +7,13 @@ class Company:
     def __init__(self,Unit=None,Equipement=None):
         self.Unit = Unit
         self.Class = "Company"
+        self.Type = ""
         self.Equipement = [] if Equipement is None else Equipement
         self.Upgrade = []
         self.Manpower = float()
         self.Quantity_Equipement = float()
+        self.BRK_bonus = 1
+        self.DEF_bonus = 1
     # HOI Stats
         self.HP = float()
         self.ORG = float()
@@ -26,31 +29,37 @@ class Company:
         self.HOI4_Profil()
     def HOI4_Profil(self):
         if self.Unit is not None:
+        # TYPE
+            self.Type = self.Unit.Class
+        # MANPOWER & EQUIPEMENT
             self.Manpower = self.Unit.Quantity
             self.Quantity_Equipement = np.sum([el.Quantity for el in self.Equipement])
+        # HEALTH
             self.HP = self.Unit.HP
             self.ORG = self.Unit.ORG
+        # ATTACK
             self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])*bonus_CT(self)
             self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])*bonus_CT(self)
             self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])*bonus_CC(self)\
                                                                                 + self.Unit.SoftMeleeAttack
             self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*bonus_CC(self)\
                                                                                 + self.Unit.HardMeleeAttack
+            self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
+                            /(self.Quantity_Equipement+self.Manpower)
+        # DEFENSE
             self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
             self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
             self.Hardness = self.Unit.Hardness
             self.Armor = self.Unit.Armor
-            self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
-                            /(self.Quantity_Equipement+self.Manpower)
         # End
         round_Stats(self)
     def setUnit(self,Unit):
         self.Unit = Unit
         self.HOI4_Profil()
-    def setEquipement(self,List=list):
+    def setEquipement(self,List:list):
         self.Equipement = List
         self.HOI4_Profil()
-    def setUpgrade(self,List=list):
+    def setUpgrade(self,List:list):
         self.Upgrade = List
         setUpgradeBonus(self)
     def Show_HOI_Stats(self):

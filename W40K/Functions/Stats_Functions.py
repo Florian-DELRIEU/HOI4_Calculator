@@ -1,5 +1,5 @@
 import numpy as np
-from MyPack.Utilities import truncDecimal
+from MyPack2.Utilities import truncDecimal
 
 ########################################################################################################################
 def setHP(object):
@@ -20,6 +20,7 @@ def setORG(object):
     object.ORG = ORG
 ########################################################################################################################
 def setSA(object):
+    # sourcery skip: assign-if-exp, remove-unnecessary-else, swap-if-else-branches
     if object.Class == "Weapon":
         if object.Type == "Melee":          SA = 0
         else:                               SA = (np.arctan(object.F/0.5)**6) /10
@@ -30,6 +31,7 @@ def setSA(object):
     object.SoftAttack = truncDecimal(SA,2)/10
 ########################################################################################################################
 def setHA(object):
+    # sourcery skip: merge-duplicate-blocks, remove-redundant-if, remove-unnecessary-else, swap-if-else-branches
     if object.Class == "Weapon":
         if object.Type == "Melee":          HA = 0
         elif object.F > 3:                  HA = np.exp(object.F/2) /100
@@ -40,7 +42,7 @@ def setHA(object):
     else:                                   return AttributeError ,"object.Type not found"
     object.HardAttack = HA/10
 ########################################################################################################################
-def setSMA(object):
+def setSMA(object):  # sourcery skip: assign-if-exp, switch
     if object.Class == "Infantry":            SMA = (object.A/10)*1.3**(object.CC-3)
     elif object.Class == "Tank":
         if object.Type == "Chariot":        SMA = 0.1
@@ -56,6 +58,7 @@ def setSMA(object):
     object.SoftMeleeAttack = SMA/10
 ########################################################################################################################
 def setHMA(object):
+    # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
     if object.Class == "Infantry" and object.F >= 4:
                                             HMA = object.SoftMeleeAttack*1.6**(object.F-4)
     elif object.Class == "Tank":
@@ -73,7 +76,7 @@ def setHMA(object):
     else:                                   return AttributeError ,"object.Class not found"
     object.HardMeleeAttack = HMA/10
 ########################################################################################################################
-def setArmor(object):
+def setArmor(object):  # sourcery skip: remove-redundant-if
     if object.Class == "Infantry":
         if   object.Svg == 3:             Armor = 2
         elif object.Svg == 2:             Armor = 4
@@ -85,7 +88,7 @@ def setArmor(object):
     else:                   return AttributeError ,"object.Class not found"
     object.Armor = Armor
 ########################################################################################################################
-def setHardness(object):
+def setHardness(object):  # sourcery skip: remove-redundant-pass
 # check class
     if object.Class == "Infantry":
         if object.Svg == 3:                         Hardness = 0.1
@@ -109,7 +112,7 @@ def setHardness(object):
     else:                                           pass
     object.Hardness = Hardness
 ########################################################################################################################
-def setPiercing(object):
+def setPiercing(object):  # sourcery skip: remove-redundant-pass, switch
     if object.Class == "Weapon":
         PRC = object.F+4
         if object.PA == 2:      PRC += 1
@@ -119,45 +122,42 @@ def setPiercing(object):
     object.Piercing = PRC
 ########################################################################################################################
 def setDefense(object):
+    # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
     """
     BRK of an weapons regarding this F and E
     """
-    if object.Class == "Weapon":
-        DEF = 0.1
-    elif "Tank" in object.Class:
-        DEF = 1
-    elif object.Class == "Infantry":
-        DEF = 1
-    else:
-        return AttributeError ,"object.Class not found"
-    object.Defense = 1
+    if object.Class == "Weapon":        DEF = 0.1
+    elif object.Class == "Tank":        DEF = 1
+    elif object.Class == "Infantry":    DEF = 1
+    else:                               return AttributeError ,"object.Class not found"
+    object.Defense = DEF
 ########################################################################################################################
 def setBreakthrought(object):
+    # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
     """
     BRK of an weapons regarding this F and E
+
+    TODO
+        - add bonus for Company
     """
-    if object.Class == "Weapon":
-        BRK = 0.1
-    elif "Tank" in object.Class:
-        BRK = 1
-    elif object.Class == "Infantry":
-        BRK = 1
-    else:
-        return AttributeError ,"object.Class not found"
-    object.Breakthrought = 1
+    if object.Class == "Weapon":        BRK = 0.1
+    elif object.Class == "Tank":        BRK = 1
+    elif object.Class == "Infantry":    BRK = 1
+    else:                               return AttributeError ,"object.Class not found"
+    object.Breakthrought = BRK
 ########################################################################################################################
 def bonus_CC(object):
+    # sourcery skip: assign-if-exp, inline-immediately-returned-variable
     CC = object.Unit.CC
     if object.Class == "Company":
-        bonus = np.exp((CC-3)/2.8)
+        return np.exp((CC-3)/2.8)
     else:
-        bonus = 1
-    return bonus
+        return 1
 ########################################################################################################################
 def bonus_CT(object):
+    # sourcery skip: assign-if-exp, inline-immediately-returned-variable
     CT = object.Unit.CT
     if object.Class == "Company":
-        bonus = np.exp((CT-3)/2.8)
+        return np.exp((CT-3)/2.8)
     else:
-        bonus = 1
-    return bonus
+        return 1

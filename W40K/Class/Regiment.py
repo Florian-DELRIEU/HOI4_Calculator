@@ -1,5 +1,5 @@
 import numpy as np
-from MyPack.Utilities import truncDecimal
+from MyPack2.Utilities import truncDecimal
 from W40K.Functions.Functions import round_Stats
 
 class Regiment:

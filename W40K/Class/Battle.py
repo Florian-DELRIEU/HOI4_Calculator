@@ -26,9 +26,6 @@ class Battle:
         self.CAC_limit = 0
         self.Phase = "Default"  # Phase de bataille en cours
         self.Terrain = "Plain"
-
-
-
     def isFinnish(self):
         """
         Check si le combat est terminé
@@ -41,22 +38,20 @@ class Battle:
             or  (self.ATK.ORG <= 0)
             or  (self.DEF.ORG <= 0)
         )
-    def Round(self,Nb=1,LogLevel=True):
+    def Round(self,Nb:int()=1,LogLevel=True):
         """
         -   Definit le nombre de lancement de round
         -   run _Round
         :param Nb: Nombre de round souhaité (-1 si jusqu'a fin du combat)
         """
-        assert type(Nb) is int , "Nb must be an :int:"
         if Nb != -1:
             i = 1
-            while i <= Nb: # Lancement de :Nb: rounds
+            while i <= Nb and not self.isFinnish(): # Lancement de :Nb: rounds
                 self._Round(Loglevel=LogLevel)
                 i += 1
         else: # Lancement des rounds jusqu'a fin du combat
             while not self.isFinnish():
                 self._Round(Loglevel=LogLevel,PauseEachRound=True)
-
     def _Round(self,Loglevel,PauseEachRound=False):
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
