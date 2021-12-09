@@ -81,8 +81,7 @@ class Regiment:
         self.set_STR() # MAJ
         NbDAMAGE = Striker.NbATK #Recupere le nombre d'attaque de l'attaquant
     # Attaquant ou defenseur ?
-        if self.isDefending: DEF = self.Defense         # Si defend alors utilise DEFENSE stat
-        else:                DEF = self.Breakthrought   # si attaque alors utilise BREAKTOUGHT stat
+        DEF = self.Defense if self.isDefending else self.Breakthrought
     # Defense de la cible
         if DEF > NbDAMAGE: NbDAMAGE *= 0.1
         else:              NbDAMAGE = self.Defense*0.1 + (NbDAMAGE-self.Defense)*0.4
@@ -92,14 +91,11 @@ class Regiment:
     # PV Dégats
         self.HP -= 1.5*NbDAMAGE # Moyenne de D2
         self.HP = truncDecimal(self.HP,1)
-        if self.HP <= 0 : self.HP = 0
+        self.HP = max(self.HP, 0)
     # ORG Dégats
-        if self.Piercing < Striker.Armor:
-            self.ORG -= 3.5*NbDAMAGE # Moyenne de D6
-        else:
-            self.ORG -= 2.5*NbDAMAGE # Moyenne de D4
+        self.ORG -= 3.5*NbDAMAGE if self.Piercing < Striker.Armor else 2.5*NbDAMAGE
         self.ORG = truncDecimal(self.ORG,1)
-        if self.ORG <= 0 : self.ORG = 0
+        self.ORG = max(self.ORG, 0)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

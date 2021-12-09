@@ -4,11 +4,11 @@ from W40K.Functions.Stats_Functions import bonus_CC,bonus_CT
 from W40K.Functions.Upgrades_bonuses import setUpgradeBonus
 
 class Company:
-    def __init__(self,Unit=None,Equipement=[]):
+    def __init__(self,Unit=None,Equipement=None):
         self.Unit = Unit
         self.Class = "Company"
-        self.Equipement = Equipement
-        self.Upgrade = list()
+        self.Equipement = [] if Equipement is None else Equipement
+        self.Upgrade = []
         self.Manpower = float()
         self.Quantity_Equipement = float()
     # HOI Stats
@@ -25,9 +25,7 @@ class Company:
         self.Defense = float()
         self.HOI4_Profil()
     def HOI4_Profil(self):
-        if self.Unit is None:
-            pass
-        else:
+        if self.Unit is not None:
             self.Manpower = self.Unit.Quantity
             self.Quantity_Equipement = np.sum([el.Quantity for el in self.Equipement])
             self.HP = self.Unit.HP

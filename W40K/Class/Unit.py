@@ -80,8 +80,7 @@ class Infantry:
                    self.Hardness,self.Armor)
         print(txt)
     def __repr__(self):
-        txt = str(self.Quantity) + " " + self.Name
-        return txt
+        return str(self.Quantity) + " " + self.Name
 
     def set_Quantity(self, Quantity):
         setQuantity(self,Quantity)

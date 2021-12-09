@@ -24,8 +24,7 @@ class Weapon:
         self.Piercing = float()
         self.HOI4_Profil()
     def __repr__(self):
-        txt = str(self.Quantity) + " " + self.Name
-        return txt
+        return str(self.Quantity) + " " + self.Name
     def HOI4_Profil(self):
     # Cadence
         if self.Type == "Tir rapide":self.Cadence = 2

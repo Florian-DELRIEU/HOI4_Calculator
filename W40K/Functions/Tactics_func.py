@@ -18,9 +18,6 @@ def choose_Tactics(Battle):
         - run set_CAC_limit
     """
     change_weight(Battle)
-    #assert type(Battle) is Battle , "Battle must be an :battle: type"
-    ATK_tactic_list = list()
-    DEF_tactic_list = list()
 # Which tactics lists is used according the battle phase
     if Battle.Phase == "Default":
         ATK_tactic_list = ATK_tactics
@@ -100,9 +97,9 @@ def Cancel_Tactic(Tactic_to_cancel):
     Tactic_to_cancel.CAC = 0
     Tactic_to_cancel.Begin_battle_phase = None
 
-
 def Initiative_round(Battle):
     """
+    TODO -- NEED Leader Upgrade
     Choisis quel camp aura l'initiative
         - Basic pour le moment car leaders ne sont pas ajoutés
     """
@@ -112,8 +109,8 @@ def Initiative_round(Battle):
     else:   pass  # Need Leader upgrade
     if Battle.DEF_Leader is None:   DEF_weight = 1
     else:   pass  # Need Leader upgrade
-    winner = rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
-    return winner
+
+    return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
 
 def apply_Tactics(Battle):
     DEF = Battle.DEF

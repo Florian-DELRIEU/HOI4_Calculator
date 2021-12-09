@@ -5,27 +5,27 @@ def setWeapons_SAHA_bonus(Object):
     """
     #assert type(Object) == Weapon , "Object must be :class Weapon:"
 # Weapons Specials rules
-    for rule in Object.SpecialsRules:
-        if rule == "Perforant":
-            Object.SoftAttack *= 1.1
-            Object.HardAttack *= 1.1
-            Object.Piercing += 1
-        if rule == "Fléau de la chair":
-            Object.SoftAttack *= 1.1
-        if rule == "Fléau des chars":
-            Object.HardAttack *= 1.1
-        if rule == "Ignore les couverts":
-            Object.SoftAttack *= 1.2
-        if rule == "Blast 3'":
-            Object.SoftAttack *= 1.1
-            Object.HardAttack *= 1.02
-        if rule == "Blast 5'":
-            Object.SoftAttack *= 1.2
-            Object.HardAttack *= 1.05
-        if rule == "Krak Grenade":
-            Object.SoftAttack *= 0
-        if rule == "Fusion":
-            Object.HardAttack *= 1.5
+    Rules = Object.SpecialsRules
+    if "Perforant" in Object.SpecialsRules:
+        Object.SoftAttack *= 1.1
+        Object.HardAttack *= 1.1
+        Object.Piercing += 1
+    if "Fléau de la chair" in Object.SpecialsRules:
+        Object.SoftAttack *= 1.1
+    if "Fléau des chars" in Object.SpecialsRules:
+        Object.HardAttack *= 1.1
+    if "Ignore les couverts" in Object.SpecialsRules:
+        Object.SoftAttack *= 1.2
+    if "Blast 3'" in Object.SpecialsRules:
+        Object.SoftAttack *= 1.1
+        Object.HardAttack *= 1.02
+    if "Blast 5'" in Object.SpecialsRules:
+        Object.SoftAttack *= 1.2
+        Object.HardAttack *= 1.05
+    if "Krak Grenade" in Object.SpecialsRules:
+        Object.SoftAttack *= 0
+    if "Fusion" in Object.SpecialsRules:
+        Object.HardAttack *= 1.5
 # Weapons type
     if Object.Type == "Lourde":     pass
     if Object.Type == "Assaut":     pass
@@ -57,20 +57,20 @@ def setWeapons_SAHA_bonus(Object):
 
 ########################################################################################################################
 
-def setWeapons_DEFBRK_bonus(Object):
+def setWeapons_DEFBRK_bonus(Object):  # sourcery skip: switch
     # Weapons type
     if Object.Type == "Lourde":
         Object.Defense *= 1.8
         Object.Breakthrought *= 0.2
-    if Object.Type == "Assaut":
+    elif Object.Type == "Assaut":
         Object.Breakthrought *= 1.4
         Object.Defense *= 0.6
-    if Object.Type == "Tir rapide":
+    elif Object.Type == "Tir rapide":
         pass
-    if Object.Type == "Salve":
+    elif Object.Type == "Salve":
         Object.Breakthrought = 1.2
         Object.Defense *= 0.8
-    if Object.Type == "Ordnance":
+    elif Object.Type == "Ordnance":
         Object.Breakthrought = 0.8
         Object.Defense *= 1.4
     # Weapon Range

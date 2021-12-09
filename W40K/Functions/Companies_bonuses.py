@@ -1,11 +1,12 @@
 def setCompanies_DEFBRK_bonus(object):
+    # sourcery skip: merge-duplicate-blocks, remove-pass-elif, remove-redundant-if, switch
     assert object.Class == "Company" , "Must be an Company object"
 
-    if object.Unit.Class == "Infantry":     ############################################################################
+    if object.Unit.Class == "Infantry":
         object.Defense *= 20
         object.Breaktrought *= 2
 
-    elif object.Unit.Class == "Tank":       ############################################################################
+    elif object.Unit.Class == "Tank":
         # Tank types
         if object.Unit.Type == "Chariot":  # Like armored car
             object.Defense *= 2
@@ -34,16 +35,16 @@ def setCompanies_DEFBRK_bonus(object):
             object.Breaktrought *= 70
         # Destroyer types
         if object.Unit.Type == "Chariot Destroyer":  # Light
-            object.Defense *= 4
+            object.Defense      *= 4
             object.Breaktrought *= 2
         elif object.Unit.Type == ("Tank Destroyer" or "Destroyer"):  # Medium tank
-            object.Defense *= 5
+            object.Defense      *= 5
             object.Breaktrought *= 3
         elif object.Unit.Type == "Heavy Destroyer":
-            object.Defense *= 4
+            object.Defense      *= 4
             object.Breaktrought *= 2
         elif object.Unit.Type == "SuperHeavy Destroyer":
-            object.Defense *= 7
+            object.Defense      *= 7
             object.Breaktrought *= 4
 
     elif object.Unit.Class == "Walker":

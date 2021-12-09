@@ -35,10 +35,12 @@ class Battle:
             - Si l'un des deux camps n'as plus de PV ou d'Organisation
         :return: True ou False
         """
-        if (self.ATK.HP <= 0) or (self.DEF.HP <= 0) or (self.ATK.ORG <= 0) or (self.DEF.ORG <= 0):
-            return True
-        else:
-            return False
+        return (
+                (self.ATK.HP  <= 0)
+            or  (self.DEF.HP  <= 0)
+            or  (self.ATK.ORG <= 0)
+            or  (self.DEF.ORG <= 0)
+        )
     def Round(self,Nb=1,LogLevel=True):
         """
         -   Definit le nombre de lancement de round
