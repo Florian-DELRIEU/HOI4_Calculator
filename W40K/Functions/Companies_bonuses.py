@@ -6,7 +6,7 @@ def setCompanies_DEFBRK_bonus(object):
 
     if object.Unit.Class == "Infantry":
         object.Defense *= 20
-        object.Breaktrought *= 2
+        object.Breakthrought *= 2
 
     elif object.Unit.Class == "Tank":
 
