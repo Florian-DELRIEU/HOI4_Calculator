@@ -1,7 +1,8 @@
 from MyPack2.Utilities import *
 from W40K.Functions.Functions import *
-from W40K.Functions.Stats_Functions import bonus_CC,bonus_CT
+#from W40K.Functions.Stats_Functions import bonus_CC,bonus_CT
 from W40K.Functions.Upgrades_bonuses import setUpgradeBonus
+from W40K.Functions.Companies_bonuses import setCompanies_DEFBRK_bonus
 
 class Company:
     def __init__(self,Unit=None,Equipement=None):
@@ -38,20 +39,21 @@ class Company:
             self.HP = self.Unit.HP
             self.ORG = self.Unit.ORG
         # ATTACK
-            self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])*bonus_CT(self)
-            self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])*bonus_CT(self)
-            self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])*bonus_CC(self)\
+            self.SoftAttack = np.sum([el.SoftAttack for el in self.Equipement])*self.Unit.bonus_CT
+            self.HardAttack = np.sum([el.HardAttack for el in self.Equipement])*self.Unit.bonus_CT
+            self.SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Equipement])*self.Unit.bonus_CC\
                                                                                 + self.Unit.SoftMeleeAttack
-            self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*bonus_CC(self)\
+            self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*self.Unit.bonus_CC\
                                                                                 + self.Unit.HardMeleeAttack
             self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
                             /(self.Quantity_Equipement+self.Manpower)
         # DEFENSE
-            self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
-            self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
+            self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])  # Base DEF
+            self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement]) # Base BRK
             self.Hardness = self.Unit.Hardness
             self.Armor = self.Unit.Armor
         # End
+            setCompanies_DEFBRK_bonus(self)
         round_Stats(self)
     def setUnit(self,Unit):
         self.Unit = Unit
