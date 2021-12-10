@@ -26,6 +26,7 @@ class Battle:
         self.CAC_limit = 0
         self.Phase = "Default"  # Phase de bataille en cours
         self.Terrain = "Plain"
+
     def isFinnish(self):
         """
         Check si le combat est terminé
@@ -38,6 +39,7 @@ class Battle:
             or  (self.ATK.ORG <= 0)
             or  (self.DEF.ORG <= 0)
         )
+
     def Round(self,Nb:int()=1,LogLevel=True):
         """
         -   Definit le nombre de lancement de round
@@ -52,6 +54,7 @@ class Battle:
         else: # Lancement des rounds jusqu'a fin du combat
             while not self.isFinnish():
                 self._Round(Loglevel=LogLevel,PauseEachRound=True)
+
     def _Round(self,Loglevel,PauseEachRound=False):
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
@@ -105,6 +108,7 @@ class Battle:
         self.roundCounter += 1
         self.printLOG()
         if PauseEachRound: AskUser("pausing ...","Click Enter")
+
     def printLOG(self):
         """
         log pour chaque heure de combats
