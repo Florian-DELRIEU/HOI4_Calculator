@@ -26,11 +26,6 @@ def setWeapons_SAHA_bonus(Object):
         Object.SoftAttack *= 0
     if "Fusion" in Object.SpecialsRules:
         Object.HardAttack *= 1.5
-# Weapons type
-    if Object.Type == "Lourde":     pass
-    if Object.Type == "Assaut":     pass
-    if Object.Type == "Tir rapide": pass
-    if Object.Type == "Salve":      pass
     if Object.Type == "Ordnance":
         Object.SoftAttack *= 1.5
 # Weapon Range
