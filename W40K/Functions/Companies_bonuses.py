@@ -1,13 +1,16 @@
+import numpy as np
+
 def setCompanies_DEFBRK_bonus(object):
     # sourcery skip: merge-duplicate-blocks, remove-pass-elif, remove-redundant-if, switch
     assert object.Class == "Company" , "Must be an Company object"
 
     if object.Unit.Class == "Infantry":
         object.Defense *= 20
-        object.Breaktrought *= 2
+        object.Breakthrought *= 2
 
     elif object.Unit.Class == "Tank":
-        # Tank types
+
+    # Tank types
         if object.Unit.Type == "Chariot":  # Like armored car
             object.Defense *= 2
             object.Breaktrought *= 10
@@ -20,7 +23,8 @@ def setCompanies_DEFBRK_bonus(object):
         elif object.Unit.Type == "SuperHeavy":
             object.Defense *= 10
             object.Breaktrought *= 70
-        # SP artillery types
+
+    # SP artillery types
         if object.Unit.Type == "Chariot SP Artillery":  # Light
             object.Defense *= 2
             object.Breaktrought *= 10
@@ -33,7 +37,8 @@ def setCompanies_DEFBRK_bonus(object):
         elif object.Unit.Type == "SuperHeavy SP Artillery":
             object.Defense *= 10
             object.Breaktrought *= 70
-        # Destroyer types
+
+    # Destroyer types
         if object.Unit.Type == "Chariot Destroyer":  # Light
             object.Defense      *= 4
             object.Breaktrought *= 2

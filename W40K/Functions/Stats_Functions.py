@@ -136,28 +136,9 @@ def setBreakthrought(object):
     # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
     """
     BRK of an weapons regarding this F and E
-
-    TODO
-        - add bonus for Company
     """
     if object.Class == "Weapon":        BRK = 0.1
     elif object.Class == "Tank":        BRK = 1
     elif object.Class == "Infantry":    BRK = 1
     else:                               return AttributeError ,"object.Class not found"
     object.Breakthrought = BRK
-########################################################################################################################
-def bonus_CC(object):
-    # sourcery skip: assign-if-exp, inline-immediately-returned-variable
-    CC = object.Unit.CC
-    if object.Class == "Company":
-        return np.exp((CC-3)/2.8)
-    else:
-        return 1
-########################################################################################################################
-def bonus_CT(object):
-    # sourcery skip: assign-if-exp, inline-immediately-returned-variable
-    CT = object.Unit.CT
-    if object.Class == "Company":
-        return np.exp((CT-3)/2.8)
-    else:
-        return 1

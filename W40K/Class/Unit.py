@@ -42,6 +42,9 @@ class Infantry:
         self.Hardness = float()
         self.Armor = float()
         self.Piercing = float()
+    # Bonus
+        self.bonus_CC = np.exp((CC-3)/2.8)
+        self.bonus_CT = np.exp((CT-3)/2.8)
         self.HOI4_Profil()
         round_Stats(self)
     def HOI4_Profil(self):
@@ -81,7 +84,6 @@ class Infantry:
         print(txt)
     def __repr__(self):
         return str(self.Quantity) + " " + self.Name
-
     def set_Quantity(self, Quantity):
         setQuantity(self,Quantity)
     def __copy__(self,Quantity):
@@ -139,6 +141,8 @@ class Tank:
         self.Hardness = float()
         self.Armor = float()
         self.Piercing = float()
+    # Bonus
+        self.bonus_CT = np.exp((CT - 3)/2.8)
         self.HOI4_Profil()
         round_Stats(self)
     def HOI4_Profil(self):
@@ -254,6 +258,9 @@ class Walker:
         self.Hardness = float()
         self.Armor = float()
         self.Piercing = float()
+    # Bonus
+        self.bonus_CC = np.exp((CC - 3)/2.8)
+        self.bonus_CT = np.exp((CT - 3)/2.8)
         self.HOI4_Profil()
         round_Stats(self)
     def HOI4_Profil(self):
