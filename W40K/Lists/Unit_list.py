@@ -37,7 +37,6 @@ Basilisk = Tank(3,12,10,10,3,Type="Tank")
 Basilisk.setWeapons(
     TurretList=[Earthshaker.__copy__(1)],
     HullList=[BolterLD.__copy__(1)])
-Field_Earthshaker = Tank(3,11,11,11,3,Type="Tank")
+Field_Earthshaker = Tank(3,10,10,10,2,Type="Tank",SpecialRules=["Immobile"])
 Field_Earthshaker.setWeapons(
-    TurretList=[Earthshaker.__copy__(1)],
-    HullList=[BolterLD.__copy__(1)])
+    TurretList=[Earthshaker.__copy__(1)])
