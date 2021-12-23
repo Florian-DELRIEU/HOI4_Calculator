@@ -158,7 +158,7 @@ class Tank:
         # Defense & Breakthrought
         setDefense(self)
         setBreakthrought(self)
-    # Weapons emplacement
+    # Bonus
         round_Stats(self)
     def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
         self.TurretWeapon = TurretList  # first Turret weapon considered as Main gun
