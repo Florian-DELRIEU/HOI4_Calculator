@@ -136,9 +136,6 @@ def setBreakthrought(object):
     # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
     """
     BRK of an weapons regarding this F and E
-
-    TODO
-        - add bonus for Company
     """
     if object.Class == "Weapon":        BRK = 0.1
     elif object.Class == "Tank":        BRK = 1

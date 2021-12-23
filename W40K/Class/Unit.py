@@ -84,7 +84,6 @@ class Infantry:
         print(txt)
     def __repr__(self):
         return str(self.Quantity) + " " + self.Name
-
     def set_Quantity(self, Quantity):
         setQuantity(self,Quantity)
     def __copy__(self,Quantity):

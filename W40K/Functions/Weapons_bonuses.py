@@ -95,3 +95,6 @@ def setWeapons_DEFBRK_bonus(Object):  # sourcery skip: switch
     elif 36 < Object.Range <= 48:
         Object.Defense *= 1.6
         Object.Breakthrought *= 1.3
+    # Weapons Fire rate
+    Object.Breakthrought *= 1.1*(Object.Cadence-1)
+    Object.Defense *= 1.1*(Object.Cadence-1)
