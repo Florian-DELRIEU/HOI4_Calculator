@@ -1,6 +1,6 @@
 from W40K.Functions.Stats_Functions import *
 from W40K.Functions.Functions import *
-from W40K.Functions.Units_bonuses import setUnitBonus
+from W40K.Functions.Units_bonuses import apply_SpecialRules, DEFBRK_bonus
 import numpy as np
 """
 Ensemble des :class: pour Unité terrestre
@@ -64,7 +64,8 @@ class Infantry:
     # Bonus
         self.Bonus()
     def Bonus(self):
-        setUnitBonus(self)
+        apply_SpecialRules(self)
+        DEFBRK_bonus(self)
         round_Stats(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
@@ -168,6 +169,12 @@ class Tank:
         self._setWeapons()
         round_Stats(self)
     def _setTankType(self):
+        """
+        FIXME
+            1) LEMAN RUSS avec obusier considéré comme "Heavy SP Artillery"
+                - Soit affiner l'algo qui définit les artillerie ou pas
+                - soit ajouter un paramètre le décrivant comme une artillerie
+        """
         if len(self.TurretWeapon) == 0: # if any turret weapon
             if len(self.HullWeapon) != 0: # and have hull weapons
                 self.Type += " Destroyer"

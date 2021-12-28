@@ -2,7 +2,6 @@ from MyPack2.Utilities import *
 from W40K.Functions.Functions import *
 #from W40K.Functions.Stats_Functions import bonus_CC,bonus_CT
 from W40K.Functions.Upgrades_bonuses import setUpgradeBonus
-from W40K.Functions.Companies_bonuses import setCompanies_DEFBRK_bonus
 
 class Company:
     def __init__(self,Unit=None,Equipement=None):
@@ -48,12 +47,11 @@ class Company:
             self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
                             /(self.Quantity_Equipement+self.Manpower)
         # DEFENSE
-            self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])  # Base DEF
-            self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement]) # Base BRK
+            self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
+            self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
             self.Hardness = self.Unit.Hardness
             self.Armor = self.Unit.Armor
         # End
-            setCompanies_DEFBRK_bonus(self)
         round_Stats(self)
     def setUnit(self,Unit):
         self.Unit = Unit

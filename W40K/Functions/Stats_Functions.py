@@ -3,6 +3,7 @@ from MyPack2.Utilities import truncDecimal
 
 ########################################################################################################################
 def setHP(object):
+    """FIXME - Pourquoi HP/4 à la fin ?"""
     if object.Class == "Infantry":  HP = object.PV * 1.5**(object.E-3)
     elif object.Class == "Tank":    HP = object.PC
     else:                       return AttributeError ,"object.Class not found"
@@ -43,6 +44,7 @@ def setHA(object):
     object.HardAttack = HA/10
 ########################################################################################################################
 def setSMA(object):  # sourcery skip: assign-if-exp, switch
+    """FIXME - SMA / 10 ??"""
     if object.Class == "Infantry":            SMA = (object.A/10)*1.3**(object.CC-3)
     elif object.Class == "Tank":
         if object.Type == "Chariot":        SMA = 0.1
@@ -59,6 +61,7 @@ def setSMA(object):  # sourcery skip: assign-if-exp, switch
 ########################################################################################################################
 def setHMA(object):
     # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
+    """FIXME - HMA / 10 ??"""
     if object.Class == "Infantry" and object.F >= 4:
                                             HMA = object.SoftMeleeAttack*1.6**(object.F-4)
     elif object.Class == "Tank":
@@ -125,10 +128,30 @@ def setDefense(object):
     # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
     """
     BRK of an weapons regarding this F and E
+    FIXME 
+        1) Pourquoi moins de DEF pour Destroyer Heavy que pour Moyen ????
     """
-    if object.Class == "Weapon":        DEF = 0.1
-    elif object.Class == "Tank":        DEF = 1
-    elif object.Class == "Infantry":    DEF = 1
+    Class,Type = object.Class , object.Type
+    if Class == "Weapon":                           DEF = 0.1
+    elif Class == "Tank":
+        if Type == "Chariot":                       DEF = 2
+        elif Type == ("Tank" or ""):                DEF = 5
+        elif Type == "Heavy":                       DEF = 6
+        elif Type == "SuperHeavy":                  DEF = 10
+        
+        if   Type == "Chariot SP Artillery":        DEF = 2
+        elif Type == ("Tank SP Artillery" 
+                          or "SP Artillery"):       DEF = 5
+        elif Type == "Heavy SP Artillery":          DEF = 6
+        elif Type == "SuperHeavy SP Artillery":     DEF = 10
+            
+        if   Type == "Chariot Destroyer":           DEF = 4
+        elif Type == ("Tank Destroyer"
+                   or "Destroyer"):                 DEF = 5 
+        elif Type == "Heavy Destroyer":             DEF = 4
+        elif Type == "SuperHeavy Destroyer":        DEF = 7
+
+    elif object.Class == "Infantry":        DEF = 20
     else:                               return AttributeError ,"object.Class not found"
     object.Defense = DEF
 ########################################################################################################################
@@ -136,9 +159,29 @@ def setBreakthrought(object):
     # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
     """
     BRK of an weapons regarding this F and E
+    FIXME 
+        1) Pourquoi moins de BRK pour Destroyer Heavy que pour Moyen ????
     """
-    if object.Class == "Weapon":        BRK = 0.1
-    elif object.Class == "Tank":        BRK = 1
-    elif object.Class == "Infantry":    BRK = 1
+    Class, Type = object.Class, object.Type
+    if object.Class == "Weapon":                    BRK = 0.1
+    elif object.Class == "Infantry":                BRK = 2
+    elif Class == "Tank":
+        if Type == "Chariot":                       BRK = 10
+        elif Type == ("Tank" or ""):                BRK = 30
+        elif Type == "Heavy":                       BRK = 40
+        elif Type == "SuperHeavy":                  BRK = 70
+
+        if Type == "Chariot SP Artillery":          BRK = 10
+        elif Type == ("Tank SP Artillery"
+                      or "SP Artillery"):           BRK = 30
+        elif Type == "Heavy SP Artillery":          BRK = 40
+        elif Type == "SuperHeavy SP Artillery":     BRK = 70
+
+        if Type == "Chariot Destroyer":             BRK = 2
+        elif Type == ("Tank Destroyer"
+                      or "Destroyer"):              BRK = 3
+        elif Type == "Heavy Destroyer":             BRK = 2
+        elif Type == "SuperHeavy Destroyer":        BRK = 4
+    elif Class == "Walker":                         pass
     else:                               return AttributeError ,"object.Class not found"
     object.Breakthrought = BRK
