@@ -98,6 +98,7 @@ def Cancel_Tactic(Tactic_to_cancel):
     Tactic_to_cancel.Begin_battle_phase = None
 
 def Initiative_round(Battle):
+    # sourcery skip: assign-if-exp, remove-redundant-pass
     """
     TODO -- NEED Leader Upgrade
     Choisis quel camp aura l'initiative

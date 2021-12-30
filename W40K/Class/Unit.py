@@ -109,11 +109,7 @@ class Infantry:
 ########################################################################################################################
 
 class Tank:
-    """
-    TODO
-        - add BRK and DEF bonuses for companies regarding tank stats in HOI
-    """
-    def __init__(self,CT=3,Blind_Av=14,Blind_Side=13,Blind_Arr=10,PC=3,Quantity=1,Type="Heavy Tank",SpecialRules=[]):
+    def __init__(self,CT=3,Blind_Av=14,Blind_Side=13,Blind_Arr=10,PC=3,Quantity=1,Type="Heavy",SpecialRules=[]):
         """
         Default is Leman Russ battle tank
         """
@@ -169,19 +165,13 @@ class Tank:
         self._setWeapons()
         round_Stats(self)
     def _setTankType(self):
-        """
-        FIXME
-            1) LEMAN RUSS avec obusier considéré comme "Heavy SP Artillery"
-                - Soit affiner l'algo qui définit les artillerie ou pas
-                - soit ajouter un paramètre le décrivant comme une artillerie
-        """
         if len(self.TurretWeapon) == 0: # if any turret weapon
             if len(self.HullWeapon) != 0: # and have hull weapons
                 self.Type += " Destroyer"
             elif len(self.SideWeapon) != 0: # if not hull weapons, have sides weapons ??
                 self.Type += " Defender"
-        elif self.TurretWeapon[0].Type == "Ordnance": # if main gun is an ordonance
-            self.Type += " SP Artillery"              # set tank type as SP artillery
+        elif self.TurretWeapon[0].Type == "Ordnance" and self.Type != "Heavy":
+            self.Type += " SP Artillery"                # set tank type as SP artillery
     def _setWeapons(self):
         if len(self.HullWeapon) != 0:
             for weapon in self.HullWeapon:
