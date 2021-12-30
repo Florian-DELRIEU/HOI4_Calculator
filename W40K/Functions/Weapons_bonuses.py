@@ -18,10 +18,10 @@ def setWeapons_SAHA_bonus(Object):
         Object.SoftAttack *= 1.2
     if "Blast 3'" in Object.SpecialsRules:
         Object.SoftAttack *= 1.1
-        Object.HardAttack *= 1.02
+        Object.HardAttack *= 0.4
     if "Blast 5'" in Object.SpecialsRules:
         Object.SoftAttack *= 1.2
-        Object.HardAttack *= 1.05
+        Object.HardAttack *= 0.6
     if "Krak Grenade" in Object.SpecialsRules:
         Object.SoftAttack *= 0
     if "Fusion" in Object.SpecialsRules:

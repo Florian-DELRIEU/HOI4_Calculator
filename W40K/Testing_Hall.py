@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 CC_test = np.arange(6)+1
 CT_test = np.arange(6)+1
@@ -14,8 +15,9 @@ Range_test = (np.arange(6)+1)*6
 Cadence_test = 1
 
 
-HMA = lambda F: np.exp(F/2) /100
-bonus_CC = lambda CC: np.exp((CC-3)/2.8)
+HA = np.exp(F_test/2) /100
+bonus_CC = np.exp((CC_test-3)/2.8)
 
 
-print(bonus_CC(CC_test))
+plt.plot(HA,"k+")
+plt.grid("both")

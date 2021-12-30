@@ -1,6 +1,6 @@
 from W40K.Functions.Stats_Functions import *
 from W40K.Functions.Functions import *
-from W40K.Functions.Units_bonuses import apply_SpecialRules, DEFBRK_bonus
+from W40K.Functions.Units_bonuses import apply_SpecialRules
 import numpy as np
 """
 Ensemble des :class: pour Unité terrestre
@@ -65,7 +65,6 @@ class Infantry:
         self.Bonus()
     def Bonus(self):
         apply_SpecialRules(self)
-        DEFBRK_bonus(self)
         round_Stats(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
