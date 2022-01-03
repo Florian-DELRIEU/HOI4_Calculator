@@ -52,8 +52,23 @@ def setWeapons_SAHA_bonus(Object):
         Object.SoftAttack *= 1.4
         Object.HardAttack *= 1.4
     elif 36 < Object.Range <= 48:
-        Object.SoftAttack *= 1.4
-        Object.HardAttack *= 1.4
+        Object.SoftAttack *= 1.6
+        Object.HardAttack *= 1.6
+    elif 36 < Object.Range <= 48:
+        Object.SoftAttack *= 1.8
+        Object.HardAttack *= 1.8
+    elif 48 < Object.Range <= 72:
+        Object.SoftAttack *= 2.0
+        Object.HardAttack *= 2.0
+    elif 72 < Object.Range <= 96:
+        Object.SoftAttack *= 2.2
+        Object.HardAttack *= 2.2
+    elif 96 < Object.Range <= 120:
+        Object.SoftAttack *= 2.4
+        Object.HardAttack *= 2.4
+    elif 120 < Object.Range <= 240:
+        Object.SoftAttack *= 3.0
+        Object.HardAttack *= 3.0
 
 ########################################################################################################################
 
@@ -63,16 +78,16 @@ def setWeapons_DEFBRK_bonus(Object):  # sourcery skip: switch
         Object.Defense *= 1.8
         Object.Breakthrought *= 0.2
     elif Object.Type == "Assaut":
-        Object.Breakthrought *= 1.4
         Object.Defense *= 0.6
+        Object.Breakthrought *= 1.4
     elif Object.Type == "Tir rapide":
         pass
     elif Object.Type == "Salve":
-        Object.Breakthrought = 1.2
+        Object.Breakthrought *= 1.2
         Object.Defense *= 0.8
     elif Object.Type == "Ordnance":
-        Object.Breakthrought = 0.8
-        Object.Defense *= 1.4
+        Object.Breakthrought *= 2
+        Object.Defense *= 0.4
     # Weapon Range
     if Object.Range == (0 or None):  # melee weapons
         Object.Defense *= 0.3
@@ -95,6 +110,18 @@ def setWeapons_DEFBRK_bonus(Object):  # sourcery skip: switch
     elif 36 < Object.Range <= 48:
         Object.Defense *= 1.6
         Object.Breakthrought *= 1.3
+    elif 48 < Object.Range <= 72:
+        Object.Defense *= 1.8
+        Object.Breakthrought *= 1.4
+    elif 72 < Object.Range <= 96:
+        Object.Defense *= 1.8
+        Object.Breakthrought *= 1.4
+    elif 96 < Object.Range <= 120:
+        Object.Defense *= 2.0
+        Object.Breakthrought *= 1.5
+    elif 120 < Object.Range <= 240:
+        Object.Defense *= 2.5
+        Object.Breakthrought *= 1.8
     # Weapons Fire rate
     Object.Breakthrought *= 1.1*(Object.Cadence-1)
     Object.Defense *= 1.1*(Object.Cadence-1)
