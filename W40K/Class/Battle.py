@@ -7,30 +7,57 @@ class Battle:
     """
     Objet contenant les divisions permettant de lancer les round et les logs
     """
-    def __init__(self, ATK, DEF):
+    def __init__(self, ATK_list, DEF_list):
     # Initials conditions
-        assert type(ATK) == Regiment and type(DEF) == Regiment , "campA and campB must be regiment class"
-        assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
-        assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
+        assert [type(ATK) == Regiment for ATK in ATK_list] , "List have to contain regiments"
+        assert [type(DEF) == Regiment for DEF in DEF_list] , "List have to contain regiments"
+        for ATK in ATK_list: ATK.isDefending == False
+        for DEF in DEF_list: DEF.isDefending == True
     # ATK team
-        self.ATK = ATK
+        self.ATK_list = ATK_list
         self.ATK_Tactic = None
         self.ATK_Leader = None
+        self.ATK_Engaged = []
+        self.ATK_Reserve = []
     # DEF Team
-        self.DEF = DEF
+        self.DEF_list = DEF_list
         self.DEF_Tactic = None
         self.DEF_Leader = None
+        self.DEF_Engaged = []
+        self.DEF_Reserve = []
     # Battle parameters
+        self.Width = 80
         self.roundCounter = 0
         self.CAC_level = 0
         self.CAC_limit = 0
         self.Phase = "Default"  # Phase de bataille en cours
         self.Terrain = "Plain"
+    def set_Engagement(self):
+        """
+        Defini l'engagement des Régiment en fonctions du Width
+        """
+        self._set_Engagment(self.ATK_list)
+        self._set_Engagment(self.DEF_list)
+    def _set_Engagment(self,List):
+        """
+        TODO -- Regle engagements (Voir règles d'engagement sur le wiki)
+            1) Toutes les regiments qui ne sont pas engagé vont dans les réserves
+            2) Si il reste de la place dans la liste des regiments engagés
+                2A)- si aucun regiment est engagés en choisir selon Initiative
+                2B)- si il reste de la place
+                    a)- chaque regiment à 2% de chances de s'engager
+                    b)- Proba modifié par radio (initiative), vitesse, technologie et doctrines
+            3) si toutes les unités en premières ligne fuit alors la bataille est perdu
+        """
+        Regiment_list = List
+        current_width = np.sum([reg.Width for reg in Regiment_list])
     def isFinnish(self):
         """
         Check si le combat est terminé
             - Si l'un des deux camps n'as plus de PV ou d'Organisation
         :return: True ou False
+        TODO
+            - la bataille est finie si tout les regiments en 1ere ligne n'ont plus de PV / ORG
         """
         return (
                 (self.ATK.HP  <= 0)
@@ -74,8 +101,8 @@ class Battle:
         txt += "\nNew cac_level = {}".format(self.CAC_level)
         txt += "\n"
     # Stats arrondis
-        round_Stats(self.ATK)
-        round_Stats(self.DEF)
+        round_Stats(iter(self.ATK_list))
+        round_Stats(iter(self.DEF_list))
         round_Stats(self)
     # ATK Round
         self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque

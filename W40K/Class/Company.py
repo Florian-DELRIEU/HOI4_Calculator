@@ -67,6 +67,8 @@ class Company:
         if   self.Type == "Infantry":   self.Width = 2
         elif self.Type == "Tank":       self.Width = 2
         elif self.Type == "Artillery":  self.Width = 3
+        elif self.Type == "Anti-Tank":  self.Width = 1
+        elif self.Type == "Anti-Air":   self.Width = 1
         else:                           self.Width = 0
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
