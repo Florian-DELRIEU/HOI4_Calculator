@@ -13,11 +13,11 @@ class Regiment:
         self.__SoftMeleeAttack = float()
         self.__HardAttack = float()
         self.__HardMeleeAttack = float()
-        self.Hardness = float()
-        self.Armor = float()
-        self.Piercing = float()
         self.__Breakthrought = float()
         self.__Defense = float()
+        self.Armor = float()
+        self.Piercing = float()
+        self.Hardness = float()
     # Current Stats
         self.Strength = 1
         self.SoftAttack = float()
@@ -30,6 +30,7 @@ class Regiment:
         self.HP = self.__HP
         self.ORG = self.__ORG
     # Battle
+        self.Width = float()
         self.NbATK = float()
         self.isDefending = True
         self.set_STR()
@@ -51,6 +52,7 @@ class Regiment:
         self.Piercing = np.mean([el.Piercing for el in self.Companies])
         self.__Breakthrought = np.sum([el.Breakthrought for el in self.Companies])
         self.__Defense = np.sum([el.Defense for el in self.Companies])
+        self.Width = np.sum([el.Width for el in self.Companies])
     def set_STR(self):
         self.Strength = self.HP / self.__HP
     # Maj des stats

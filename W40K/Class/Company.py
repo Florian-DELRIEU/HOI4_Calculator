@@ -26,6 +26,7 @@ class Company:
         self.Piercing = float()
         self.Breakthrought = float()
         self.Defense = float()
+        self.Width = float()
         self.HOI4_Profil()
     def HOI4_Profil(self):
         if self.Unit is not None:
@@ -62,6 +63,11 @@ class Company:
     def setUpgrade(self,List:list):
         self.Upgrade = List
         setUpgradeBonus(self)
+    def setWidth(self):
+        if   self.Type == "Infantry":   self.Width = 2
+        elif self.Type == "Tank":       self.Width = 2
+        elif self.Type == "Artillery":  self.Width = 3
+        else:                           self.Width = 0
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
