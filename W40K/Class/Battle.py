@@ -2,6 +2,8 @@ from W40K.Functions.Functions import round_Stats
 from W40K.Class.Regiment import Regiment
 from W40K.Functions.Tactics_func import *
 from MyPack.Utilities import AskUser
+from numpy.random import choice
+from numpy import sum
 
 class Battle:
     """
@@ -47,7 +49,8 @@ class Battle:
                 2B)- si il reste de la place
                     a)- chaque regiment à 2% de chances de s'engager
                     b)- Proba modifié par radio (initiative), vitesse, technologie et doctrines
-            3) si toutes les unités en premières ligne fuit alors la bataille est perdu
+            3) Si une unité en 1ere ligne n'as plus d'ORG/PV alors elle fuit
+            4) si toutes les unités en premières ligne fuit alors la bataille est perdu
         """
         Regiment_list = List
         current_width = np.sum([reg.Width for reg in Regiment_list])
@@ -56,14 +59,10 @@ class Battle:
         Check si le combat est terminé
             - Si l'un des deux camps n'as plus de PV ou d'Organisation
         :return: True ou False
-        TODO
-            - la bataille est finie si tout les regiments en 1ere ligne n'ont plus de PV / ORG
         """
         return (
-                (self.ATK.HP  <= 0)
-            or  (self.DEF.HP  <= 0)
-            or  (self.ATK.ORG <= 0)
-            or  (self.DEF.ORG <= 0)
+                (len(self.ATK_Engaged) == 0)
+            or  (len(self.DEF_Engaged) == 0)
         )
     def Round(self,Nb:int()=1,LogLevel=True):
         """
@@ -88,17 +87,17 @@ class Battle:
             previous_CAC_limit = self.CAC_limit
             choose_Tactics(self)
             if Loglevel:
-                txt += "\nNew tactics / Battle phase: {}".format(self.Phase)
-                txt += "\n- {} choose {} tactic".format(self.ATK.Name,self.ATK_Tactic)
-                txt += "\n- {} choose {} tactic".format(self.DEF.Name,self.DEF_Tactic)
+                txt += f"\nNew tactics / Battle phase: {self.Phase}"
+                txt += f"\n- ATK choose {self.ATK_Tactic} tactic"
+                txt += f"\n- DEF choose {self.DEF_Tactic} tactic"
                 txt += "\n"
-                txt += "\nOld CAC limit = {}".format(previous_CAC_limit)
+                txt += f"\nOld CAC limit = {previous_CAC_limit}"
         update_CAC(self)
         if self.roundCounter%12 == 0 and Loglevel:
-            txt += "\n- Cac changes by ATK = {}".format(self.ATK_Tactic.CAC)
-            txt += "\n- Cac changes by DEF = {}".format(self.DEF_Tactic.CAC)
-            txt += "\nNew CAC limit = {}".format(self.CAC_limit)
-        txt += "\nNew cac_level = {}".format(self.CAC_level)
+            txt += f"\n- Cac changes by ATK = {self.ATK_Tactic.CAC}"
+            txt += f"\n- Cac changes by DEF = {self.DEF_Tactic.CAC}"
+            txt += f"\nNew CAC limit = {self.CAC_limit}"
+        txt += f"\nNew cac_level = {self.CAC_level}"
         txt += "\n"
     # Stats arrondis
         round_Stats(iter(self.ATK_list))
