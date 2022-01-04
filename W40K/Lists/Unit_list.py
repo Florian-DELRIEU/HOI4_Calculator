@@ -1,6 +1,10 @@
+"""
+FIXME
+    1) Basilik.Type = "Tank"
+        - Cause une erreur dans les fonctions set_Defense/set_Breakthrough (DEF/BRK == 0 car non trouvé)
+"""
 from W40K.Class.Unit import Infantry, Tank, Walker
 from W40K.Class.Weapons import Weapon
-
 # Units
 Gardes =        Infantry(3, 3, 3, 3, 1, 1, 7, 5, Name="Gardes")
 SpaceMarines =  Infantry(4, 4, 4, 4, 1, 1, 9, 3, Name="Space Marines", SpecialRules=["Astartes"])

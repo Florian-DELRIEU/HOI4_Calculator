@@ -138,6 +138,7 @@ class Tank:
         self.Armor = float()
         self.Piercing = float()
     # Bonus
+        self.bonus_CC = 1
         self.bonus_CT = np.exp((CT - 3)/2.8)
         self.HOI4_Profil()
         round_Stats(self)
@@ -188,6 +189,7 @@ class Tank:
         self.HardAttack = np.sum([el.HardAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Defense = np.sum([el.Defense for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Breakthrought = np.sum([el.Breakthrought for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
+        self.Piercing = np.max([weapon.Piercing for weapon in self.TurretWeapon+self.HullWeapon+self.SideWeapon])
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
@@ -208,17 +210,11 @@ class Tank:
         setQuantity(self, Quantity)
     def __copy__(self,Quantity=None):
         if Quantity is None: Quantity = self.Quantity
-        New = Tank(CT=self.CT,
-                   Blind_Av=self.Blind_Av,
-                   Blind_Side=self.Blind_Side,
-                   Blind_Arr=self.Blind_Arr,
-                   PC = self.PC,
-                   SpecialRules=self.SpecialRules,
-                   Type=self.Type,
-                   Quantity=Quantity)
-        New.HOI4_Profil()
-        New.set_Quantity(Quantity)
-        return New
+        newObject = Tank()
+        for attr in self.__dict__:
+            newObject.__setattr__(attr, self.__getattribute__(attr))
+        newObject.set_Quantity(Quantity)
+        return newObject
 
 ########################################################################################################################
 ########################################################################################################################
