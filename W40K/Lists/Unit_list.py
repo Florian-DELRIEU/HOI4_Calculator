@@ -33,7 +33,7 @@ Predator_A.setWeapons(
     TurretList=[Autocanon.__copy__(1)],
     HullList=[BolterLD.__copy__(1)],
     SideList=[BolterLD.__copy__(2)])
-Basilisk = Tank(3,12,10,10,3,Type="Tank")
+Basilisk = Tank(3,12,10,10,3,Type="Tank",SpecialRules=["Oppen-Topped"])
 Basilisk.setWeapons(
     TurretList=[Earthshaker.__copy__(1)],
     HullList=[BolterLD.__copy__(1)])

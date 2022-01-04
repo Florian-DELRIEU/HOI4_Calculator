@@ -134,21 +134,22 @@ def setDefense(object):
         elif Type == "Heavy":                       DEF = 6
         elif Type == "SuperHeavy":                  DEF = 10
         
-        if   Type == "Chariot SP Artillery":        DEF = 4
+        elif   Type == "Chariot SP Artillery":      DEF = 4
         elif Type == ("Tank SP Artillery" 
                           or "SP Artillery"):       DEF = 5
         elif Type == "Heavy SP Artillery":          DEF = 6
         elif Type == "SuperHeavy SP Artillery":     DEF = 7
             
-        if   Type == "Chariot Destroyer":           DEF = 4
+        elif   Type == "Chariot Destroyer":         DEF = 4
         elif Type == ("Tank Destroyer"
                    or "Destroyer"):                 DEF = 5 
         elif Type == "Heavy Destroyer":             DEF = 6
         elif Type == "SuperHeavy Destroyer":        DEF = 7
+        else:                                       return AttributeError, "Tank Type not Found"
 
     elif object.Class == "Infantry":        DEF = 20
     else:                               return AttributeError ,"object.Class not found"
-    object.Defense = DEF
+    object.Defense = DEF / 100
 ########################################################################################################################
 def setBreakthrought(object):
     # sourcery skip: merge-duplicate-blocks, remove-pass-elif, remove-redundant-if, switch
@@ -164,17 +165,18 @@ def setBreakthrought(object):
         elif Type == "Heavy":                       BRK = 40
         elif Type == "SuperHeavy":                  BRK = 70
 
-        if Type == "Chariot SP Artillery":          BRK = 2
+        elif Type == "Chariot SP Artillery":        BRK = 2
         elif Type == ("Tank SP Artillery"
                       or "SP Artillery"):           BRK = 3
         elif Type == "Heavy SP Artillery":          BRK = 2
         elif Type == "SuperHeavy SP Artillery":     BRK = 3
 
-        if Type == "Chariot Destroyer":             BRK = 1
+        elif Type == "Chariot Destroyer":           BRK = 1
         elif Type == ("Tank Destroyer"
                       or "Destroyer"):              BRK = 1.3
         elif Type == "Heavy Destroyer":             BRK = 1
         elif Type == "SuperHeavy Destroyer":        BRK = 4
+        else:                                       return AttributeError, "Tank Type not Found"
     elif Class == "Walker":                         pass
     else:                               return AttributeError ,"object.Class not found"
-    object.Breakthrought = BRK
+    object.Breakthrought = BRK / 100
