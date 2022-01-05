@@ -26,8 +26,6 @@ def check_lists(self):
     from W40K.Class.Weapons import Weapon
     for el in self.Equipement:
         assert type(el) is Weapon , "Each element of Equipement list must be a :Weapon class:"
-
-
 """
 def saveInCSV(Object):
     Dico1 = Object.__dict__

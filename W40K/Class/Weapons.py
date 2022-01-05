@@ -23,8 +23,10 @@ class Weapon:
         self.Breakthrought = float()
         self.Piercing = float()
         self.HOI4_Profil()
+
     def __repr__(self):
         return str(self.Quantity) + " " + self.Name
+
     def HOI4_Profil(self):
     # Cadence
         if self.Type == "Tir rapide":self.Cadence = 2
@@ -41,6 +43,7 @@ class Weapon:
         setWeapons_DEFBRK_bonus(self)
     # End
         round_Stats(self)
+
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
@@ -53,19 +56,17 @@ class Weapon:
                    self.Defense,self.Breakthrought,
                    self.Piercing)
         print(txt)
+
     def set_Quantity(self,Quantity):
         setQuantity(self, Quantity)
-    def __copy__(self,Quantity):
-        NewWeapon = Weapon()
-        NewWeapon.F = self.F
-        NewWeapon.PA = self.PA
-        NewWeapon.Type = self.Type
-        NewWeapon.Range = self.Range
-        NewWeapon.Name = self.Name
-        NewWeapon.SpecialsRules = self.SpecialsRules
-        NewWeapon.HOI4_Profil()
-        NewWeapon.set_Quantity(Quantity)
-        return NewWeapon
+
+    def __copy__(self, Quantity=None):
+        if Quantity is None: Quantity = self.Quantity
+        newObject = Weapon()
+        for attr in self.__dict__:
+            newObject.__setattr__(attr, self.__getattribute__(attr))
+        newObject.set_Quantity(Quantity)
+        return newObject
 
 
 class Upgrade:

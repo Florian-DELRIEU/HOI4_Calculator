@@ -27,20 +27,20 @@ Astartes_CCW = Weapon(4,None,None,"Melee",Name="Astartes Knife")
 Bayonet = Weapon(3,None,None,"Melee",Name="Lasgun bayonet")
 
 # Vehicules and Artillerie
-LemanRuss_A = Tank(3,14,12,10,3,Type="Heavy")
+LemanRuss_A = Tank(3,14,12,10,3,Type="Heavy",Name="Leman Russ")
 LemanRuss_A.setWeapons(
     TurretList=[Obusier.__copy__(1)],
     HullList=[BolterLD.__copy__(1)],
     SideList=[BolterLD.__copy__(2)])
-Predator_A = Tank(4,13,11,10,3,Quantity=1,Type="Tank")
+Predator_A = Tank(4,13,11,10,3,Quantity=1,Type="Tank",Name="Predator")
 Predator_A.setWeapons(
     TurretList=[Autocanon.__copy__(1)],
     HullList=[BolterLD.__copy__(1)],
     SideList=[BolterLD.__copy__(2)])
-Basilisk = Tank(3,12,10,10,3,Type="Tank",SpecialRules=["Oppen-Topped"])
+Basilisk = Tank(3,12,10,10,3,Type="Tank",SpecialRules=["Oppen-Topped"],Name="Basillisk")
 Basilisk.setWeapons(
     TurretList=[Earthshaker.__copy__(1)],
     HullList=[BolterLD.__copy__(1)])
-Field_Earthshaker = Tank(3,10,10,10,2,Type="Tank",SpecialRules=["Immobile"])
+Field_Earthshaker = Tank(3,10,10,10,2,Type="Tank",SpecialRules=["Immobile"],Name="Earthshaker")
 Field_Earthshaker.setWeapons(
     TurretList=[Earthshaker.__copy__(1)])

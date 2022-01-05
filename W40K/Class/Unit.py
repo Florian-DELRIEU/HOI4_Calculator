@@ -108,12 +108,14 @@ class Infantry:
 ########################################################################################################################
 
 class Tank:
-    def __init__(self,CT=3,Blind_Av=14,Blind_Side=13,Blind_Arr=10,PC=3,Quantity=1,Type="Heavy",SpecialRules=[]):
+    def __init__(self,CT=3,Blind_Av=14,Blind_Side=13,Blind_Arr=10,PC=3,Quantity=1,Type="Heavy",SpecialRules=[],
+                 Name= ""):
         """
         Default is Leman Russ battle tank
         """
         self.Quantity = Quantity
         self.Class = "Tank"
+        self.Name = Name
     # W40K Stats
         self.CT = CT
         self.Blind_Av = Blind_Av
@@ -157,6 +159,8 @@ class Tank:
         setBreakthrought(self)
     # Bonus
         round_Stats(self)
+    def __repr__(self):
+            return str(self.Quantity) + " " + self.Name
     def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
         self.TurretWeapon = TurretList  # first Turret weapon considered as Main gun
         self.SideWeapon = SideList
@@ -221,12 +225,13 @@ class Tank:
 
 class Walker:
     def __init__(self,CC=3,CT=3,F=5,Blind_Av=12,Blind_Side=10,Blind_Arr=10,A=1,PC=2,Quantity=1,Type="Marcheur"
-                 ,SpecialRules=list):
+                 ,SpecialRules=list,Name = ""):
         """
         Default is Sentinel
         """
         self.Quantity = Quantity
         self.Class = "Walker"
+        self.Name = Name
     # W40K Stats
         self.CC = CC
         self.CT = CT
@@ -285,19 +290,15 @@ class Walker:
                    self.SoftMeleeAttack,self.HardMeleeAttack,
                    self.Hardness,self.Armor)
         print(txt)
+    def __repr__(self):
+        return str(self.Quantity) + " " + self.Name
     def set_Quantity(self,Quantity):
         setQuantity(self, Quantity)
-    def __copy__(self,Quantity):
-        New = Walker(CT=self.CT,
-                     CC=self.CC,
-                     Blind_Av=self.Blind_Av,
-                     Blind_Side=self.Blind_Side,
-                     Blind_Arr=self.Blind_Arr,
-                     PC = self.PC,
-                     A=self.A,
-                     SpecialRules=self.SpecialRules,
-                     Type=self.Type,
-                     Quantity=Quantity)
-        New.HOI4_Profil()
-        New.set_Quantity(Quantity)
-        return New
+
+    def __copy__(self, Quantity=None):
+        if Quantity is None: Quantity = self.Quantity
+        newObject = Walker()
+        for attr in self.__dict__:
+            newObject.__setattr__(attr, self.__getattribute__(attr))
+        newObject.set_Quantity(Quantity)
+        return newObject

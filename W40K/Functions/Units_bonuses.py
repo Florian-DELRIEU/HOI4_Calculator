@@ -3,5 +3,5 @@ def apply_SpecialRules(unit):
         if rule == "Astartes":
             unit.ORG *= 1.2
         elif rule == "Immobile":
-            unit.Breaktrought = 0
+            unit.Breaktrought = 0 if unit.Type != "Artillery" else 0.8
             unit.Defense *= 1.2
