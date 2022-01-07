@@ -1,4 +1,5 @@
 from MyPack.Utilities import *
+from HOI.Tactics.Tactics_func import choose_Tactic
 
 class Division:
     """
@@ -96,7 +97,10 @@ class Battle:
         assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
         self.ATK = ATK
         self.DEF = DEF
+        self.ATK_Tactic = None
+        self.DEF_Tactic = None
         self.roundCounter = 0
+        self.Phase = "Default"
     def isFinnish(self):
         """
         Check si le combat est terminé
@@ -127,6 +131,11 @@ class Battle:
         """
         Lancement d'un round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
+        if self.roundCounter % 12 == 0:
+            choose_Tactic(self)
+            txt = "New tactics / Battle phase: {}".format(self.Phase)
+            txt += "\n- {} choose {} tactic".format(self.ATK.Name, self.ATK_Tactic)
+            txt += "\n- {} choose {} tactic".format(self.DEF.Name, self.DEF_Tactic)
         self.ATK.Attaque(self.DEF)  # ATK attaque
         self.DEF.Damage(self.ATK)   # DEF prend les dommages
         self.DEF.Attaque(self.ATK)  # DEF riposte
