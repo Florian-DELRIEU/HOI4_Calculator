@@ -24,8 +24,10 @@ class Battle:
         self.roundCounter = 0
         self.CAC_level = 0
         self.CAC_limit = 0
-        self.Phase = "Default"  # Phase de bataille en cours
+        self.Current_Phase = "Default"  # Phase de bataille en cours
+        self.Following_Phase = "Default"
         self.Terrain = "Plain"
+        self.Initiative_winner = None
     def isFinnish(self):
         """
         Check si le combat est terminé
@@ -59,9 +61,10 @@ class Battle:
         txt = """----------- round {} -----------------""".format(self.roundCounter)
         if self.roundCounter%12 == 0:
             previous_CAC_limit = self.CAC_limit
+            self.Current_Phase = self.Following_Phase
             choose_Tactics(self)
             if Loglevel:
-                txt += "\nNew tactics / Battle phase: {}".format(self.Phase)
+                txt += "\nNew tactics / Battle phase: {}".format(self.Current_Phase)
                 txt += "\n- {} choose {} tactic".format(self.ATK.Name,self.ATK_Tactic)
                 txt += "\n- {} choose {} tactic".format(self.DEF.Name,self.DEF_Tactic)
                 txt += "\n"

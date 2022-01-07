@@ -1,3 +1,4 @@
+
 class Tactic:
     def __init__(self,ATK_Damage=1,ATK_Defense=1,DEF_Damage=1,DEF_Defense=1,CAC=0,weight=4,CounteredBy=None,Name="",
                  BeginPhase=None):
@@ -12,7 +13,7 @@ class Tactic:
         self.CAC = CAC
         self.weight = weight
     # Begin battle phase
-        self.Begin_battle_phase = None
+        self.Begin_battle_phase = BeginPhase
 
     def __repr__(self):
         return self.Name

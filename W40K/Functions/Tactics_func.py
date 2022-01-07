@@ -19,19 +19,20 @@ def choose_Tactics(Battle):
     """
     change_weight(Battle)
 # Which tactics lists is used according the battle phase
-    if Battle.Phase == "Default":
+    if Battle.Current_Phase == "Default":
         ATK_tactic_list = ATK_tactics
         DEF_tactic_list = DEF_tactics
-    elif Battle.Phase == "Close Quarter Combat":
+        Battle.Current_Phase == "Default"
+    elif Battle.Current_Phase == "Close Quarter Combat":
         ATK_tactic_list = ATK_CQ_tactics
         DEF_tactic_list = DEF_CQ_tactics
-    elif Battle.Phase == "Seize Bridge":
+    elif Battle.Current_Phase == "Seize Bridge":
         ATK_tactic_list = ATK_SB_tactics
         DEF_tactic_list = DEF_SB_tactics
-    elif Battle.Phase == "Hold Bridge":
+    elif Battle.Current_Phase == "Hold Bridge":
         ATK_tactic_list = ATK_HB_tactics
         DEF_tactic_list = DEF_HB_tactics
-    elif Battle.Phase == "Tactical Withdraw":
+    elif Battle.Current_Phase == "Tactical Withdraw":
         ATK_tactic_list = ATK_TW_tactics
         DEF_tactic_list = DEF_TW_tactics
     else: return NameError , "Wrong phase name"
@@ -39,13 +40,17 @@ def choose_Tactics(Battle):
     ATK_Tactic, DEF_Tactic = _choose_tactics(ATK_tactic_list,DEF_tactic_list,winner) # choose tactics
     Battle.ATK_Tactic = ATK_Tactic
     Battle.DEF_Tactic = DEF_Tactic
+    Battle.Initiative_winner = winner
     isCountered(Battle) # test if any tactics has been coutered
     apply_Tactics(Battle) # apply bonuses
+    change_BattlePhase(Battle)
 
 def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
     """
     Le perdant du :initiative round: choisi la tactique en premier. Ensuite le gagnant tente de le contrer.
     :return: Tactiques choisis par les deux camps
+    FIXME
+        - Fusionner les boucles pour les cas ou le gagnant est soit le DEF / ATK dans une seulle boucle
     """
     ATK_Tactic = Tactic()
     DEF_Tactic = Tactic()
@@ -145,6 +150,13 @@ def update_CAC(Battle):
     Battle.CAC_level += CAC_drift
     if Battle.CAC_level < 0: Battle.CAC_level = 0
     elif Battle.CAC_level > 1: Battle.CAC_level = 1
+
+def change_BattlePhase(Battle):
+    if Battle.Initiative_winner == "ATK":   winner_tactic = Battle.ATK_Tactic
+    elif Battle.Initiative_winner == "DEF": winner_tactic = Battle.DEF_Tactic
+    else: return AttributeError , "Winner not exists"
+    if winner_tactic.Begin_battle_phase != None:
+        Battle.Following_Phase = winner_tactic.Begin_battle_phase
 
 def change_weight(Battle):
     """Change tactics weight with regards to Generals skills and abilities and terrain"""
