@@ -41,8 +41,7 @@ class Division:
         self.set_STR() # MAJ des stats
         NbATK = Target.HARD*self.HA + (1-Target.HARD)*self.SA  # Calcul du nbr d'attaque en fonction du Hardness
     # Piercing ?
-        if self.PRC <= Target.ARM: self.NbATK = NbATK/2  # si perce pas
-        else: self.NbATK = NbATK                     # si perce
+        self.NbATK = NbATK if self.PRC >= Target.ARM else NbATK/2
         self.NbATK /= 10 # les attaques sont divisé par 10 (voir wiki)
     def Damage(self,Striker):
         """
@@ -52,8 +51,7 @@ class Division:
         self.set_STR() # MAJ
         NbDAMAGE = Striker.NbATK #Recupere le nombre d'attaque de l'attaquant
     # Attaquant ou defenseur ?
-        if self.isDefending: DEF = self.DEF  # Si defend alors utilise DEFENSE stat
-        else:                DEF = self.BRK  # si attaque alors utilise BREAKTOUGHT stat
+        DEF = self.DEF if self.isDefending else self.BRK
     # Defense de la cible
         if DEF > NbDAMAGE: NbDAMAGE *= 0.1
         else:              NbDAMAGE = self.DEF*0.1 + (NbDAMAGE-self.DEF)*0.4
@@ -61,14 +59,11 @@ class Division:
     # PV Dégats
         self.PV -= 1.5*NbDAMAGE # Moyenne de D2
         self.PV = truncDecimal(self.PV,1)
-        if self.PV <= 0 : self.PV = 0
+        self.PV = max(self.PV, 0)
     # ORG Dégats
-        if self.PRC > Striker.ARM:
-            self.ORG -= 3.5*NbDAMAGE # Moyenne de D6
-        else:
-            self.ORG -= 2.5*NbDAMAGE # Moyenne de D4
+        self.ORG -= 3.5*NbDAMAGE if self.PRC > Striker.ARM else 2.5*NbDAMAGE
         self.ORG = truncDecimal(self.ORG,1)
-        if self.ORG <= 0 : self.ORG = 0
+        self.ORG = max(self.ORG, 0)
 
 class Bataillon:
     def __init__(self,PV,ORG,SA,HA,DEF,BRK,ARM,PRC,HARD,Width,Supply_use,Fuel_use,IC,Name=""):
@@ -108,10 +103,12 @@ class Battle:
             - Si l'un des deux camps n'as plus de PV ou d'Organisation
         :return: True ou False
         """
-        if (self.ATK.PV <= 0) or (self.DEF.PV <= 0) or (self.ATK.ORG <= 0) or (self.DEF.ORG <= 0):
-            return True
-        else:
-            return False
+        return (
+            (self.ATK.PV <= 0)
+            or (self.DEF.PV <= 0)
+            or (self.ATK.ORG <= 0)
+            or (self.DEF.ORG <= 0)
+        )
     def Round(self,Nb=1):
         """
         Definit le nombre de lancement de round

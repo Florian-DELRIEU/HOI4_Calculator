@@ -1,9 +1,9 @@
 from Class import *
-from DivisionList import *
+from DivisionList import Div_Dico
 
-DivA = Infantery_72
+DivA = Div_Dico["Infantry_72"]
 DivA.isDefending = False
-DivB = Armored_432
+DivB = Div_Dico["Armored_432"]
 DivB.isDefending = True
 
 BATTLE = Battle(DivA,DivB)
