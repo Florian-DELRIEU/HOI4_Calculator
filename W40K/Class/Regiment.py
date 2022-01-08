@@ -3,7 +3,7 @@ from MyPack2.Utilities import truncDecimal
 from W40K.Functions.Functions import round_Stats
 
 class Regiment:
-    def __init__(self,CompagnieList=[],XP=0,Name=""):
+    def __init__(self,CompagnieList=[],XP=0,Entrenchment_level=0,Name=""):
         self.Companies = CompagnieList
         self.Name = Name
     # Stats when stregth == 1
@@ -20,6 +20,7 @@ class Regiment:
         self.Hardness = float()
     # Current Stats
         self.Experience = XP
+        self.Entrenchment = Entrenchment_level
         self.Strength = 1
         self.SoftAttack = float()
         self.SoftMeleeAttack = float()
@@ -59,6 +60,7 @@ class Regiment:
         self.__Defense = np.sum([el.Defense for el in self.Companies])
         self.Width = np.sum([el.Width for el in self.Companies])
         self.set_XP()
+        self.set_Entrenchment()
 
     def set_XP(self):  # sourcery skip: flip-comparison
         XP = self.Experience
@@ -68,13 +70,17 @@ class Regiment:
         elif 75 <= XP < 90: Land_modificator = 0.50
         elif 90 <= XP     : Land_modificator = 1.75
         else:               Land_modificator = 1
-
         self.__SoftAttack *= Land_modificator
         self.__HardAttack *= Land_modificator
         self.__SoftMeleeAttack *= Land_modificator
         self.__HardMeleeAttack *= Land_modificator
         self.__Breakthrought *= Land_modificator
         self.__Defense *= Land_modificator
+
+    def set_Entrenchment(self):
+        self.__Defense *= 1.02**(self.Entrenchment)
+        self.__SoftAttack *= 1.02**(self.Entrenchment)
+        self.__HardAttack *= 1.02**(self.Entrenchment)
 
     def set_STR(self):
         self.Strength = self.HP / self.__HP
