@@ -1,6 +1,7 @@
 import numpy as np
 from MyPack2.Utilities import truncDecimal
 from W40K.Functions.Functions import round_Stats
+from W40K.Functions.Leader_func import set_LeaderSkills
 
 class Regiment:
     def __init__(self,CompagnieList=[],XP=0,Entrenchment_level=0,Name=""):
@@ -21,6 +22,7 @@ class Regiment:
     # Current Stats
         self.Experience = XP
         self.Entrenchment = Entrenchment_level
+        self.Leader = None
         self.Strength = 1
         self.SoftAttack = float()
         self.SoftMeleeAttack = float()
@@ -61,6 +63,10 @@ class Regiment:
         self.Width = np.sum([el.Width for el in self.Companies])
         self.set_XP()
         self.set_Entrenchment()
+        if self.Leader is not None: self.apply_Leader()
+
+    def apply_Leader(self):
+        set_LeaderSkills(self)
 
     def set_XP(self):  # sourcery skip: flip-comparison
         XP = self.Experience
