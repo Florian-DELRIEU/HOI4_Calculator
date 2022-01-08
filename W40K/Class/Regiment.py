@@ -83,10 +83,10 @@ class Regiment:
         self.set_STR() # MAJ
         NbDAMAGE = Striker.NbATK #Recupere le nombre d'attaque de l'attaquant
     # Attaquant ou defenseur ?
-        DEF = self.Defense if self.isDefending else self.Breakthrought
+        DEF = self.Defense/10 if self.isDefending else self.Breakthrought/10
     # Defense de la cible
         if DEF > NbDAMAGE: NbDAMAGE *= 0.1
-        else:              NbDAMAGE = self.Defense*0.1 + (NbDAMAGE-self.Defense)*0.4
+        else:              NbDAMAGE = DEF*0.1 + (NbDAMAGE-DEF)*0.4
     # Arrondissement des dégats
         round_Stats(self)
     # Calcul des dégats entre les PV et l'ORG
