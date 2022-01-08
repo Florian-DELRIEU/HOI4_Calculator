@@ -16,5 +16,5 @@ RegB = Regiment(Name = "Ultramarines",
 
 RegB.isDefending = False
 
-BattleA = Battle(RegB,RegA)
+BattleA = Battle(RegB,RegA,Terrain="Marsh",River="Big")
 BattleA.Round(-1)

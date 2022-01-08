@@ -50,7 +50,7 @@ def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
     Le perdant du :initiative round: choisi la tactique en premier. Ensuite le gagnant tente de le contrer.
     :return: Tactiques choisis par les deux camps
     FIXME
-        - Fusionner les boucles pour les cas ou le gagnant est soit le DEF / ATK dans une seulle boucle
+        - Fusionner les boucles pour les cas ou le gagnant est soit le DEF / ATK dans une seule boucle
     """
     ATK_Tactic = Tactic()
     DEF_Tactic = Tactic()

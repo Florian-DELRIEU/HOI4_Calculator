@@ -1,3 +1,7 @@
+"""
+TODO
+       - Mettre les poids des tactiques avec pont à 0 si Battle.RiverCrossing = False
+"""
 from W40K.Class.Tactics import Tactic
 
 ## ATTACKS

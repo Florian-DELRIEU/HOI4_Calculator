@@ -1,13 +1,15 @@
 from W40K.Functions.Functions import round_Stats
 from W40K.Class.Regiment import Regiment
 from W40K.Functions.Tactics_func import *
+from W40K.Lists.Terrain_list import Terrain_dico
+from W40K.Functions.Terrain_func import apply_Terrain
 from MyPack.Utilities import AskUser
 
 class Battle:
     """
     Objet contenant les divisions permettant de lancer les round et les logs
     """
-    def __init__(self, ATK, DEF):
+    def __init__(self, ATK, DEF, Terrain="Plains", River = None):
     # Initials conditions
         assert type(ATK) == Regiment and type(DEF) == Regiment , "campA and campB must be regiment class"
         assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
@@ -26,7 +28,8 @@ class Battle:
         self.CAC_limit = 0
         self.Current_Phase = "Default"  # Phase de bataille en cours
         self.Following_Phase = "Default"
-        self.Terrain = "Plain"
+        self.Terrain = Terrain_dico[Terrain]
+        self.Terrain.set_River(River)
         self.Initiative_winner = None
     def isFinnish(self):
         """
@@ -53,7 +56,7 @@ class Battle:
                 i += 1
         else: # Lancement des rounds jusqu'a fin du combat
             while not self.isFinnish():
-                self._Round(Loglevel=LogLevel,PauseEachRound=True)
+                self._Round(Loglevel=LogLevel,PauseEachRound=False)
     def _Round(self,Loglevel,PauseEachRound=False):
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
@@ -69,6 +72,7 @@ class Battle:
                 txt += "\n- {} choose {} tactic".format(self.DEF.Name,self.DEF_Tactic)
                 txt += "\n"
                 txt += "\nOld CAC limit = {}".format(previous_CAC_limit)
+        apply_Terrain(self)
         update_CAC(self)
         if self.roundCounter%12 == 0 and Loglevel:
             txt += "\n- Cac changes by ATK = {}".format(self.ATK_Tactic.CAC)
@@ -108,6 +112,10 @@ class Battle:
         self.roundCounter += 1
         self.printLOG()
         if PauseEachRound: AskUser("pausing ...","Click Enter")
+
+    def set_River(self,River_width):
+        self.Terrain.set_River(River_width=River_width)
+
     def printLOG(self):
         """
         log pour chaque heure de combats
