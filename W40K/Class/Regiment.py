@@ -3,7 +3,7 @@ from MyPack2.Utilities import truncDecimal
 from W40K.Functions.Functions import round_Stats
 
 class Regiment:
-    def __init__(self,CompagnieList=[],Name=""):
+    def __init__(self,CompagnieList=[],XP=0,Name=""):
         self.Companies = CompagnieList
         self.Name = Name
     # Stats when stregth == 1
@@ -19,6 +19,7 @@ class Regiment:
         self.Piercing = float()
         self.Hardness = float()
     # Current Stats
+        self.Experience = XP
         self.Strength = 1
         self.SoftAttack = float()
         self.SoftMeleeAttack = float()
@@ -34,11 +35,15 @@ class Regiment:
         self.NbATK = float()
         self.isDefending = True
         self.set_STR()
+        round_Stats(self)
+
     def __repr__(self):
         return self.Name
+
     def setCompanies(self,CompaniesList=[]):
         self.Companies = CompaniesList
         self.HOI4_Profil()
+
     def HOI4_Profil(self):
     # Default Stats
         self.__HP = np.sum([el.HP for el in self.Companies])
@@ -48,11 +53,29 @@ class Regiment:
         self.__HardAttack = np.sum([el.HardAttack for el in self.Companies])
         self.__HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Companies])
         self.Hardness = np.mean([el.Hardness for el in self.Companies])
-        self.Armor = np.mean([el.Armor for el in self.Companies])
-        self.Piercing = np.mean([el.Piercing for el in self.Companies])
+        self.Armor = 0.7*np.mean([el.Armor for el in self.Companies]) + 0.3*np.max([el.Armor for el in self.Companies])
+        self.Piercing = 0.7*np.mean([el.Piercing for el in self.Companies]) + 0.3*np.max([el.Piercing for el in self.Companies])
         self.__Breakthrought = np.sum([el.Breakthrought for el in self.Companies])
         self.__Defense = np.sum([el.Defense for el in self.Companies])
         self.Width = np.sum([el.Width for el in self.Companies])
+        self.set_XP()
+
+    def set_XP(self):  # sourcery skip: flip-comparison
+        XP = self.Experience
+        if   0  <= XP < 10: Land_modificator = 0.75
+        elif 10 <= XP < 30: Land_modificator = 1
+        elif 30 <= XP < 75: Land_modificator = 1.25
+        elif 75 <= XP < 90: Land_modificator = 0.50
+        elif 90 <= XP     : Land_modificator = 1.75
+        else:               Land_modificator = 1
+
+        self.__SoftAttack *= Land_modificator
+        self.__HardAttack *= Land_modificator
+        self.__SoftMeleeAttack *= Land_modificator
+        self.__HardMeleeAttack *= Land_modificator
+        self.__Breakthrought *= Land_modificator
+        self.__Defense *= Land_modificator
+
     def set_STR(self):
         self.Strength = self.HP / self.__HP
     # Maj des stats
@@ -62,6 +85,7 @@ class Regiment:
         self.HardMeleeAttack = self.__HardMeleeAttack * self.Strength
         self.Breakthrought = self.__Breakthrought * self.Strength
         self.Defense = self.__Defense * self.Strength
+
     def Attaque(self,Target,CAC_level):
         assert type(Target) == Regiment
         self.set_STR()
@@ -75,6 +99,7 @@ class Regiment:
             self.NbATK = NbATK  # si perce
         self.NbATK /= 10  # les attaques sont divisé par 10 (voir wiki)
         round_Stats(self)
+
     def Damage(self,Striker):
         """
         Calcul du nombre de touche et des dégats
@@ -98,6 +123,7 @@ class Regiment:
         self.ORG -= 3.5*NbDAMAGE if self.Piercing < Striker.Armor else 2.5*NbDAMAGE
         self.ORG = truncDecimal(self.ORG,1)
         self.ORG = max(self.ORG, 0)
+
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

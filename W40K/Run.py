@@ -12,9 +12,9 @@ RegA.isDefending = True
 RegB = Regiment(Name = "Ultramarines",
                 CompagnieList = [
                         Spaces_100A,Spaces_100A,Spaces_100A,Spaces_100A
-                ])
+                ],XP=100)
 
 RegB.isDefending = False
 
-BattleA = Battle(RegB,RegA,Terrain="Marsh",River="Big")
+BattleA = Battle(RegB,RegA,Terrain="Plains",River=None)
 BattleA.Round(-1)
