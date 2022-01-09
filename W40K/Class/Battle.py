@@ -19,13 +19,11 @@ class Battle:
         assert type(ATK) == Regiment and type(DEF) == Regiment , "campA and campB must be regiment class"
         assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
         assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
-    # ATK team
         self.ATK = {
             "Regiment": ATK,
             "Leader": Leader,
             "Tactic": ATK_all_tactics.copy()
         }
-    # DEF Team
         self.DEF = {
             "Regiment":DEF,
             "Leader":Leader,
@@ -38,7 +36,7 @@ class Battle:
         self.Current_Phase = "Default"  # Phase de bataille en cours
         self.Following_Phase = "Default"
         self.Terrain = Terrain_dico[Terrain]
-        self.Terrain.set_River(River)
+        self.River = River
         self.Initiative_winner = None
 
     def isFinnish(self):
@@ -55,10 +53,19 @@ class Battle:
         )
 
     def _init_round(self):
+        self.Terrain.set_River(self.River)
         set_LeaderSkills(self)
         apply_LeaderTactic(self)
         apply_Terrain(self)
         update_CAC(self)
+        self.apply_river()
+
+    def apply_river(self):
+        if self.River is None:
+            for side in [self.ATK,self.DEF]:
+                for tactic in side["Tactic"]:
+                    if "Bridge" in tactic.Name:
+                        tactic.weight = 0
 
     def Round(self,Nb:int()=1,LogLevel=True):
         """
@@ -130,9 +137,6 @@ class Battle:
         self.roundCounter += 1
         self.printLOG()
         if PauseEachRound: AskUser("pausing ...","Click Enter")
-
-    def set_River(self,River_width):
-        self.Terrain.set_River(River_width=River_width)
 
     def printLOG(self):
         """

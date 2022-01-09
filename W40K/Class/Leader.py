@@ -4,4 +4,3 @@ class Leader:
         self.Defense_skill = Defense_skill
         self.Traits_list = Traits
         self.Prefered_Tactics = Prefered_Tactics
-        
