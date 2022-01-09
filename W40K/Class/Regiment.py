@@ -2,6 +2,7 @@ import numpy as np
 from MyPack2.Utilities import truncDecimal
 from W40K.Functions.Functions import round_Stats
 from W40K.Functions.Leader_func import set_LeaderSkills
+from W40K.Class.Leader import Leader
 
 class Regiment:
     def __init__(self,CompagnieList=[],XP=0,Entrenchment_level=0,Name=""):
@@ -61,12 +62,14 @@ class Regiment:
         self.__Breakthrought = np.sum([el.Breakthrought for el in self.Companies])
         self.__Defense = np.sum([el.Defense for el in self.Companies])
         self.Width = np.sum([el.Width for el in self.Companies])
+        self.apply_bonuses()
+
+    def apply_bonuses(self):
+        """Regroupe toutes les fonctions donnant des bonuses aux stats des Régiments"""
+        if self.Leader is None: self.Leader = Leader()
+        set_LeaderSkills(self)
         self.set_XP()
         self.set_Entrenchment()
-        if self.Leader is not None: self.apply_Leader()
-
-    def apply_Leader(self):
-        set_LeaderSkills(self)
 
     def set_XP(self):  # sourcery skip: flip-comparison
         XP = self.Experience

@@ -5,7 +5,8 @@ from MyPack.Utilities import truncDecimal
 from  W40K.Lists.Tactics_list import ATK_tactics, ATK_HB_tactics, ATK_CQ_tactics, ATK_SB_tactics, ATK_TW_tactics
 from  W40K.Lists.Tactics_list import DEF_tactics, DEF_HB_tactics, DEF_CQ_tactics, DEF_SB_tactics, DEF_TW_tactics
 
-
+all_Tactics_list = ATK_tactics + ATK_HB_tactics + ATK_CQ_tactics + ATK_SB_tactics + ATK_TW_tactics\
+                 + DEF_tactics + DEF_HB_tactics + DEF_CQ_tactics + DEF_SB_tactics + DEF_TW_tactics
 ########################################################################################################################
 
 def choose_Tactics(Battle):
@@ -160,4 +161,5 @@ def change_BattlePhase(Battle):
 
 def change_weight(Battle):
     """Change tactics weight with regards to Generals skills and abilities and terrain"""
+
     pass
