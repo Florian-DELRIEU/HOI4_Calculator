@@ -1,10 +1,14 @@
-from W40K.Functions.Functions import round_Stats
 from W40K.Class.Regiment import Regiment
-from W40K.Functions.Tactics_func import *
-from W40K.Lists.Terrain_list import Terrain_dico
-from W40K.Functions.Terrain_func import apply_Terrain
-from MyPack.Utilities import AskUser
 from W40K.Class.Leader import Leader
+
+from W40K.Functions.Tactics_func import *
+from W40K.Functions.Functions import round_Stats
+from W40K.Functions.Terrain_func import apply_Terrain
+from W40K.Functions.Leader_func import set_LeaderSkills, apply_LeaderTactic
+
+from W40K.Lists.Terrain_list import Terrain_dico
+from W40K.Lists.Tactics_list import ATK_all_tactics,DEF_all_tactics
+from MyPack.Utilities import AskUser
 
 class Battle:
     """
@@ -18,14 +22,14 @@ class Battle:
     # ATK team
         self.ATK = {
             "Regiment": ATK,
-            "Tactic": Tactic,
-            "Leader": Leader
+            "Leader": Leader,
+            "Tactic": ATK_all_tactics.copy()
         }
     # DEF Team
         self.DEF = {
             "Regiment":DEF,
-            "Tactic":Tactic,
-            "Leader":Leader
+            "Leader":Leader,
+            "Tactic":DEF_all_tactics.copy()
         }
     # Battle parameters
         self.roundCounter = 0
@@ -49,6 +53,13 @@ class Battle:
             or  (self.ATK["Regiment"].ORG <= 0)
             or  (self.ATK["Regiment"].ORG <= 0)
         )
+
+    def _init_round(self):
+        set_LeaderSkills(self)
+        apply_LeaderTactic(self)
+        apply_Terrain(self)
+        update_CAC(self)
+
     def Round(self,Nb:int()=1,LogLevel=True):
         """
         -   Definit le nombre de lancement de round
@@ -64,9 +75,6 @@ class Battle:
             while not self.isFinnish():
                 self._Round(Loglevel=LogLevel,PauseEachRound=False)
 
-    def _init_round(self):
-        apply_Terrain(self)
-        update_CAC(self)
 
     def _Round(self,Loglevel,PauseEachRound=False):
         """

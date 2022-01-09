@@ -64,8 +64,6 @@ class Regiment:
 
     def apply_bonuses(self):
         """Regroupe toutes les fonctions donnant des bonuses aux stats des Régiments"""
-        if self.Leader is None: self.Leader = Leader()
-        set_LeaderSkills(self)
         self.set_XP()
         self.set_Entrenchment()
 
