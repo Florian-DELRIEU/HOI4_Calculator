@@ -14,19 +14,19 @@ class Battle:
     """
     Objet contenant les divisions permettant de lancer les round et les logs
     """
-    def __init__(self, ATK, DEF, Terrain="Plains", River = None):
+    def __init__(self, ATK, DEF, ATK_leader=Leader, DEF_leader=Leader, Terrain="Plains", River = None):
     # Initials conditions
         assert type(ATK) == Regiment and type(DEF) == Regiment , "campA and campB must be regiment class"
         assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
         assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
         self.ATK = {
             "Regiment": ATK,
-            "Leader": Leader,
+            "Leader": ATK_leader,
             "Tactic": ATK_all_tactics.copy()
         }
         self.DEF = {
             "Regiment":DEF,
-            "Leader":Leader,
+            "Leader":DEF_leader,
             "Tactic":DEF_all_tactics.copy()
         }
     # Battle parameters
@@ -72,6 +72,7 @@ class Battle:
         -   Definit le nombre de lancement de round
         -   run _Round
         :param Nb: Nombre de round souhaité (-1 si jusqu'a fin du combat)
+        :param LogLevel:
         """
         if Nb != -1:
             i = 1
@@ -81,7 +82,6 @@ class Battle:
         else: # Lancement des rounds jusqu'a fin du combat
             while not self.isFinnish():
                 self._Round(Loglevel=LogLevel,PauseEachRound=False)
-
 
     def _Round(self,Loglevel,PauseEachRound=False):
         """

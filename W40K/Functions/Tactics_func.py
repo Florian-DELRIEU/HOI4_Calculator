@@ -106,17 +106,14 @@ def Cancel_Tactic(Tactic_to_cancel):
 def Initiative_round(Battle):
     # sourcery skip: assign-if-exp, remove-redundant-pass
     """
-    TODO -- NEED Leader Upgrade
     Choisis quel camp aura l'initiative
-        - Basic pour le moment car leaders ne sont pas ajoutés
+        - Pas en accord avec le wiki (a voir)
+        - Code perso
     """
-    ATK_weight = int()
-    DEF_weight = int()
-    if Battle.ATK_Leader is None:   ATK_weight = 1
-    else:   pass  # Need Leader upgrade
-    if Battle.DEF_Leader is None:   DEF_weight = 1
-    else:   pass  # Need Leader upgrade
-
+    DEF_leader = Battle.DEF["Leader"]
+    DEF_weight = DEF_leader.Defense_skill + DEF_leader.Level
+    ATK_leader = Battle.ATK["Leader"]
+    ATK_weight = ATK_leader.Attack_skill + ATK_leader.Level
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
 
 def apply_Tactics(Battle):
