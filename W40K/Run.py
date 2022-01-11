@@ -17,5 +17,5 @@ RegB = Regiment(Name = "Ultramarines",
 
 RegB.isDefending = False
 
-BattleA = Battle(RegB,RegA,ATK_leader=Leader(1,3,1,["Assaut"],[]),DEF_leader=Leader(1,1,1,[],[]),Terrain="Plains",River="LOLO")
+BattleA = Battle(RegB,RegA,ATK_leader=Leader(1,3,1,["Assaut"],[]),DEF_leader=Leader(1,1,1,[],[]),Terrain="Plains",River=None)
 BattleA.Round(-1)

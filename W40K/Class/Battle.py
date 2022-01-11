@@ -27,11 +27,13 @@ class Battle:
             "Leader": ATK_leader,
             "Tactics": ATK_all_tactics.copy()
         }
+        self.ATK_Tactic_chosen = None
         self.DEF = {
             "Regiment":DEF,
             "Leader":DEF_leader,
             "Tactics":DEF_all_tactics.copy()
         }
+        self.DEF_Tactic_chosen = None
     # Battle parameters
         self.roundCounter = 0
         self.CAC_level = 0
@@ -52,7 +54,7 @@ class Battle:
                 (self.ATK["Regiment"].HP  <= 0)
             or  (self.DEF["Regiment"].HP  <= 0)
             or  (self.ATK["Regiment"].ORG <= 0)
-            or  (self.ATK["Regiment"].ORG <= 0)
+            or  (self.DEF["Regiment"].ORG <= 0)
         )
 
     def _init_round(self):
@@ -91,6 +93,8 @@ class Battle:
                 self._Round(Loglevel=LogLevel,PauseEachRound=False)
 
     def _Round(self,Loglevel,PauseEachRound=False):
+        ATK_regiment = self.ATK["Regiment"]
+        DEF_regiment = self.DEF["Regiment"]
         """
         Lancement d'une round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
@@ -102,43 +106,43 @@ class Battle:
             choose_Tactics(self)
             if Loglevel:
                 txt += "\nNew tactics / Battle phase: {}".format(self.Current_Phase)
-                txt += "\n- {} choose {} tactic".format(self.ATK["Regiment"].Name,self.ATK["Tactic"])
-                txt += "\n- {} choose {} tactic".format(self.DEF["Regiment"].Name,self.DEF["Tactic"])
+                txt += "\n- {} choose {} tactic".format(ATK_regiment.Name, self.ATK_Tactic_chosen)
+                txt += "\n- {} choose {} tactic".format(DEF_regiment.Name, self.DEF_Tactic_chosen)
                 txt += "\n"
                 txt += "\nOld CAC limit = {}".format(previous_CAC_limit)
         if self.roundCounter%12 == 0 and Loglevel:
-            txt += "\n- Cac changes by ATK = {}".format(self.ATK["Tactic"].CAC)
-            txt += "\n- Cac changes by DEF = {}".format(self.DEF["Tactic"].CAC)
+            txt += "\n- Cac changes by ATK = {}".format(self.ATK_Tactic_chosen.CAC)
+            txt += "\n- Cac changes by DEF = {}".format(self.DEF_Tactic_chosen.CAC)
             txt += "\nNew CAC limit = {}".format(self.CAC_limit)
         txt += "\nNew cac_level = {}".format(self.CAC_level)
         txt += "\n"
     # Stats arrondis
-        round_Stats(self.ATK)
-        round_Stats(self.DEF)
+        round_Stats(ATK_regiment)
+        round_Stats(DEF_regiment)
         round_Stats(self)
     # ATK Round
-        self.ATK["Regiment"].Attaque(self.DEF,self.CAC_level)  # ATK attaque
+        ATK_regiment.Attaque(DEF_regiment,self.CAC_level)  # ATK attaque
         if Loglevel:
-            txt += "\n{} round".format(self.ATK["Regiment"].Name)
-            txt += "\n - Shots: {} SA + {} HA = {}".format(self.ATK["Regiment"].SoftAttack,self.ATK["Regiment"].HardAttack,
-                                                           self.ATK["Regiment"].SoftAttack+self.ATK["Regiment"].HardAttack)
-            txt += "\n - Melee: {} SMA + {} HMA = {}".format(round(self.ATK["Regiment"].SoftMeleeAttack*self.CAC_level,2),
-                                                             round(self.ATK["Regiment"].HardMeleeAttack*self.CAC_level,2),
-                    round(self.ATK["Regiment"].SoftMeleeAttack*self.CAC_level,2)+round(self.ATK["Regiment"].SoftMeleeAttack*self.CAC_level,2))
+            txt += "\n{} round".format(ATK_regiment.Name)
+            txt += "\n - Shots: {} SA + {} HA = {}".format(ATK_regiment.SoftAttack,ATK_regiment.HardAttack,
+                                                           ATK_regiment.SoftAttack+ATK_regiment.HardAttack)
+            txt += "\n - Melee: {} SMA + {} HMA = {}".format(round(ATK_regiment.SoftMeleeAttack*self.CAC_level,2),
+                                                             round(ATK_regiment.HardMeleeAttack*self.CAC_level,2),
+                    round(ATK_regiment.SoftMeleeAttack*self.CAC_level,2)+round(ATK_regiment.SoftMeleeAttack*self.CAC_level,2))
     # DEF Round
-        self.DEF["Regiment"].Attaque(self.DEF,self.CAC_level)  # DEF riposte
+        DEF_regiment.Attaque(DEF_regiment,self.CAC_level)  # DEF riposte
         if Loglevel:
-            txt += "\n{} round".format(self.DEF["Regiment"].Name)
-            txt += "\n - Shots: {} SA + {} HA = {}".format(self.DEF["Regiment"].SoftAttack, self.DEF["Regiment"].HardAttack,
-                                                           self.DEF["Regiment"].SoftAttack + self.DEF["Regiment"].HardAttack)
-            txt += "\n - Melee: {} SMA + {} HMA = {}".format(round(self.DEF["Regiment"].SoftMeleeAttack*self.CAC_level, 2),
-                                                             round(self.DEF["Regiment"].HardMeleeAttack*self.CAC_level, 2),
-                                                             round(self.DEF["Regiment"].SoftMeleeAttack*self.CAC_level, 2) + round(
-                                                                 self.DEF["Regiment"].SoftMeleeAttack*self.CAC_level, 2))
-        self.DEF["Regiment"].Damage(self.ATK)   # DEF prend les dommages
-        if Loglevel: txt+= "\n{} takes {} hits (-{} defenses)".format(self.DEF["Regiment"].Name,self.ATK["Regiment"].NbATK,self.DEF["Regiment"].Defense)
-        self.ATK["Regiment"].Damage(self.DEF)   # ATK prend les dommages
-        if Loglevel: txt+= "\n{} takes {} hits (-{} breakthrought)".format(self.ATK["Regiment"].Name,self.DEF["Regiment"].NbATK,self.ATK["Regiment"].Breakthrought)
+            txt += "\n{} round".format(DEF_regiment.Name)
+            txt += "\n - Shots: {} SA + {} HA = {}".format(DEF_regiment.SoftAttack, DEF_regiment.HardAttack,
+                                                           DEF_regiment.SoftAttack + DEF_regiment.HardAttack)
+            txt += "\n - Melee: {} SMA + {} HMA = {}".format(round(DEF_regiment.SoftMeleeAttack*self.CAC_level, 2),
+                                                             round(DEF_regiment.HardMeleeAttack*self.CAC_level, 2),
+                                                             round(DEF_regiment.SoftMeleeAttack*self.CAC_level, 2) + round(
+                                                                 DEF_regiment.SoftMeleeAttack*self.CAC_level, 2))
+        DEF_regiment.Damage(ATK_regiment)   # DEF prend les dommages
+        if Loglevel: txt+= "\n{} takes {} hits (-{} defenses)".format(DEF_regiment.Name,ATK_regiment.NbATK,DEF_regiment.Defense)
+        ATK_regiment.Damage(DEF_regiment)   # ATK prend les dommages
+        if Loglevel: txt+= "\n{} takes {} hits (-{} breakthrought)".format(ATK_regiment.Name,DEF_regiment.NbATK,ATK_regiment.Breakthrought)
         print(txt)
     # Log de fin de round
         self.roundCounter += 1
@@ -149,11 +153,13 @@ class Battle:
         """
         log pour chaque heure de combats
         """
+        ATK_regiment = self.ATK["Regiment"]
+        DEF_regiment = self.DEF["Regiment"]
         txt= """{}: {}/{}   {}/{}
 {}: {}/{}   {}/{}
 
-""".format(self.ATK["Regiment"].Name,self.ATK["Regiment"].HP,self.ATK["Regiment"]._Regiment__HP,self.ATK["Regiment"].ORG,self.ATK["Regiment"]._Regiment__ORG,
-           self.DEF["Regiment"].Name,self.DEF["Regiment"].HP,self.DEF["Regiment"]._Regiment__HP,self.DEF["Regiment"].ORG,self.DEF["Regiment"]._Regiment__ORG)
+""".format(ATK_regiment.Name,ATK_regiment.HP,ATK_regiment._Regiment__HP,ATK_regiment.ORG,ATK_regiment._Regiment__ORG,
+           DEF_regiment.Name,DEF_regiment.HP,DEF_regiment._Regiment__HP,DEF_regiment.ORG,DEF_regiment._Regiment__ORG)
         if self.isFinnish():
             txt += """
 ----------- End of Battle -----------------

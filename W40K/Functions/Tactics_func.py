@@ -39,8 +39,8 @@ def choose_Tactics(Battle):
     else: return NameError , "Wrong phase name"
     winner = Initiative_round(Battle) # wich side has initiative
     ATK_Tactic, DEF_Tactic = _choose_tactics(ATK_tactic_list,DEF_tactic_list,winner) # choose tactics
-    Battle.ATK_Tactic = ATK_Tactic
-    Battle.DEF_Tactic = DEF_Tactic
+    Battle.ATK_Tactic_chosen = ATK_Tactic
+    Battle.DEF_Tactic_chosen = DEF_Tactic
     Battle.Initiative_winner = winner
     isCountered(Battle) # test if any tactics has been coutered
     apply_Tactics(Battle) # apply bonuses
@@ -84,11 +84,11 @@ def isCountered(Battle):
     """
     Check if a tactic has been countered. Cancel countered ones
     """
-    if Battle.DEF_Tactic.Name == Battle.ATK_Tactic.CounteredBy:
-        Cancel_Tactic(Battle.ATK_Tactic)
+    if Battle.DEF_Tactic_chosen.Name == Battle.ATK_Tactic_chosen.CounteredBy:
+        Cancel_Tactic(Battle.ATK_Tactic_chosen)
         print("ATK tactic COUNTERED !!")
-    if Battle.ATK_Tactic.Name == Battle.DEF_Tactic.CounteredBy:
-        Cancel_Tactic(Battle.DEF_Tactic)
+    if Battle.ATK_Tactic_chosen.Name == Battle.DEF_Tactic_chosen.CounteredBy:
+        Cancel_Tactic(Battle.DEF_Tactic_chosen)
         print("DEF tactic COUNTERED !!")
 
 def Cancel_Tactic(Tactic_to_cancel):
@@ -118,9 +118,9 @@ def Initiative_round(Battle):
 
 def apply_Tactics(Battle):
     DEF = Battle.DEF["Regiment"]
-    DEF_Tac = Battle.DEF_Tactic
+    DEF_Tac = Battle.DEF_Tactic_chosen
     ATK = Battle.ATK["Regiment"]
-    ATK_Tac = Battle.ATK_Tactic
+    ATK_Tac = Battle.ATK_Tactic_chosen
 # Bonus for DEF
     DEF.SoftAttack *= DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
     DEF.HardAttack *= DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
@@ -133,8 +133,8 @@ def apply_Tactics(Battle):
     set_CAC_limit(Battle)
 
 def set_CAC_limit(Battle):
-    DEF_Tac = Battle.DEF_Tactic
-    ATK_Tac = Battle.ATK_Tactic
+    DEF_Tac = Battle.DEF_Tactic_chosen
+    ATK_Tac = Battle.ATK_Tactic_chosen
     if Battle.CAC_limit < 0:    Battle.CAC_limit = 0 # Mets le CAC limit entre 0 et 1
     elif Battle.CAC_limit > 1:  Battle.CAC_limit = 1 # Pour préparer le nouvel CAC limit
     Battle.CAC_limit = Battle.CAC_limit + np.sum(DEF_Tac.CAC + ATK_Tac.CAC)
@@ -150,8 +150,8 @@ def update_CAC(Battle):
     elif Battle.CAC_level > 1: Battle.CAC_level = 1
 
 def change_BattlePhase(Battle):
-    if Battle.Initiative_winner == "ATK":   winner_tactic = Battle.ATK_Tactic
-    elif Battle.Initiative_winner == "DEF": winner_tactic = Battle.DEF_Tactic
+    if Battle.Initiative_winner == "ATK":   winner_tactic = Battle.ATK_Tactic_chosen
+    elif Battle.Initiative_winner == "DEF": winner_tactic = Battle.DEF_Tactic_chosen
     else: return AttributeError , "Winner not exists"
     if winner_tactic.Begin_battle_phase != None:
         Battle.Following_Phase = winner_tactic.Begin_battle_phase
