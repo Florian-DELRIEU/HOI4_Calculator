@@ -1,6 +1,7 @@
 from W40K.Lists.Companies_list import *
 from W40K.Class.Regiment import Regiment
 from W40K.Class.Battle import Battle
+from W40K.Class.Leader import Leader
 
 RegA = Regiment(Name = "101st Regiment",
                 CompagnieList = [
@@ -16,5 +17,5 @@ RegB = Regiment(Name = "Ultramarines",
 
 RegB.isDefending = False
 
-BattleA = Battle(RegB,RegA,Terrain="Plains",River=None)
+BattleA = Battle(RegB,RegA,ATK_leader=Leader(1,3,1,["Assaut"],[]),DEF_leader=Leader(1,1,1,[],[]),Terrain="Plains",River="LOLO")
 BattleA.Round(-1)

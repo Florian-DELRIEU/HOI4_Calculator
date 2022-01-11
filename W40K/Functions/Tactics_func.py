@@ -117,18 +117,18 @@ def Initiative_round(Battle):
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
 
 def apply_Tactics(Battle):
-    DEF = Battle.DEF
+    DEF = Battle.DEF["Regiment"]
     DEF_Tac = Battle.DEF_Tactic
-    ATK = Battle.ATK
+    ATK = Battle.ATK["Regiment"]
     ATK_Tac = Battle.ATK_Tactic
 # Bonus for DEF
-    DEF.SoftAttack = DEF.SoftAttack * DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
-    DEF.HardAttack = DEF.HardAttack * DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
-    DEF.Defense = DEF.Defense * DEF_Tac.DEF_Defense * ATK_Tac.DEF_Defense
+    DEF.SoftAttack *= DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
+    DEF.HardAttack *= DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
+    DEF.Defense *= DEF_Tac.DEF_Defense * ATK_Tac.DEF_Defense
 # Bonus for ATK
-    ATK.SoftAttack = ATK.SoftAttack * ATK_Tac.ATK_Damage * ATK_Tac.ATK_Damage
-    ATK.HardAttack = ATK.HardAttack * ATK_Tac.ATK_Damage * ATK_Tac.ATK_Damage
-    ATK.Defense = ATK.Defense * ATK_Tac.ATK_Defense * ATK_Tac.ATK_Defense
+    ATK.SoftAttack *= DEF_Tac.ATK_Damage * ATK_Tac.ATK_Damage
+    ATK.HardAttack *= DEF_Tac.ATK_Damage * ATK_Tac.ATK_Damage
+    ATK.Defense *= DEF_Tac.ATK_Defense * ATK_Tac.ATK_Defense
 # Cac limit
     set_CAC_limit(Battle)
 
@@ -158,5 +158,4 @@ def change_BattlePhase(Battle):
 
 def change_weight(Battle):
     """Change tactics weight with regards to Generals skills and abilities and terrain"""
-
     pass

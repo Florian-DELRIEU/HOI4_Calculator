@@ -14,7 +14,10 @@ class Battle:
     """
     Objet contenant les divisions permettant de lancer les round et les logs
     """
-    def __init__(self, ATK, DEF, ATK_leader=Leader, DEF_leader=Leader, Terrain="Plains", River = None):
+    def __init__(self,
+                 ATK, DEF, ATK_leader=Leader(1,1,1,[],[]), DEF_leader=Leader(1,1,1,[],[]),
+                 Terrain="Plains", River = None
+                 ):
     # Initials conditions
         assert type(ATK) == Regiment and type(DEF) == Regiment , "campA and campB must be regiment class"
         assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
@@ -22,12 +25,12 @@ class Battle:
         self.ATK = {
             "Regiment": ATK,
             "Leader": ATK_leader,
-            "Tactic": ATK_all_tactics.copy()
+            "Tactics": ATK_all_tactics.copy()
         }
         self.DEF = {
             "Regiment":DEF,
             "Leader":DEF_leader,
-            "Tactic":DEF_all_tactics.copy()
+            "Tactics":DEF_all_tactics.copy()
         }
     # Battle parameters
         self.roundCounter = 0
@@ -61,9 +64,13 @@ class Battle:
         self.apply_river()
 
     def apply_river(self):
+        """
+        TODO - Move function to Terrain_func
+        :return:
+        """
         if self.River is None:
             for side in [self.ATK,self.DEF]:
-                for tactic in side["Tactic"]:
+                for tactic in side["Tactics"]:
                     if "Bridge" in tactic.Name:
                         tactic.weight = 0
 

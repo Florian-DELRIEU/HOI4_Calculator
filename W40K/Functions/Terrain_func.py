@@ -1,7 +1,7 @@
 
 def apply_Terrain(Battle):
-    ATK = Battle.ATK
-    DEF = Battle.DEF
+    ATK = Battle.ATK["Regiment"]
+    DEF = Battle.DEF["Regiment"]
     Terrain = Battle.Terrain
 
     ATK.SoftAttack    *= Terrain.Attack_malus
