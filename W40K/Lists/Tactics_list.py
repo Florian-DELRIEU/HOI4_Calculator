@@ -1,9 +1,6 @@
-"""
-TODO
-       - Mettre les poids des tactiques avec pont à 0 si Battle.RiverCrossing = False
-"""
 from W40K.Class.Tactics import Tactic
 
+########################################################################################################################
 ## ATTACKS
 ATK_tactics = [
 Tactic(ATK_Damage=1.05,CAC=0,Name="Attaque",
@@ -29,7 +26,6 @@ Tactic(DEF_Damage=0.95,ATK_Damage=1.2,CAC=.3,weight=0,Name="Seize Bridge",
        BeginPhase="Seize Bridge"),
 Tactic(DEF_Damage=1.1,ATK_Damage=1.1,CAC=.5,weight=0,Name="Mass Charge"),
 ]
-
 ## DEFENSES
 DEF_tactics = [
 Tactic(DEF_Damage=1.05,Name="Defense"),
@@ -49,7 +45,6 @@ Tactic(ATK_Damage=1.2,DEF_Damage=.95,CAC=0,weight=0,Name="Hold Bridge",
        BeginPhase="Hold Bridge"),
 ]
 
-
 ########################################################################################################################
 ## Close Quarter Attack
 ATK_CQ_tactics = [
@@ -58,7 +53,6 @@ Tactic(ATK_Damage=1.2,DEF_Damage=1.2,weight=2,CAC=0.5,Name="Close Quarter Storm"
 Tactic(ATK_Damage=1.05,DEF_Damage=1.05,weight=1,CAC=-0.3,Name="Close Quarter Withdraw",
        BeginPhase="Default"),
 ]
-
 ## Close Quarter Defense
 DEF_CQ_tactics = [
 Tactic(ATK_Damage=1.1,DEF_Damage=1.05,Name="Close Quarter Defense"),
@@ -74,13 +68,11 @@ Tactic(ATK_Damage=0.85,DEF_Damage=0.95,CAC=0.2,Name="Pursuit"),
 Tactic(ATK_Damage=0.95,DEF_Damage=0.90,CAC=0.4,Name="Intercept",
        BeginPhase="Default"),
 ]
-
 ## Tactical withdraw Defend
 DEF_TW_tactics = [
 Tactic(ATK_Damage=0.7,DEF_Damage=0.95,CAC=-0.3,Name="Withdrawal"),
 Tactic(ATK_Damage=0.6,DEF_Damage=0.9,CAC=-0.5,Name="Evade"),
 ]
-
 
 ########################################################################################################################
 ## Seize Bridge Attacks
@@ -88,7 +80,6 @@ ATK_SB_tactics = [
 Tactic(ATK_Damage=1.2,DEF_Damage=1,CAC=0,Name="Hold Bridge"),
 Tactic(ATK_Damage=1.2,DEF_Damage=0.9,CAC=0,Name="Defend Bridge"),
 ]
-
 ## Seize Bridge Defend
 DEF_SB_tactics = [
 Tactic(ATK_Damage=1,DEF_Damage=0.95,CAC=0.1,Name="Bridge Assaut"),
@@ -97,7 +88,6 @@ Tactic(ATK_Damage=1.1,DEF_Damage=0.95,CAC=0.5,Name="Recapture Bridge",
        CounteredBy="Defend Bridge",
        BeginPhase="Hold Bridge"),
 ]
-
 
 ########################################################################################################################
 ## Hold Bridge Attacks
@@ -108,9 +98,14 @@ Tactic(ATK_Damage=1.2,DEF_Damage=1.05,CAC=0.5,weight=2,Name="Storm Bridge",
        CounteredBy="Defend Bridge",
        BeginPhase="Seize Bridge"),
 ]
-
 ## Hold Bridge Defend
 DEF_HB_tactics = [
 Tactic(ATK_Damage=1.2,DEF_Damage=0.9,CAC=0,Name="Hold Bridge"),
 Tactic(ATK_Damage=1.1,DEF_Damage=1.05,CAC=0,Name="Defend Bridge"),
 ]
+
+########################################################################################################################
+########################################################################################################################
+
+ATK_all_tactics = ATK_tactics + ATK_HB_tactics + ATK_SB_tactics + ATK_TW_tactics + ATK_CQ_tactics
+DEF_all_tactics = DEF_tactics + DEF_HB_tactics + DEF_SB_tactics + DEF_TW_tactics + DEF_CQ_tactics

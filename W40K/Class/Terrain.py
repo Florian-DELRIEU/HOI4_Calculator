@@ -12,7 +12,8 @@ class Terrain():
         self.Fort_level = 0
         self.River = None
 
-    def set_River(self,river_width = ("Small" or "Big" or None)):
+    def set_River(self,river_width):
+        assert river_width == ("Small" or "Big" or None) , "river-width must be 'Small', 'big' or 'None' "
         self.River = river_width
         self.RiverCrossing = self.River is not None
         if   self.River == "Small": self.Attack_malus *= (1-0.3)

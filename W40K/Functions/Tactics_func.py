@@ -5,7 +5,8 @@ from MyPack.Utilities import truncDecimal
 from  W40K.Lists.Tactics_list import ATK_tactics, ATK_HB_tactics, ATK_CQ_tactics, ATK_SB_tactics, ATK_TW_tactics
 from  W40K.Lists.Tactics_list import DEF_tactics, DEF_HB_tactics, DEF_CQ_tactics, DEF_SB_tactics, DEF_TW_tactics
 
-
+all_Tactics_list = ATK_tactics + ATK_HB_tactics + ATK_CQ_tactics + ATK_SB_tactics + ATK_TW_tactics\
+                 + DEF_tactics + DEF_HB_tactics + DEF_CQ_tactics + DEF_SB_tactics + DEF_TW_tactics
 ########################################################################################################################
 
 def choose_Tactics(Battle):
@@ -105,32 +106,29 @@ def Cancel_Tactic(Tactic_to_cancel):
 def Initiative_round(Battle):
     # sourcery skip: assign-if-exp, remove-redundant-pass
     """
-    TODO -- NEED Leader Upgrade
     Choisis quel camp aura l'initiative
-        - Basic pour le moment car leaders ne sont pas ajoutés
+        - Pas en accord avec le wiki (a voir)
+        - Code perso
     """
-    ATK_weight = int()
-    DEF_weight = int()
-    if Battle.ATK_Leader is None:   ATK_weight = 1
-    else:   pass  # Need Leader upgrade
-    if Battle.DEF_Leader is None:   DEF_weight = 1
-    else:   pass  # Need Leader upgrade
-
+    DEF_leader = Battle.DEF["Leader"]
+    DEF_weight = DEF_leader.Defense_skill + DEF_leader.Level
+    ATK_leader = Battle.ATK["Leader"]
+    ATK_weight = ATK_leader.Attack_skill + ATK_leader.Level
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
 
 def apply_Tactics(Battle):
-    DEF = Battle.DEF
+    DEF = Battle.DEF["Regiment"]
     DEF_Tac = Battle.DEF_Tactic
-    ATK = Battle.ATK
+    ATK = Battle.ATK["Regiment"]
     ATK_Tac = Battle.ATK_Tactic
 # Bonus for DEF
-    DEF.SoftAttack = DEF.SoftAttack * DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
-    DEF.HardAttack = DEF.HardAttack * DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
-    DEF.Defense = DEF.Defense * DEF_Tac.DEF_Defense * ATK_Tac.DEF_Defense
+    DEF.SoftAttack *= DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
+    DEF.HardAttack *= DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
+    DEF.Defense *= DEF_Tac.DEF_Defense * ATK_Tac.DEF_Defense
 # Bonus for ATK
-    ATK.SoftAttack = ATK.SoftAttack * ATK_Tac.ATK_Damage * ATK_Tac.ATK_Damage
-    ATK.HardAttack = ATK.HardAttack * ATK_Tac.ATK_Damage * ATK_Tac.ATK_Damage
-    ATK.Defense = ATK.Defense * ATK_Tac.ATK_Defense * ATK_Tac.ATK_Defense
+    ATK.SoftAttack *= DEF_Tac.ATK_Damage * ATK_Tac.ATK_Damage
+    ATK.HardAttack *= DEF_Tac.ATK_Damage * ATK_Tac.ATK_Damage
+    ATK.Defense *= DEF_Tac.ATK_Defense * ATK_Tac.ATK_Defense
 # Cac limit
     set_CAC_limit(Battle)
 
