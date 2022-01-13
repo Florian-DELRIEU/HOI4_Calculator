@@ -1,6 +1,6 @@
 from W40K.Functions.Stats_Functions import *
 from W40K.Functions.Functions import *
-from W40K.Functions.Weapons_bonuses import setWeapons_SAHA_bonus,setWeapons_DEFBRK_bonus
+from W40K.Functions.Weapons_bonuses import setWeapons_SAHA_bonus,change_weapons_DEFBRK
 
 class Weapon:
     def __init__(self, F=3, PA=None, Range = 24, Type="Tir rapide", Cadence = 1,Quantity=1,SpecialsRules=[],Name=""):
@@ -19,9 +19,9 @@ class Weapon:
         self.HardAttack = float()
         self.SoftMeleeAttack = float()
         self.HardMeleeAttack = float()
-        self.Defense = float()
-        self.Breakthrought = float()
         self.Piercing = float()
+        self.Defense_bonus = float(1.0)
+        self.Breakthrought_bonus = float(1.0)
         self.HOI4_Profil()
 
     def __repr__(self):
@@ -38,9 +38,7 @@ class Weapon:
         setWeapons_SAHA_bonus(self)
         setPiercing(self)
     # Defense and Break
-        setDefense(self)
-        setBreakthrought(self)
-        setWeapons_DEFBRK_bonus(self)
+        change_weapons_DEFBRK(self)
     # End
         round_Stats(self)
 
@@ -53,7 +51,7 @@ class Weapon:
         Breakthrought = {}
         Piercing      = {}
         """.format(self.SoftAttack,self.HardAttack,
-                   self.Defense,self.Breakthrought,
+                   self.Defense_bonus,self.Breakthrought_bonus,
                    self.Piercing)
         print(txt)
 

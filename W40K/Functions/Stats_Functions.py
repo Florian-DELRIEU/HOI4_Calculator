@@ -127,8 +127,7 @@ def setDefense(object):
     BRK of an weapons regarding this F and E
     """
     Class,Type = object.Class , object.Type
-    if Class == "Weapon":                           DEF = 0.1
-    elif Class == "Tank":
+    if Class == "Tank":
         if Type == "Chariot":                       DEF = 4
         elif Type == ("Tank" or ""):                DEF = 5
         elif Type == "Heavy":                       DEF = 6
@@ -157,8 +156,7 @@ def setBreakthrought(object):
     BRK of an weapons regarding this F and E
     """
     Class, Type = object.Class, object.Type
-    if object.Class == "Weapon":                    BRK = 0.1
-    elif object.Class == "Infantry":                BRK = 2
+    if object.Class == "Infantry":                BRK = 2
     elif Class == "Tank":
         if Type == "Chariot":                       BRK = 26
         elif Type == ("Tank" or ""):                BRK = 30
