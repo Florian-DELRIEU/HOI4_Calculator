@@ -78,7 +78,7 @@ def change_weapons_DEFBRK(Weapon):  # sourcery skip: switch
         Weapon.Defense_bonus *= 1.5
         Weapon.Defense_bonus *= 0
     elif Weapon.Type == "Assaut":
-        Weapon.Defense_bonus *= 0
+        Weapon.Defense_bonus *= 0.3
         Weapon.Breakthrought_bonus *= 1.5
     elif Weapon.Type == "Tir rapide":
         pass
@@ -87,7 +87,7 @@ def change_weapons_DEFBRK(Weapon):  # sourcery skip: switch
         Weapon.Defense_bonus *= 0.8
     elif Weapon.Type == "Ordnance":
         Weapon.Breakthrought_bonus *= 1
-        Weapon.Defense_bonus *= 1.3
+        Weapon.Defense_bonus *= 1
     # Weapon Range #Commented
     """
     if Weapon.Range == (0 or None):  # melee weapons
