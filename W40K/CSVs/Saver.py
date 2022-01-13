@@ -54,8 +54,8 @@ fisrt_column_B = ["SoftAttack","HardAttack","SoftMeleeAttack","HardMeleeAttack",
 DICO_3B["Weapons"] = fisrt_column_B
 for key,cur in DICO_2B.items():
     assert type(cur) == Weapon
-    cur_list = [cur.SoftAttack,cur.HardAttack,cur.SoftMeleeAttack,cur.HardMeleeAttack,cur.Defense,
-            cur.Breakthrought]
+    cur_list = [cur.SoftAttack,cur.HardAttack,cur.SoftMeleeAttack,cur.HardMeleeAttack,cur.Defense_bonus,
+            cur.Breakthrought_bonus]
     round_Stats(cur)
     DICO_3B[key] = cur_list
 

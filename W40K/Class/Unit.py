@@ -186,18 +186,18 @@ class Tank:
             for weapon in self.HullWeapon:
                 weapon.SoftAttack *= 0.33
                 weapon.HardAttack *= 0.33
-                weapon.Defense *= 0.33
-                weapon.Breakthrought *= 0.33
+                weapon.Defense_bonus *= 1
+                weapon.Breakthrought_bonus *= 1
         if len(self.SideWeapon) != 0:
             for weapon in self.SideWeapon:
                 weapon.SoftAttack *= 0.66
                 weapon.HardAttack *= 0.66
-                weapon.Defense *= 0.66
-                weapon.Breakthrought *= 0.66
+                weapon.Defense_bonus *= 1
+                weapon.Breakthrought_bonus *= 1
         self.SoftAttack = np.sum([el.SoftAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.HardAttack = np.sum([el.HardAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
-        self.Defense = np.sum([el.Defense for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
-        self.Breakthrought = np.sum([el.Breakthrought for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
+        self.Defense = np.sum([el.Defense_bonus for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
+        self.Breakthrought = np.sum([el.Breakthrought_bonus for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Piercing = np.max([weapon.Piercing for weapon in self.TurretWeapon+self.HullWeapon+self.SideWeapon])
     def Show_HOI_Stats(self):
         self.HOI4_Profil()

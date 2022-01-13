@@ -124,57 +124,59 @@ def setPiercing(object):  # sourcery skip: remove-redundant-pass, switch
 def setDefense(object):
     # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
     """
-    BRK of an weapons regarding this F and E
+    Pour chaques catégories la valeur dest divisé par le nombre d'unité dans une compangie (plus simple)
+    afin de le rendre en accord avec les stats dans HOI IV
     """
     Class,Type = object.Class , object.Type
     if Class == "Tank":
-        if Type == "Chariot":                       DEF = 4
-        elif Type == ("Tank" or ""):                DEF = 5
-        elif Type == "Heavy":                       DEF = 6
-        elif Type == "SuperHeavy":                  DEF = 10
+        if Type == "Chariot":                       DEF = 4 / 15
+        elif Type == ("Tank" or ""):                DEF = 5 / 15
+        elif Type == "Heavy":                       DEF = 6 / 10
+        elif Type == "SuperHeavy":                  DEF = 10 / 4
         
-        elif   Type == "Chariot SP Artillery":      DEF = 4
+        elif   Type == "Chariot SP Artillery":      DEF = 4 / 15
         elif Type == ("Tank SP Artillery" 
-                          or "SP Artillery"):       DEF = 5
-        elif Type == "Heavy SP Artillery":          DEF = 6
-        elif Type == "SuperHeavy SP Artillery":     DEF = 7
+                          or "SP Artillery"):       DEF = 5 / 15
+        elif Type == "Heavy SP Artillery":          DEF = 6 / 10
+        elif Type == "SuperHeavy SP Artillery":     DEF = 7 / 4
             
-        elif   Type == "Chariot Destroyer":         DEF = 4
+        elif   Type == "Chariot Destroyer":         DEF = 4 / 15
         elif Type == ("Tank Destroyer"
-                   or "Destroyer"):                 DEF = 5 
-        elif Type == "Heavy Destroyer":             DEF = 6
-        elif Type == "SuperHeavy Destroyer":        DEF = 7
+                   or "Destroyer"):                 DEF = 5 / 15
+        elif Type == "Heavy Destroyer":             DEF = 6 / 10
+        elif Type == "SuperHeavy Destroyer":        DEF = 7 / 4
         else:                                       return AttributeError, "Tank Type not Found"
 
-    elif object.Class == "Infantry":        DEF = 20
+    elif object.Class == "Infantry":        DEF = 20 / 100
     else:                               return AttributeError ,"object.Class not found"
-    object.Defense = DEF / 100
+    object.Defense = DEF
 ########################################################################################################################
 def setBreakthrought(object):
     # sourcery skip: merge-duplicate-blocks, remove-pass-elif, remove-redundant-if, switch
     """
-    BRK of an weapons regarding this F and E
+    Pour chaques catégories la valeur dest divisé par le nombre d'unité dans une compangie (plus simple)
+    afin de le rendre en accord avec les stats dans HOI IV
     """
     Class, Type = object.Class, object.Type
-    if object.Class == "Infantry":                BRK = 2
+    if object.Class == "Infantry":                BRK = 2 / 100
     elif Class == "Tank":
-        if Type == "Chariot":                       BRK = 26
-        elif Type == ("Tank" or ""):                BRK = 30
-        elif Type == "Heavy":                       BRK = 40
-        elif Type == "SuperHeavy":                  BRK = 70
+        if Type == "Chariot":                       BRK = 26 / 15
+        elif Type == ("Tank" or ""):                BRK = 30 / 15
+        elif Type == "Heavy":                       BRK = 40 / 10
+        elif Type == "SuperHeavy":                  BRK = 70 / 4
 
-        elif Type == "Chariot SP Artillery":        BRK = 2
+        elif Type == "Chariot SP Artillery":        BRK = 2 / 15
         elif Type == ("Tank SP Artillery"
-                      or "SP Artillery"):           BRK = 3
-        elif Type == "Heavy SP Artillery":          BRK = 2
-        elif Type == "SuperHeavy SP Artillery":     BRK = 3
+                      or "SP Artillery"):           BRK = 3 / 15
+        elif Type == "Heavy SP Artillery":          BRK = 2 / 10
+        elif Type == "SuperHeavy SP Artillery":     BRK = 3 /4
 
-        elif Type == "Chariot Destroyer":           BRK = 1
+        elif Type == "Chariot Destroyer":           BRK = 1 / 15
         elif Type == ("Tank Destroyer"
-                      or "Destroyer"):              BRK = 1.3
-        elif Type == "Heavy Destroyer":             BRK = 1
-        elif Type == "SuperHeavy Destroyer":        BRK = 4
+                      or "Destroyer"):              BRK = 1.3 / 15
+        elif Type == "Heavy Destroyer":             BRK = 1 / 10
+        elif Type == "SuperHeavy Destroyer":        BRK = 4 / 4
         else:                                       return AttributeError, "Tank Type not Found"
-    elif Class == "Walker":                         pass
+    #elif Class == "Walker":                         pass
     else:                               return AttributeError ,"object.Class not found"
-    object.Breakthrought = BRK / 100
+    object.Breakthrought = BRK
