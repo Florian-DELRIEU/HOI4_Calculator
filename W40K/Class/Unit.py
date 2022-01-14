@@ -158,9 +158,15 @@ class Tank:
         setDefense(self)
         setBreakthrought(self)
     # Bonus
+        self.Bonus()
         round_Stats(self)
     def __repr__(self):
             return str(self.Quantity) + " " + self.Name
+
+    def Bonus(self):
+        apply_SpecialRules(self)
+        round_Stats(self)
+
     def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
         self.TurretWeapon = TurretList  # first Turret weapon considered as Main gun
         self.SideWeapon = SideList
@@ -168,6 +174,7 @@ class Tank:
         self._setTankType()
         self._setWeapons()
         round_Stats(self)
+
     def _setTankType(self):
         if len(self.TurretWeapon) == 0: # if any turret weapon
             if len(self.HullWeapon) != 0: # and have hull weapons
@@ -182,21 +189,23 @@ class Tank:
             - Le basilisk perd tout ses valeurs Defense/Breakthrought a cause de cette fonction
             - breakpoint: self.Name == "Basilisk"
         """
+        for weapon in self.TurretWeapon+self.HullWeapon+self.SideWeapon:
+            weapon.Defense_bonus = 1
+            weapon.Breakthrought_bonus = 1
+        if len(self.TurretWeapon) == 0 and len(self.HullWeapon) != 0:
+            self.Breakthrought *= 0.8
+            self.Defense *= 1.2
         if len(self.HullWeapon) != 0:
             for weapon in self.HullWeapon:
                 weapon.SoftAttack *= 0.33
                 weapon.HardAttack *= 0.33
-                weapon.Defense_bonus *= 1
-                weapon.Breakthrought_bonus *= 1
         if len(self.SideWeapon) != 0:
             for weapon in self.SideWeapon:
                 weapon.SoftAttack *= 0.66
                 weapon.HardAttack *= 0.66
-                weapon.Defense_bonus *= 1
-                weapon.Breakthrought_bonus *= 1
         self.SoftAttack = np.sum([el.SoftAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.HardAttack = np.sum([el.HardAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
-        self.Defense = np.sum([el.Defense_bonus for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
+        self.Defense *= np.prod([el.Defense_bonus for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Breakthrought = np.sum([el.Breakthrought_bonus for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Piercing = np.max([weapon.Piercing for weapon in self.TurretWeapon+self.HullWeapon+self.SideWeapon])
     def Show_HOI_Stats(self):
@@ -278,7 +287,11 @@ class Walker:
         # Defense & Breakthrought
         setDefense(self)
         setBreakthrought(self)
+        self.Bonus()
     # End
+    def Bonus(self):
+        apply_SpecialRules(self)
+        round_Stats(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

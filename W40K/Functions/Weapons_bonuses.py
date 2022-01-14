@@ -76,7 +76,7 @@ def change_weapons_DEFBRK(Weapon):  # sourcery skip: switch
     # Weapons type
     if Weapon.Type == "Lourde":
         Weapon.Defense_bonus *= 1.5
-        Weapon.Defense_bonus *= 0
+        Weapon.Breakthrought_bonus *= 0
     elif Weapon.Type == "Assaut":
         Weapon.Defense_bonus *= 0.3
         Weapon.Breakthrought_bonus *= 1.5
@@ -125,5 +125,5 @@ def change_weapons_DEFBRK(Weapon):  # sourcery skip: switch
         Weapon.Breakthrought *= 1.8
     """
     # Weapons Fire rate
-    Weapon.Breakthrought_bonus *= 1.1*(Weapon.Cadence - 1)
-    Weapon.Defense_bonus *= 1.1*(Weapon.Cadence - 1)
+    Weapon.Breakthrought_bonus *= 1 #1.1*(Weapon.Cadence - 1)
+    Weapon.Defense_bonus *= 1 #.1*(Weapon.Cadence - 1)
