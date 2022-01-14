@@ -114,7 +114,7 @@ class Tank:
         Default is Leman Russ battle tank
         """
         self.Quantity = Quantity
-        self.Class = "Tank"
+        self.Class = "Vehicule"
         self.Name = Name
     # W40K Stats
         self.CT = CT
@@ -144,6 +144,7 @@ class Tank:
         self.bonus_CT = np.exp((CT - 3)/2.8)
         self.HOI4_Profil()
         round_Stats(self)
+
     def HOI4_Profil(self):
         setHP(self)
         setORG(self)
@@ -160,6 +161,7 @@ class Tank:
     # Bonus
         self.Bonus()
         round_Stats(self)
+
     def __repr__(self):
             return str(self.Quantity) + " " + self.Name
 
@@ -238,13 +240,13 @@ class Tank:
 ########################################################################################################################
 
 class Walker:
-    def __init__(self,CC=3,CT=3,F=5,Blind_Av=12,Blind_Side=10,Blind_Arr=10,A=1,PC=2,Quantity=1,Type="Marcheur"
+    def __init__(self,CC=3,CT=3,F=5,Blind_Av=12,Blind_Side=10,Blind_Arr=10,A=1,PC=2,Quantity=1,Type="Walker"
                  ,SpecialRules=list,Name = ""):
         """
         Default is Sentinel
         """
         self.Quantity = Quantity
-        self.Class = "Walker"
+        self.Class = "Vehicule"
         self.Name = Name
     # W40K Stats
         self.CC = CC
@@ -288,10 +290,12 @@ class Walker:
         setDefense(self)
         setBreakthrought(self)
         self.Bonus()
-    # End
+        # End
+
     def Bonus(self):
         apply_SpecialRules(self)
         round_Stats(self)
+
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
@@ -308,8 +312,10 @@ class Walker:
                    self.SoftMeleeAttack,self.HardMeleeAttack,
                    self.Hardness,self.Armor)
         print(txt)
+
     def __repr__(self):
         return str(self.Quantity) + " " + self.Name
+
     def set_Quantity(self,Quantity):
         setQuantity(self, Quantity)
 
