@@ -13,11 +13,10 @@ def setORG(object):
     FIXME
         - Revoir ci dessous
     """
-    if object.Class == "Infantry":
-        ORG = object.Cd*10
+    if object.Class == "Infantry":          ORG = object.Cd*10
     elif object.Class == "Vehicule":
-        if object.Type == "SuperHeavy":     ORG = 15
-        elif object.Type == "Artillerie":   ORG = 0
+        if "SuperHeavy" in object.Type:     ORG = 15
+        elif "Artillerie" in object.Type:   ORG = 0
         elif "Walker" in object.Type :      ORG = 40
         else:                               ORG = 10
     else:                                   return AttributeError ,"object.Type not found"
@@ -156,6 +155,8 @@ def setDefense(object):
                    or "Destroyer"):                 DEF = 5 / 15
         elif Type == "Heavy Destroyer":             DEF = 6 / 10
         elif Type == "SuperHeavy Destroyer":        DEF = 7 / 4
+
+        elif Type == "Walker":                      DEF = 10 / 15
         else:                                       return AttributeError, "Tank Type not Found"
 
     elif object.Class == "Infantry":        DEF = 20 / 100
@@ -168,6 +169,9 @@ def setBreakthrought(object):
     """
     Pour chaques catégories la valeur dest divisé par le nombre d'unité dans une compangie (plus simple)
     afin de le rendre en accord avec les stats dans HOI IV
+    TODO
+        - add Super heavy walker (Titan)
+        - Heavy walker ??
     """
     Class, Type = object.Class, object.Type
     if object.Class == "Infantry":                BRK = 2 / 100
@@ -189,6 +193,8 @@ def setBreakthrought(object):
                       or "Destroyer"):              BRK = 1.3 / 15
         elif Type == "Heavy Destroyer":             BRK = 1 / 10
         elif Type == "SuperHeavy Destroyer":        BRK = 4 / 4
+
+        elif Type == "Walker":                      BRK = 12 / 15
         else:                                       return AttributeError, "Tank Type not Found"
 
     else:                               return AttributeError ,"object.Class not found"

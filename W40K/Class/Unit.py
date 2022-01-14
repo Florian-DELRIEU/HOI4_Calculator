@@ -186,11 +186,6 @@ class Tank:
         elif self.TurretWeapon[0].Type == "Ordnance" and self.Type != "Heavy":
             self.Type += " SP Artillery"                # set tank type as SP artillery
     def _setWeapons(self):
-        """
-        FIXME
-            - Le basilisk perd tout ses valeurs Defense/Breakthrought a cause de cette fonction
-            - breakpoint: self.Name == "Basilisk"
-        """
         for weapon in self.TurretWeapon+self.HullWeapon+self.SideWeapon:
             weapon.Defense_bonus = 1
             weapon.Breakthrought_bonus = 1
