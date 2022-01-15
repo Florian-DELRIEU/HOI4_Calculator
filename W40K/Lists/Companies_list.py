@@ -37,4 +37,8 @@ Spaces_100B = Company(Unit= SpaceMarines.__copy__(100),
                                     KrakGrenades.__copy__(100),
                                     Astartes_CCW.__copy__(100)])
 
-Basilisk_40A = Company(Unit= Basilisk.__copy__(15))
+Basilisk_15A = Company(Unit= Basilisk.__copy__(15))
+
+Predator_9A = Company(Unit= Predator_A.__copy__(9))
+
+Earthshaker_Company = Company(Unit=Field_Earthshaker.__copy__(12))
