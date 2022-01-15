@@ -37,4 +37,4 @@ Spaces_100B = Company(Unit= SpaceMarines.__copy__(100),
                                     KrakGrenades.__copy__(100),
                                     Astartes_CCW.__copy__(100)])
 
-Basilisk_40A = Company(Unit= Basilisk.__copy__(40))
+Basilisk_40A = Company(Unit= Basilisk.__copy__(15))

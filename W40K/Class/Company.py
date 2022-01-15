@@ -65,7 +65,7 @@ class Company:
 
     def set_Defense_bonuses(self):
         MANPOWER = self.Manpower
-        DEF_bonus = 0
+        DEF_bonus = 1 if self.Type == "Vehicule" else 0
         for weapon in self.Equipement:
             current_DEF_bonus = weapon.Defense_bonus
             current_equip_ratio = weapon.Quantity / MANPOWER
@@ -75,7 +75,7 @@ class Company:
 
     def set_Breakthrought_bonuses(self):
         MANPOWER = self.Manpower
-        BRK_bonus = 0
+        BRK_bonus = 1 if self.Type == "Vehicule" else 0
         for weapon in self.Equipement:
             current_BRK_bonus = weapon.Breakthrought_bonus
             current_equip_ratio = weapon.Quantity / MANPOWER

@@ -175,6 +175,7 @@ class Tank:
         self.HullWeapon = HullList
         self._setTankType()
         self._setWeapons()
+        self.HOI4_Profil()
         round_Stats(self)
 
     def _setTankType(self):
@@ -203,7 +204,7 @@ class Tank:
         self.SoftAttack = np.sum([el.SoftAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.HardAttack = np.sum([el.HardAttack for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Defense *= np.prod([el.Defense_bonus for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
-        self.Breakthrought = np.sum([el.Breakthrought_bonus for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
+        self.Breakthrought *= np.prod([el.Breakthrought_bonus for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Piercing = np.max([weapon.Piercing for weapon in self.TurretWeapon+self.HullWeapon+self.SideWeapon])
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
