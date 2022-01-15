@@ -29,6 +29,10 @@ class Company:
         self.Width = float()
         self.HOI4_Profil()
     def HOI4_Profil(self):
+        """
+        FIXME
+            - Pourquoi self.Piercing est divisé par la quantité d'équipement ??? -- A VERIFIER
+        """
         if self.Unit is not None:
         # TYPE
             self.Type = self.Unit.Class
@@ -61,22 +65,22 @@ class Company:
 
     def set_Defense_bonuses(self):
         MANPOWER = self.Manpower
-        DEF_bonus = 1
+        DEF_bonus = 0
         for weapon in self.Equipement:
             current_DEF_bonus = weapon.Defense_bonus
             current_equip_ratio = weapon.Quantity / MANPOWER
             current_DEF_bonus *= current_equip_ratio
-            DEF_bonus *= current_DEF_bonus
+            DEF_bonus += current_DEF_bonus
         self.Unit.Defense *= DEF_bonus
 
     def set_Breakthrought_bonuses(self):
         MANPOWER = self.Manpower
-        BRK_bonus = 1
+        BRK_bonus = 0
         for weapon in self.Equipement:
             current_BRK_bonus = weapon.Breakthrought_bonus
             current_equip_ratio = weapon.Quantity / MANPOWER
             current_BRK_bonus *= current_equip_ratio
-            BRK_bonus *= current_BRK_bonus
+            BRK_bonus += current_BRK_bonus
         self.Unit.Breakthrought *= BRK_bonus
 
     def setUnit(self,Unit):

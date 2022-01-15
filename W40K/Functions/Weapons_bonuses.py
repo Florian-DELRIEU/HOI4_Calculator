@@ -26,9 +26,9 @@ def apply_SpecialsRules(Weapon):
     if ("Melta" or "Fusion") in Rules:
         Weapon.HardAttack *= 1.5
     if "Defensive Grenade" in Rules:
-        Weapon.Defense_bonus *= 1.15
+        Weapon.Defense_bonus += 0.15
     if "Assault Grenade" in Rules:
-        Weapon.Breakthrought_bonus *= 1.15
+        Weapon.Breakthrought_bonus += 0.15
 
 
 ########################################################################################################################
@@ -36,25 +36,28 @@ def apply_SpecialsRules(Weapon):
 def apply_WeaponsType(Weapon):  # sourcery skip: switch
 
     # Weapons type
-    if Weapon.isGrenade(): pass # Pour que les grenades ne soient pas affectés par ces bonus
+    if Weapon.isGrenade(): # Pour que les grenades ne soient pas affectés par ces bonus
+        Weapon.Defense_bonus = 0            # Les grenades sont des armes particulières, les valeurs sont mises a 0
+        Weapon.Breakthrought_bonus = 0      # pour ne pas gonfler les stats des compagnies
     elif Weapon.Type == "Lourde":
-        Weapon.Defense_bonus *= 1.7
-        Weapon.Breakthrought_bonus *= 0.3
+        Weapon.Defense_bonus += 0.50
+        Weapon.Breakthrought_bonus += 0
     elif Weapon.Type == "Assaut":
-        Weapon.Defense_bonus *= 0.5
-        Weapon.Breakthrought_bonus *= 1.5
+        Weapon.Defense_bonus += 0
+        Weapon.Breakthrought_bonus += 0.50
     elif Weapon.Type == "Tir rapide":
         pass
     elif Weapon.Type == "Salve":
-        Weapon.Breakthrought_bonus *= 1.2
-        Weapon.Defense_bonus *= 0.8
+        Weapon.Breakthrought_bonus += 0.2
+        Weapon.Defense_bonus += 0.05
     elif Weapon.Type == "Ordnance":
-        Weapon.Breakthrought_bonus *= 1
-        Weapon.Defense_bonus *= 1
+        Weapon.Breakthrought_bonus += 0
+        Weapon.Defense_bonus += 0
 
     # Weapon Range #Commented
     if Weapon.Range == (0 or None):  # melee weapons
-        pass
+        Weapon.Defense_bonus = 0
+        Weapon.Breakthrought_bonus = 0
     elif Weapon.Range <= 8:
         Weapon.SoftAttack *= 0.4
         Weapon.HardAttack *= 0.4
@@ -125,5 +128,5 @@ def apply_WeaponsType(Weapon):  # sourcery skip: switch
     """
 
     # Weapons Fire rate
-    Weapon.Breakthrought_bonus *= 1 #1.1*(Weapon.Cadence - 1)
-    Weapon.Defense_bonus *= 1 #.1*(Weapon.Cadence - 1)
+    Weapon.Breakthrought_bonus += 0 #1.1*(Weapon.Cadence - 1)
+    Weapon.Defense_bonus += 0 #.1*(Weapon.Cadence - 1)
