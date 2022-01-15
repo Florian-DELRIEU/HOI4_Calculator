@@ -55,6 +55,9 @@ class Weapon:
     def set_Quantity(self,Quantity):
         setQuantity(self, Quantity)
 
+    def isGrenade(self):
+        return any(("Grenade" or "grenade") in rule for rule in self.SpecialsRules)
+
     def __repr__(self):
         return str(self.Quantity) + " " + self.Name
 

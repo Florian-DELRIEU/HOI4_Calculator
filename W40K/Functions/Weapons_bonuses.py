@@ -36,11 +36,12 @@ def apply_SpecialsRules(Weapon):
 def apply_WeaponsType(Weapon):  # sourcery skip: switch
 
     # Weapons type
-    if Weapon.Type == "Lourde":
-        Weapon.Defense_bonus *= 1.5
-        Weapon.Breakthrought_bonus *= 0
+    if Weapon.isGrenade(): pass # Pour que les grenades ne soient pas affectés par ces bonus
+    elif Weapon.Type == "Lourde":
+        Weapon.Defense_bonus *= 1.7
+        Weapon.Breakthrought_bonus *= 0.3
     elif Weapon.Type == "Assaut":
-        Weapon.Defense_bonus *= 0.3
+        Weapon.Defense_bonus *= 0.5
         Weapon.Breakthrought_bonus *= 1.5
     elif Weapon.Type == "Tir rapide":
         pass
