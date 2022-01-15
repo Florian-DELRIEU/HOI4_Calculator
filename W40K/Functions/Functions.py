@@ -20,9 +20,9 @@ def setQuantity(object, Quantity):
     object.SoftMeleeAttack *= quantity_factor
     object.HardMeleeAttack *= quantity_factor
     try:    object.Defense *= quantity_factor
-    except: object.Defense_bonus *= quantity_factor
+    except: pass
     try:    object.Breakthrought *= quantity_factor
-    except: object.Breakthrought_bonus *= quantity_factor
+    except: pass
 
 def check_lists(self):
     from W40K.Class.Weapons import Weapon

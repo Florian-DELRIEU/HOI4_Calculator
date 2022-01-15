@@ -66,7 +66,8 @@ class Company:
             current_DEF_bonus = weapon.Defense_bonus
             current_equip_ratio = weapon.Quantity / MANPOWER
             current_DEF_bonus *= current_equip_ratio
-            DEF_bonus += current_DEF_bonus
+            DEF_bonus *= current_DEF_bonus
+        self.Unit.Defense *= DEF_bonus
 
     def set_Breakthrought_bonuses(self):
         MANPOWER = self.Manpower
@@ -76,6 +77,7 @@ class Company:
             current_equip_ratio = weapon.Quantity / MANPOWER
             current_BRK_bonus *= current_equip_ratio
             BRK_bonus += current_BRK_bonus
+        self.Unit.Breakthrought *= BRK_bonus
 
     def setUnit(self,Unit):
         self.Unit = Unit

@@ -46,14 +46,10 @@ def setHA(object):
     object.HardAttack = HA/10
 ########################################################################################################################
 def setSMA(object):  # sourcery skip: assign-if-exp, switch
-    if object.Class == "Infantry":            SMA = (object.A/10)*1.3**(object.CC-3)
+    if object.Class == "Infantry":              SMA = (object.A/10)*1.3**(object.CC-3)
     elif object.Class == "Vehicule":
-        if object.Type == "Chariot":        SMA = 0.1
-        elif object.Type == "Tank":         SMA = 0.3
-        elif object.Type == "Heavy":        SMA = 0.5
-        elif object.Type == "SuperHeavy":   SMA = 0.6
-        elif object.Type == "Artillery":    SMA = 0
-        else:                               return AttributeError ,"object.Type not found"
+        if "Walker" in object.Type:             SMA = (object.A/10)*1.3**(object.CC-3)
+        else:                                   SMA = 0
     elif object.Class == "Weapon":
         if object.Type == "Melee":          SMA = np.arctan(object.F/0.5)**6 /10
         else:                               SMA = 0
@@ -65,12 +61,8 @@ def setHMA(object):
     if object.Class == "Infantry" and object.F >= 4:
                                             HMA = object.SoftMeleeAttack*1.6**(object.F-4)
     elif object.Class == "Vehicule":
-        if object.Type == "Chariot":        HMA = 0
-        elif object.Type == "Tank":         HMA = 0.1
-        elif object.Type == "Heavy":        HMA = 0.2
-        elif object.Type == "SuperHeavy":   HMA = 0.4
-        elif object.Type == "Artillery":    HMA = 0
-        else:                               return AttributeError ,"object.Type not found"
+        if "Walker" in object.Type:         HMA = object.SoftMeleeAttack*1.6**(object.F-4)
+        else:                               HMA = 0
     elif object.Class == "Weapon" and object.F >= 4:
         if object.Type == "Melee":          HMA = np.exp(object.F/2) /100
         elif "Krak Grenade" in object.SpecialsRules:
