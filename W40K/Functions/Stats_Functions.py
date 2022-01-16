@@ -26,24 +26,24 @@ def setSA(object):
     # sourcery skip: assign-if-exp, remove-unnecessary-else, swap-if-else-branches
     if object.Class == "Weapon":
         if object.Type == "Melee":          SA = 0
-        else:                               SA = (np.arctan(object.F/0.5)**6) /10
+        else:                               SA = (np.arctan(object.F/0.5)**6)
         try:                                SA *= 1.2**(5-object.PA)
         except:                             pass
         SA *= object.Cadence
     else:                                   return AttributeError ,"object.Type not found"
-    object.SoftAttack = truncDecimal(SA,2)/10
+    object.SoftAttack = truncDecimal(SA,2) /500
 ########################################################################################################################
 def setHA(object):
     # sourcery skip: merge-duplicate-blocks, remove-redundant-if, remove-unnecessary-else, swap-if-else-branches
     if object.Class == "Weapon":
         if object.Type == "Melee":          HA = 0
-        elif object.F > 3:                  HA = np.exp(object.F/2) /100
+        elif object.F > 3:                  HA = np.exp(object.F/2)
         else:                               HA = 0
         try:                                HA *= ((1/object.PA**3)*216)**0.3
         except:                             pass
         HA *= object.Cadence
     else:                                   return AttributeError ,"object.Type not found"
-    object.HardAttack = HA/10
+    object.HardAttack = truncDecimal(HA,2) /3000
 ########################################################################################################################
 def setSMA(object):  # sourcery skip: assign-if-exp, switch
     if object.Class == "Infantry":              SMA = (object.A/10)*1.3**(object.CC-3)

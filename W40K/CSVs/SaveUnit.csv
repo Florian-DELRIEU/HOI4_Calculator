@@ -1,8 +1,8 @@
 Units,Gardes,SpaceMarines,LemanRuss_A,Predator_A,Basilisk,Field_Earthshaker
 HP,0.25,0.38,0.75,0.75,0.75,0.5
 ORG,70,108.0,10,10,10,10
-SoftAttack,0.0,0.0,1.25,1.33,0.8,0.63
-HardAttack,0.0,0.0,0.24,0.29,0.32,0.3
+SoftAttack,0.0,0.0,0.24,0.26,0.16,0.13
+HardAttack,0.0,0.0,0.07,0.09,0.11,0.1
 SoftMeleeAttack,0.01,0.01,0.0,0.0,0.0,0.0
 HardMeleeAttack,0.0,0.0,0.0,0.0,0.0,0.0
 Defense,0.2,0.2,0.6,0.33,0.33,0.33
