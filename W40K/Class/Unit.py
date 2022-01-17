@@ -1,6 +1,6 @@
 from W40K.Functions.Stats_Functions import *
 from W40K.Functions.Functions import *
-from W40K.Functions.Units_bonuses import apply_SpecialRules
+from W40K.Functions.Units_bonuses import apply_SpecialRules, apply_Vehicule
 import numpy as np
 """
 Ensemble des :class: pour Unité terrestre
@@ -153,8 +153,6 @@ class Tank:
         # Hardness & Armor
         setHardness(self)
         setArmor(self)
-        # Piercing
-        setPiercing(self)
         # Defense & Breakthrought
         setDefense(self)
         setBreakthrought(self)
@@ -167,6 +165,7 @@ class Tank:
 
     def Bonus(self):
         apply_SpecialRules(self)
+        apply_Vehicule(self)
         round_Stats(self)
 
     def setWeapons(self,TurretList=[],SideList=[],HullList=[]):
@@ -186,6 +185,7 @@ class Tank:
                 self.Type += " Defender"
         elif self.TurretWeapon[0].Type == "Ordnance" and self.Type != "Heavy":
             self.Type += " SP Artillery"                # set tank type as SP artillery
+
     def _setWeapons(self):
         for weapon in self.TurretWeapon+self.HullWeapon+self.SideWeapon:
             weapon.Defense_bonus = 1
@@ -206,6 +206,7 @@ class Tank:
         self.Defense *= np.prod([el.Defense_bonus for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Breakthrought *= np.prod([el.Breakthrought_bonus for el in self.HullWeapon+self.TurretWeapon+self.SideWeapon])
         self.Piercing = np.max([weapon.Piercing for weapon in self.TurretWeapon+self.HullWeapon+self.SideWeapon])
+
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """
@@ -222,8 +223,10 @@ class Tank:
                    self.SoftMeleeAttack,self.HardMeleeAttack,
                    self.Hardness,self.Armor)
         print(txt)
+
     def set_Quantity(self,Quantity):
         setQuantity(self, Quantity)
+
     def __copy__(self,Quantity=None):
         if Quantity is None: Quantity = self.Quantity
         newObject = Tank()

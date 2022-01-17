@@ -51,7 +51,7 @@ class Company:
                                                                                 + self.Unit.SoftMeleeAttack
             self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*self.Unit.bonus_CC\
                                                                                 + self.Unit.HardMeleeAttack
-            self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
+            self.Piercing = (self.Manpower*self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
                             /(self.Quantity_Equipement+self.Manpower)
         # DEFENSE
             self.set_Defense_bonuses()

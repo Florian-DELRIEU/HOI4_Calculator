@@ -94,19 +94,33 @@ def setHardness(object):  # sourcery skip: remove-redundant-pass
         if object.Svg == 3:                         Hardness = 0.1
         elif object.Svg == 2:                       Hardness = 0.2
         else:                                       Hardness = 0
-    elif object.Class == "Vehicule":
-        if   object.Type == "Chariot":              Hardness = 0.80
-        elif object.Type == "Tank":                 Hardness = 0.90
-        elif object.Type == "Heavy":                Hardness = 0.95
-        elif object.Type == "SuperHeavy":           Hardness = 0.99
-        elif object.Type == "Artillery":            Hardness = 0
 
-        if "Walker" in object.Type:                 Hardness *= 0.7
-        else:                                       return AttributeError ,"object.Type not found"
+    elif object.Class == "Vehicule":
+        Type = object.Type
+        if Type == "Chariot":                       Hardness = 0.80
+        elif Type == ("Tank" or ""):                Hardness = 0.90
+        elif Type == "Heavy":                       Hardness = 0.95
+        elif Type == "SuperHeavy":                  Hardness = 0.99
+
+        elif Type == "Chariot SP Artillery":        Hardness = 0.50
+        elif Type == ("Tank SP Artillery"
+                      or "SP Artillery"):           Hardness = 0.65
+        elif Type == "Heavy SP Artillery":          Hardness = 0.80
+        elif Type == "SuperHeavy SP Artillery":     Hardness = 0.90
+
+        elif Type == "Chariot Destroyer":           Hardness = 0.80
+        elif Type == ("Tank Destroyer"
+                      or "Destroyer"):              Hardness = 0.90
+        elif Type == "Heavy Destroyer":             Hardness = 0.95
+        elif Type == "SuperHeavy Destroyer":        Hardness = 0.99
+
+        elif Type == "Walker":                      Hardness = 0.75
+        else:                                       return AttributeError, "Tank Type not Found"
 
     else:                                           return AttributeError ,"object.Class not found"
 # check rules
     if "Oppen-Topped" in object.SpecialRules:       Hardness /= 2
+    if "Immobile" in object.SpecialRules:           Hardness = 0
     else:                                           pass
 # check hardness out of bounds
     if Hardness <= 0:                               Hardness = 0
@@ -120,8 +134,9 @@ def setPiercing(object):  # sourcery skip: remove-redundant-pass, switch
         if object.PA == 2:      PRC += 1
         elif object.PA == 1:    PRC += 2
         else:                   pass
-    else:                       PRC = 0
-    object.Piercing = PRC
+        object.Piercing = PRC
+    else:                       pass
+
 ########################################################################################################################
 def setDefense(object):
     # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
