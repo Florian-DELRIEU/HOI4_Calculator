@@ -6,8 +6,6 @@ def apply_SpecialRules(unit):
     for rule in unit.SpecialRules:
         if rule == "Astartes":
             unit.ORG *= 1.2
-        if rule == "Immobile":
-            pass
 
 def apply_Vehicule(vehicule):
     Class,Type = vehicule.Class, vehicule.Type
@@ -54,5 +52,4 @@ def apply_Vehicule(vehicule):
             vehicule.SoftAttack *= 1
             vehicule.HardAttack *= 16
 
-        elif Type == "Walker":pass
-        else:                                       return AttributeError, "Tank Type not Found"
+        elif Type != "Walker":                                       return AttributeError, "Tank Type not Found"
