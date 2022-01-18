@@ -1,7 +1,7 @@
 from MyPack2.Utilities import *
 from W40K.Functions.Functions import *
-#from W40K.Functions.Stats_Functions import bonus_CC,bonus_CT
 from W40K.Functions.Upgrades_bonuses import setUpgradeBonus
+from W40K.Functions.Units_bonuses import apply_SpecialRules
 
 class Company:
     def __init__(self,Unit=None,Equipement=None):
@@ -14,6 +14,7 @@ class Company:
         self.Quantity_Equipement = float()
         self.BRK_bonus = 1
         self.DEF_bonus = 1
+        self.SpecialRules = self.Unit.SpecialRules
     # HOI Stats
         self.HP = float()
         self.ORG = float()
@@ -60,6 +61,7 @@ class Company:
             self.Breakthrought = self.Unit.Breakthrought
             self.Hardness = self.Unit.Hardness
             self.Armor = self.Unit.Armor
+            apply_SpecialRules(self)
         # End
         round_Stats(self)
 

@@ -1,15 +1,24 @@
-def apply_SpecialRules(unit):
-    """
-    TODO
-        - add bonus for "Immobile" rule
-    """
+def apply_SpecialRules(company):  # sourcery skip: switch
+    unit = company.Unit
     for rule in unit.SpecialRules:
         if rule == "Astartes":
-            unit.ORG *= 1.2
+            company.ORG *= 1.2
         if rule == "Immobile":
-            pass
+            company.Hardness = 0
+        if rule == "Oppen-Topped":
+            company.Harness /= 2
+        if rule == "Combat Squads":
+            company.Breaktrought *= 1.15
+        if rule == "Heavy Weapons Team":
+            for weapon in company.Equipement:
+                if weapon.Type == "Lourde":
+                    weapon.Breakthrought_bonus += 0.1
+        if rule == "Combined Squads":
+            company.Defense *= 1.15
+        if "Chapter:" in rule:
+            apply_Faction(unit,rule.split(": ")[-1])
 
-def apply_Vehicule(vehicule):
+def apply_Vehicule(vehicule):  # sourcery skip: remove-pass-elif
     Class,Type = vehicule.Class, vehicule.Type
     if Class == "Vehicule":
 
@@ -56,3 +65,12 @@ def apply_Vehicule(vehicule):
 
         elif Type == "Walker":pass
         else:                                       return AttributeError, "Tank Type not Found"
+
+def apply_Faction(unit,rule):
+    """
+    FIXME
+        - Voir si je change les poids de certaines tactiques pour "ULTRAMARINES"
+    """
+    if rule == "Ultramarines":
+        unit.SoftAttack *= 1.05
+        unit.HardAttack *= 1.05

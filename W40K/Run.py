@@ -5,8 +5,9 @@ from W40K.Class.Leader import Leader
 
 RegA = Regiment(Name = "101st Regiment",
                 CompagnieList = [
-                        Guardsmens_100B,Guardsmens_100B,Guardsmens_100B,Guardsmens_100B,
-                        Guardsmens_100B,Guardsmens_100B,Guardsmens_100C,Guardsmens_100C,
+                        Guardsmens_100C,Guardsmens_100C,Guardsmens_100C,
+                        Guardsmens_100C,Guardsmens_100C,Guardsmens_100C,
+                        Basilisk_15A,Basilisk_15A,
                 ])
 RegA.isDefending = True
 

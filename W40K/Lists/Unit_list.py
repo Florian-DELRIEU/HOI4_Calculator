@@ -1,8 +1,10 @@
 from W40K.Class.Unit import Infantry, Tank, Walker
 from W40K.Class.Weapons import Weapon
 # Units
-Gardes =        Infantry(3, 3, 3, 3, 1, 1, 7, 5, Name="Gardes")
-SpaceMarines =  Infantry(4, 4, 4, 4, 1, 1, 9, 3, Name="Space Marines", SpecialRules=["Astartes"])
+Gardes =        Infantry(3, 3, 3, 3, 1, 1, 7, 5, Name="Gardes",
+                         SpecialRules=["Combined Squads","Heavy Weapons Team"])
+SpaceMarines =  Infantry(4, 4, 4, 4, 1, 1, 9, 3, Name="Space Marines",
+                         SpecialRules=["Astartes","Combats Squads","Chapter: Ultramarines"])
 
 # Weapons
 Lasgun = Weapon(3,None,Type="Tir rapide",Range=24,Name="Lasgun")
@@ -25,7 +27,7 @@ Bayonet = Weapon(3,None,None,"Melee",Name="Lasgun bayonet")
 LemanRuss_A = Tank(3,14,12,10,3,Type="Heavy",Name="Leman Russ")
 LemanRuss_A.setWeapons(
     TurretList=[Obusier.__copy__(1)],
-    HullList=[BolterLD.__copy__(1)],
+    HullList=[CanonLaser.__copy__(1)],
     SideList=[BolterLD.__copy__(2)])
 
 Predator_A = Tank(4,13,11,10,3,Quantity=1,Type="Tank",Name="Predator")
