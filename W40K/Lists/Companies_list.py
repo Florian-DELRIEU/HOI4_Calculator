@@ -38,6 +38,15 @@ Spaces_Devastator = Company(Unit=   SpaceMarines.__copy__(100),
                                     KrakGrenades.__copy__(100),
                                     Astartes_CCW.__copy__(50)])
 
+Spaces_Assault = Company(Unit=      SpaceMarines.__copy__(100),
+                      Equipement=[  BoltPistol.__copy__(90),
+                                    PlasmaPistol.__copy__(10),
+                                    MeltaBomb.__copy__(10),
+                                    FragGrenades.__copy__(100),
+                                    KrakGrenades.__copy__(100),
+                                    Astartes_CCW.__copy__(100)],
+                      Upgrade=[Upgrade(Name="Jump Pack",BRK=1.3,Quantity=100)])
+
 Basilisk_15A = Company(Unit= Basilisk.__copy__(15))
 
 Predator_9A = Company(Unit= Predator_A.__copy__(9))

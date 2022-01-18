@@ -13,7 +13,10 @@ RegA.isDefending = True
 
 RegB = Regiment(Name = "Ultramarines",
                 CompagnieList = [
-                        Spaces_100A,Spaces_100A,Spaces_100A,Spaces_100A
+                        Spaces_Tactical,Spaces_Tactical,Spaces_Tactical,
+                        Spaces_Tactical,Spaces_Tactical,Spaces_Tactical,
+                        Spaces_Devastator,Spaces_Devastator,
+
                 ],XP=100,Entrenchment_level=2)
 
 RegB.isDefending = False

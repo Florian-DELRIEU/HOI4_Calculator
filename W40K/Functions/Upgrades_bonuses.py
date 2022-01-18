@@ -22,5 +22,5 @@ def setUpgradeBonus(company):
     company.HardAttack *= HardAttack_Bonus
     company.SoftMeleeAttack *= SoftMeleeAttack_Bonus
     company.HardMeleeAttack *= HardMeleeAttack_Bonus
-    company.Defense_bonus *= Defense_Bonus
-    company.Breakthrought_bonus *= Breakthrought_Bonus
+    company.Defense *= Defense_Bonus
+    company.Breakthrought *= Breakthrought_Bonus

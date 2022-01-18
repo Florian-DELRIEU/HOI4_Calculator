@@ -6,13 +6,13 @@ def apply_SpecialRules(company):  # sourcery skip: switch
         if rule == "Immobile":
             company.Hardness = 0
         if rule == "Oppen-Topped":
-            company.Harness /= 2
+            company.Hardness /= 2
         if rule == "Combat Squads":
             company.Breaktrought *= 1.15
         if rule == "Heavy Weapons Team":
             for weapon in company.Equipement:
                 if weapon.Type == "Lourde":
-                    weapon.Breakthrought_bonus += 0.1
+                    weapon.Breakthrought_bonus = 0
         if rule == "Combined Squads":
             company.Defense *= 1.15
         if "Chapter:" in rule:
