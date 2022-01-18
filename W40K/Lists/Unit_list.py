@@ -1,5 +1,13 @@
+"""
+FIXME
+    - Ajouter regle pour les melta bomb (comme pour les krak grenades) (SA = 0, HA + 15% je pense)
+    - Les Pistols ont un SA/HA très faible (voire nul) a cause de la règle spéciale Pistol
+                - Je pense que c'est a cause de la faible portée, de la cadence de 1 et en plus de la règles "Pistol"
+                - allèger ça
+"""
 from W40K.Class.Unit import Infantry, Tank, Walker
 from W40K.Class.Weapons import Weapon,Upgrade
+
 # Units
 Gardes =        Infantry(3, 3, 3, 3, 1, 1, 7, 5, Name="Gardes",
                          SpecialRules=["Combined Squads","Heavy Weapons Team"])
