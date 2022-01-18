@@ -29,6 +29,10 @@ class Company:
         self.Width = float()
         self.HOI4_Profil()
     def HOI4_Profil(self):
+        """
+        FIXME
+            - Pourquoi self.Piercing est divisé par la quantité d'équipement ??? -- A VERIFIER
+        """
         if self.Unit is not None:
         # TYPE
             self.Type = self.Unit.Class
@@ -47,29 +51,56 @@ class Company:
                                                                                 + self.Unit.SoftMeleeAttack
             self.HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Equipement])*self.Unit.bonus_CC\
                                                                                 + self.Unit.HardMeleeAttack
-            self.Piercing = (self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
+            self.Piercing = (self.Manpower*self.Unit.Piercing + np.sum([el.Quantity*el.Piercing for el in self.Equipement]))\
                             /(self.Quantity_Equipement+self.Manpower)
         # DEFENSE
-            self.Defense = self.Unit.Defense + np.sum([el.Defense for el in self.Equipement])
-            self.Breakthrought = self.Unit.Breakthrought + np.sum([el.Breakthrought for el in self.Equipement])
+            self.set_Defense_bonuses()
+            self.set_Breakthrought_bonuses()
+            self.Defense = self.Unit.Defense
+            self.Breakthrought = self.Unit.Breakthrought
             self.Hardness = self.Unit.Hardness
             self.Armor = self.Unit.Armor
         # End
         round_Stats(self)
+
+    def set_Defense_bonuses(self):
+        MANPOWER = self.Manpower
+        DEF_bonus = 1 if self.Type == "Vehicule" else 0
+        for weapon in self.Equipement:
+            current_DEF_bonus = weapon.Defense_bonus
+            current_equip_ratio = weapon.Quantity / MANPOWER
+            current_DEF_bonus *= current_equip_ratio
+            DEF_bonus += current_DEF_bonus
+        self.Unit.Defense *= DEF_bonus
+
+    def set_Breakthrought_bonuses(self):
+        MANPOWER = self.Manpower
+        BRK_bonus = 1 if self.Type == "Vehicule" else 0
+        for weapon in self.Equipement:
+            current_BRK_bonus = weapon.Breakthrought_bonus
+            current_equip_ratio = weapon.Quantity / MANPOWER
+            current_BRK_bonus *= current_equip_ratio
+            BRK_bonus += current_BRK_bonus
+        self.Unit.Breakthrought *= BRK_bonus
+
     def setUnit(self,Unit):
         self.Unit = Unit
         self.HOI4_Profil()
+
     def setEquipement(self,List:list):
         self.Equipement = List
         self.HOI4_Profil()
+
     def setUpgrade(self,List:list):
         self.Upgrade = List
         setUpgradeBonus(self)
+
     def setWidth(self):
         if   self.Type == "Infantry":   self.Width = 2
         elif self.Type == "Tank":       self.Width = 2
         elif self.Type == "Artillery":  self.Width = 3
         else:                           self.Width = 0
+
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

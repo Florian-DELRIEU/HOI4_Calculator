@@ -1,6 +1,6 @@
 from W40K.Functions.Stats_Functions import *
 from W40K.Functions.Functions import *
-from W40K.Functions.Weapons_bonuses import setWeapons_SAHA_bonus,setWeapons_DEFBRK_bonus
+from W40K.Functions.Weapons_bonuses import apply_SpecialsRules,apply_WeaponsType
 
 class Weapon:
     def __init__(self, F=3, PA=None, Range = 24, Type="Tir rapide", Cadence = 1,Quantity=1,SpecialsRules=[],Name=""):
@@ -19,13 +19,10 @@ class Weapon:
         self.HardAttack = float()
         self.SoftMeleeAttack = float()
         self.HardMeleeAttack = float()
-        self.Defense = float()
-        self.Breakthrought = float()
         self.Piercing = float()
+        self.Defense_bonus = float(1.0)
+        self.Breakthrought_bonus = float(1.0)
         self.HOI4_Profil()
-
-    def __repr__(self):
-        return str(self.Quantity) + " " + self.Name
 
     def HOI4_Profil(self):
     # Cadence
@@ -35,12 +32,10 @@ class Weapon:
         setHA(self)
         setSMA(self)
         setHMA(self)
-        setWeapons_SAHA_bonus(self)
         setPiercing(self)
     # Defense and Break
-        setDefense(self)
-        setBreakthrought(self)
-        setWeapons_DEFBRK_bonus(self)
+        apply_WeaponsType(self)
+        apply_SpecialsRules(self)
     # End
         round_Stats(self)
 
@@ -53,12 +48,18 @@ class Weapon:
         Breakthrought = {}
         Piercing      = {}
         """.format(self.SoftAttack,self.HardAttack,
-                   self.Defense,self.Breakthrought,
+                   self.Defense_bonus,self.Breakthrought_bonus,
                    self.Piercing)
         print(txt)
 
     def set_Quantity(self,Quantity):
         setQuantity(self, Quantity)
+
+    def isGrenade(self):
+        return any(("Grenade" or "grenade") in rule for rule in self.SpecialsRules)
+
+    def __repr__(self):
+        return str(self.Quantity) + " " + self.Name
 
     def __copy__(self, Quantity=None):
         if Quantity is None: Quantity = self.Quantity
