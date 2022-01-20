@@ -46,12 +46,12 @@ def setHA(object):
     object.HardAttack = truncDecimal(HA,2) /3000
 ########################################################################################################################
 def setSMA(object):  # sourcery skip: assign-if-exp, switch
-    if object.Class == "Infantry":              SMA = (object.A/10)*1.3**(object.CC-3)
+    if object.Class == "Infantry":              SMA = (object.A/10)*1.3**(object.CC-3) /4
     elif object.Class == "Vehicule":
-        if "Walker" in object.Type:             SMA = (object.A/10)*1.3**(object.CC-3)
+        if "Walker" in object.Type:             SMA = (object.A/10)*1.3**(object.CC-3) /4
         else:                                   SMA = 0
     elif object.Class == "Weapon":
-        if object.Type == "Melee":              SMA = np.arctan(object.F/0.5)**6 /10
+        if object.Type == "Melee":              SMA = np.arctan(object.F/0.5)**6 /10 /4
         elif object.Type == "Pistol":           SMA = 0.2
         else:                                   SMA = 0
     else:                                   return AttributeError ,"object.Class not found"
@@ -60,12 +60,12 @@ def setSMA(object):  # sourcery skip: assign-if-exp, switch
 def setHMA(object):
     # sourcery skip: merge-duplicate-blocks, remove-redundant-if, switch
     if object.Class == "Infantry" and object.F >= 4:
-                                            HMA = object.SoftMeleeAttack*1.6**(object.F-4)
+                                            HMA = object.SoftMeleeAttack*1.6**(object.F-4) /4
     elif object.Class == "Vehicule":
-        if "Walker" in object.Type:         HMA = object.SoftMeleeAttack*1.6**(object.F-4)
+        if "Walker" in object.Type:         HMA = object.SoftMeleeAttack*1.6**(object.F-4) /4
         else:                               HMA = 0
     elif object.Class == "Weapon" and object.F >= 4:
-        if object.Type == "Melee":          HMA = np.exp(object.F/2) /100
+        if object.Type == "Melee":          HMA = np.exp(object.F/2) /100 /4
         elif "Krak Grenade" in object.SpecialsRules:
                                             HMA = np.exp(object.F/2)/100
         else:                               HMA = 0
