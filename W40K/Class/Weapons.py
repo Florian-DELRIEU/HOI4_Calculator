@@ -27,6 +27,7 @@ class Weapon:
     def HOI4_Profil(self):
     # Cadence
         if self.Type == "Tir rapide":self.Cadence = 2
+        elif self.Type == "Pistol": self.Cadence = 1
     # Soft and Hard Attack
         setSA(self)
         setHA(self)

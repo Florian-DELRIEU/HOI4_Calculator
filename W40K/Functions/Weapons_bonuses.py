@@ -18,9 +18,11 @@ def apply_SpecialsRules(Weapon):
     if "Blast 3'" in Rules:
         Weapon.SoftAttack *= 1.1
         Weapon.HardAttack *= 0.4
+        Weapon.Piercing *= 0.6
     if "Blast 5'" in Rules:
         Weapon.SoftAttack *= 1.2
         Weapon.HardAttack *= 0.6
+        Weapon.Piercing *= 0.6
     if "Krak Grenade" in Rules:
         Weapon.SoftAttack *= 0
     if ("Melta" or "Fusion") in Rules:
@@ -47,10 +49,6 @@ def apply_WeaponsType(Weapon):  # sourcery skip: switch
     elif Weapon.Type == "Assaut":
         Weapon.Defense_bonus += 0
         Weapon.Breakthrought_bonus += 0.50
-    elif Weapon.Type == "Pistol":
-        Weapon.SoftMeleeAttack = 0.02
-        Weapon.SoftAttack /= 3
-        Weapon.HardAttack /= 3
     elif Weapon.Type == "Tir rapide":
         pass
     elif Weapon.Type == "Salve":
@@ -134,5 +132,7 @@ def apply_WeaponsType(Weapon):  # sourcery skip: switch
     """
 
     # Weapons Fire rate
-    Weapon.Breakthrought_bonus += 0 #1.1*(Weapon.Cadence - 1)
-    Weapon.Defense_bonus += 0 #.1*(Weapon.Cadence - 1)
+    Weapon.Breakthrought_bonus += 0 #1.1**(Weapon.Cadence - 1)
+    Weapon.Defense_bonus += 0 #.1**(Weapon.Cadence - 1)
+    Weapon.SoftAttack *= 1.1**(Weapon.Cadence - 1)
+    Weapon.HardAttack *= 1.1**(Weapon.Cadence - 1)

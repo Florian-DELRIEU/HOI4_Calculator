@@ -64,7 +64,7 @@ class Infantry:
     # Bonus
         self.Bonus()
     def Bonus(self):
-        #apply_SpecialRules(self)
+        apply_SpecialRules(self)
         round_Stats(self)
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
@@ -164,7 +164,7 @@ class Tank:
             return str(self.Quantity) + " " + self.Name
 
     def Bonus(self):
-        #apply_SpecialRules(self)
+        apply_SpecialRules(self)
         apply_Vehicule(self)
         round_Stats(self)
 

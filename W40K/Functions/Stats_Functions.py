@@ -53,6 +53,7 @@ def setSMA(object):  # sourcery skip: assign-if-exp, switch
     elif object.Class == "Weapon":
         if object.Type == "Melee":          SMA = np.arctan(object.F/0.5)**6 /10
         else:                               SMA = 0
+    elif object.Type == "Pistol":           SMA = 0.02
     else:                                   return AttributeError ,"object.Class not found"
     object.SoftMeleeAttack = SMA/10
 ########################################################################################################################

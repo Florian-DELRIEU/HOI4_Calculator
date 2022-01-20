@@ -1,7 +1,7 @@
 from MyPack2.Utilities import *
 from W40K.Functions.Functions import *
 from W40K.Functions.Upgrades_bonuses import setUpgradeBonus
-from W40K.Functions.Units_bonuses import apply_SpecialRules
+from W40K.Functions.Company_bonuses import apply_SpecialRules
 
 class Company:
     def __init__(self,Unit=None,Equipement=None,Upgrade=None):

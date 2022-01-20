@@ -51,4 +51,4 @@ Basilisk_15A = Company(Unit= Basilisk.__copy__(15))
 
 Predator_9A = Company(Unit= Predator_A.__copy__(9))
 
-Earthshaker_Company = Company(Unit=Field_Earthshaker.__copy__(12))
+Earthshaker_Company = Company(Unit=Earthshaker_Platform.__copy__(12))

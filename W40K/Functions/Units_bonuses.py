@@ -1,22 +1,20 @@
-def apply_SpecialRules(company):  # sourcery skip: switch
-    unit = company.Unit
+def apply_SpecialRules(unit):  # sourcery skip: switch
     for rule in unit.SpecialRules:
         if rule == "Astartes":
-            company.ORG *= 1.2
-        if rule == "Immobile":
-            company.Hardness = 0
+            unit.ORG *= 1.2
         if rule == "Oppen-Topped":
-            company.Hardness /= 2
+            unit.Hardness /= 2
         if rule == "Combat Squads":
-            company.Breaktrought *= 1.15
-        if rule == "Heavy Weapons Team":
-            for weapon in company.Equipement:
-                if weapon.Type == "Lourde":
-                    weapon.Breakthrought_bonus = 0
+            unit.Breaktrought *= 1.15
         if rule == "Combined Squads":
-            company.Defense *= 1.15
+            unit.Defense *= 1.15
         if "Chapter:" in rule:
             apply_Faction(unit,rule.split(": ")[-1])
+
+    if "Platform" in unit.Name:
+        unit.Hardness = 0
+        unit.Armor = 0
+        unit.Type = "Platform"
 
 def apply_Vehicule(vehicule):  # sourcery skip: remove-pass-elif
     Class,Type = vehicule.Class, vehicule.Type

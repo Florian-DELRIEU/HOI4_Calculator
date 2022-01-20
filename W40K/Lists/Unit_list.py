@@ -1,10 +1,3 @@
-"""
-FIXME
-    - Ajouter regle pour les melta bomb (comme pour les krak grenades) (SA = 0, HA + 15% je pense)
-    - Les Pistols ont un SA/HA très faible (voire nul) a cause de la règle spéciale Pistol
-                - Je pense que c'est a cause de la faible portée, de la cadence de 1 et en plus de la règles "Pistol"
-                - allèger ça
-"""
 from W40K.Class.Unit import Infantry, Tank, Walker
 from W40K.Class.Weapons import Weapon,Upgrade
 
@@ -52,7 +45,7 @@ Basilisk.setWeapons(
     TurretList=[Earthshaker.__copy__(1)],
     HullList=[BolterLD.__copy__(1)])
 
-Field_Earthshaker = Tank(3,10,10,10,2,Type="Tank",SpecialRules=["Immobile"],Name="Earthshaker")
-Field_Earthshaker.setWeapons(
+Earthshaker_Platform = Tank(3, 10, 10, 10, 2, Type="Tank", SpecialRules=["Immobile"], Name="Earthshaker Platform")
+Earthshaker_Platform.setWeapons(
     TurretList=[Earthshaker.__copy__(1)])
 
