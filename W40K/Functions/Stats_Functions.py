@@ -51,9 +51,9 @@ def setSMA(object):  # sourcery skip: assign-if-exp, switch
         if "Walker" in object.Type:             SMA = (object.A/10)*1.3**(object.CC-3)
         else:                                   SMA = 0
     elif object.Class == "Weapon":
-        if object.Type == "Melee":          SMA = np.arctan(object.F/0.5)**6 /10
-        else:                               SMA = 0
-    elif object.Type == "Pistol":           SMA = 0.02
+        if object.Type == "Melee":              SMA = np.arctan(object.F/0.5)**6 /10
+        elif object.Type == "Pistol":           SMA = 0.2
+        else:                                   SMA = 0
     else:                                   return AttributeError ,"object.Class not found"
     object.SoftMeleeAttack = SMA/10
 ########################################################################################################################
@@ -178,7 +178,7 @@ def setBreakthrought(object):
         - Heavy walker ??
     """
     Class, Type = object.Class, object.Type
-    if object.Class == "Infantry":                BRK = 2 / 100
+    if object.Class == "Infantry":                  BRK = 2 / 100
     elif Class == "Vehicule":
 
         if Type == "Chariot":                       BRK = 26 / 15
