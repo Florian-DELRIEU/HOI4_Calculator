@@ -29,6 +29,8 @@ def apply_SpecialsRules(Weapon):
         Weapon.Defense_bonus += 0.15
     if "Assault Grenade" in Rules:
         Weapon.Breakthrought_bonus += 0.15
+    if "Gets Hot" in Rules:
+        pass
 
 
 ########################################################################################################################
@@ -41,10 +43,14 @@ def apply_WeaponsType(Weapon):  # sourcery skip: switch
         Weapon.Breakthrought_bonus = 0      # pour ne pas gonfler les stats des compagnies
     elif Weapon.Type == "Lourde":
         Weapon.Defense_bonus += 0.50
-        Weapon.Breakthrought_bonus += 0
+        Weapon.Breakthrought_bonus += -0.1
     elif Weapon.Type == "Assaut":
         Weapon.Defense_bonus += 0
         Weapon.Breakthrought_bonus += 0.50
+    elif Weapon.Type == "Pistol":
+        Weapon.SoftMeleeAttack = 0.02
+        Weapon.SoftAttack /= 3
+        Weapon.HardAttack /= 3
     elif Weapon.Type == "Tir rapide":
         pass
     elif Weapon.Type == "Salve":

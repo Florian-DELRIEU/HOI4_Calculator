@@ -1,7 +1,7 @@
-Weapons,Lasgun,Bolter,MeltaGun,PlasmaGun,KrakGrenades,FragGrenades,BolterLD,CanonLaser,Earthshaker,Obusier,Autocanon,Astartes_CCW,Bayonet
-SoftAttack,0.02,0.03,0.03,0.06,0.0,0.01,0.1,0.09,0.13,0.08,0.1,0.0,0.0
-HardAttack,0.0,0.0,0.08,0.05,0.0,0.0,0.02,0.27,0.1,0.04,0.06,0.0,0.0
-SoftMeleeAttack,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.09,0.08
-HardMeleeAttack,0.0,0.0,0.0,0.0,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.0
-Defense,1.0,1.0,1.0,1.0,0,0,1.5,1.5,1.0,1.0,1.5,0,0
-Breakthrought,1.0,1.0,1.5,1.0,0,0.15,1.0,1.0,1.0,1.0,1.0,0,0
+Weapons,Lasgun,Bolter,BoltPistol,MeltaGun,PlasmaGun,PlasmaPistol,KrakGrenades,FragGrenades,BolterLD,CanonLaser,Earthshaker,Obusier,Autocanon,Astartes_CCW,Bayonet,MeltaBomb
+SoftAttack,0.02,0.03,0.0,0.03,0.06,0.01,0.0,0.01,0.1,0.09,0.13,0.08,0.1,0.0,0.0,0.0
+HardAttack,0.0,0.0,0.0,0.08,0.05,0.01,0.0,0.0,0.02,0.27,0.1,0.04,0.06,0.0,0.0,0.0
+SoftMeleeAttack,0.0,0.0,0.02,0.0,0.0,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.09,0.08,0.12
+HardMeleeAttack,0.0,0.0,0.0,0.0,0.0,0.0,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.01,0.0,0.05
+Defense,1.0,1.0,1.0,1.0,1.0,1.0,0,0,1.5,1.5,1.0,1.0,1.5,0,0,1.0
+Breakthrought,1.0,1.0,1.0,1.5,1.0,1.0,0,0.15,0.9,0.9,1.0,1.0,0.9,0,0,1.0

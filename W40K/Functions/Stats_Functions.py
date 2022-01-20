@@ -118,10 +118,6 @@ def setHardness(object):  # sourcery skip: remove-redundant-pass
         else:                                       return AttributeError, "Tank Type not Found"
 
     else:                                           return AttributeError ,"object.Class not found"
-# check rules
-    if "Oppen-Topped" in object.SpecialRules:       Hardness /= 2
-    if "Immobile" in object.SpecialRules:           Hardness = 0
-    else:                                           pass
 # check hardness out of bounds
     if Hardness <= 0:                               Hardness = 0
     elif Hardness >= 1:                             Hardness = 1

@@ -5,14 +5,18 @@ from W40K.Class.Leader import Leader
 
 RegA = Regiment(Name = "101st Regiment",
                 CompagnieList = [
-                        Guardsmens_100B,Guardsmens_100B,Guardsmens_100B,Guardsmens_100B,
-                        Guardsmens_100B,Guardsmens_100B,Guardsmens_100C,Guardsmens_100C,
+                        Guardsmens_100C,Guardsmens_100C,Guardsmens_100C,
+                        Guardsmens_100C,Guardsmens_100C,Guardsmens_100C,
+                        Basilisk_15A,Basilisk_15A,
                 ])
 RegA.isDefending = True
 
 RegB = Regiment(Name = "Ultramarines",
                 CompagnieList = [
-                        Spaces_100A,Spaces_100A,Spaces_100A,Spaces_100A
+                        Spaces_Tactical,Spaces_Tactical,Spaces_Tactical,
+                        Spaces_Tactical,Spaces_Tactical,Spaces_Tactical,
+                        Spaces_Devastator,Spaces_Devastator,
+
                 ],XP=100,Entrenchment_level=2)
 
 RegB.isDefending = False

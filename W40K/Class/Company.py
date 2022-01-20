@@ -1,19 +1,20 @@
 from MyPack2.Utilities import *
 from W40K.Functions.Functions import *
-#from W40K.Functions.Stats_Functions import bonus_CC,bonus_CT
 from W40K.Functions.Upgrades_bonuses import setUpgradeBonus
+from W40K.Functions.Units_bonuses import apply_SpecialRules
 
 class Company:
-    def __init__(self,Unit=None,Equipement=None):
+    def __init__(self,Unit=None,Equipement=None,Upgrade=None):
         self.Unit = Unit
         self.Class = "Company"
         self.Type = ""
         self.Equipement = [] if Equipement is None else Equipement
-        self.Upgrade = []
+        self.Upgrade = [] if Upgrade is None else Upgrade
         self.Manpower = float()
         self.Quantity_Equipement = float()
         self.BRK_bonus = 1
         self.DEF_bonus = 1
+        self.SpecialRules = self.Unit.SpecialRules
     # HOI Stats
         self.HP = float()
         self.ORG = float()
@@ -35,7 +36,7 @@ class Company:
         """
         if self.Unit is not None:
         # TYPE
-            self.Type = self.Unit.Class
+            self.Type = self.Unit.Type
         # MANPOWER & EQUIPEMENT
             self.Manpower = self.Unit.Quantity
             self.Quantity_Equipement = np.sum([el.Quantity for el in self.Equipement])
@@ -60,8 +61,13 @@ class Company:
             self.Breakthrought = self.Unit.Breakthrought
             self.Hardness = self.Unit.Hardness
             self.Armor = self.Unit.Armor
+            self.Bonus()
         # End
         round_Stats(self)
+
+    def Bonus(self):
+        setUpgradeBonus(self)
+        apply_SpecialRules(self)
 
     def set_Defense_bonuses(self):
         MANPOWER = self.Manpower
