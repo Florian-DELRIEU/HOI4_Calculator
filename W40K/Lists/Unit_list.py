@@ -4,6 +4,13 @@ from W40K.Class.Weapons import Weapon,Upgrade
 # Units
 Gardes =        Infantry(3, 3, 3, 3, 1, 1, 7, 5, Name="Gardes",
                          SpecialRules=["Combined Squads","Heavy Weapons Team"])
+
+Gardes_DKK = Gardes
+Gardes_DKK.SpecialRules = ["Iron Discipline","Death Korps"]
+
+Grenadier_DKK = Infantry(3, 3, 3, 3, 11, 1, 7, 4, Name="Grenadier",
+                        SpecialRules=["Iron Discipline","Death Korps"])
+
 SpaceMarines =  Infantry(4, 4, 4, 4, 1, 1, 9, 3, Name="Space Marines",
                          SpecialRules=["Astartes","Combats Squads","Chapter: Ultramarines"])
 

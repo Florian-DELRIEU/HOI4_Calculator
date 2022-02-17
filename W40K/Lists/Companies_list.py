@@ -1,3 +1,7 @@
+"""
+TODO
+    - Ajouter les armes manquantes
+"""
 from W40K.Lists.Unit_list import *
 from W40K.Class.Company import Company
 
@@ -17,6 +21,15 @@ Guardsmens_100C = Company(Unit=         Gardes.__copy__(100),
                                         FragGrenades.__copy__(60),
                                         KrakGrenades.__copy__(40),
                                         Bayonet.__copy__(100)])
+DKK_LineInfantryCompany_IA5 = Company(Unit = Gardes_DKK.__copy__(600),
+                                      Equipement=[
+                                          Lasgun.__copy__(7*6*10),
+                                          PlasmaGun.__copy__(2*10),
+                                          # Flamer._copy_(1*10)
+                                          MeltaGun.__copy__(1*10),
+                                          #GrenadeLauncher.__copy__(1*10),
+                                      ])
+
 
 Spaces_Tactical = Company(Unit=     SpaceMarines.__copy__(100),
                       Equipement=[  Bolter.__copy__(85),
