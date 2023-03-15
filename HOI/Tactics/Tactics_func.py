@@ -50,23 +50,23 @@ def _choose_tactic(ATK_tactic_list, DEF_tactic_list, Initiative_winner):
     ATK_Tactic = Tactic()
     DEF_Tactic = Tactic()
     if Initiative_winner == "ATK":
-    # DEF choice first
+        # DEF choice first
         DEF_tactic_weight = [el.weight for el in DEF_tactic_list]
         DEF_Tactic = rd.choices(DEF_tactic_list, DEF_tactic_weight)[0]
-    # Change weight for try counter DEF tactic
+        # Change weight for try counter DEF tactic
         try: # Increase weight if counter tactic exist
             Counter_tactic = [el for el in ATK_tactic_list if el.Name == DEF_Tactic.CounteredBy][0]
             Counter_tactic.weight *= 1.35
         except: pass # if counter tactic doesn't exist
-    # ATK choice finnaly
+        # ATK choice finnaly
         ATK_tactic_weight = [el.weight for el in ATK_tactic_list]
         ATK_Tactic = rd.choices(ATK_tactic_list, ATK_tactic_weight)[0]
     if Initiative_winner == "DEF":
-    # ATK choice first
-        ATK_tactic_weight = [el.weight for el in ATK_tactic_list]
+        # ATK choice first
+        ATK_tactic_weight = [el.weight for el in ATK_tactic_list]  # Tout les poids de la listes de tactiques
         ATK_Tactic = rd.choices(ATK_tactic_list, ATK_tactic_weight)[0]
         try: # Change weight for try counter ATK tactic
-            Counter_tactic = [el for el in DEF_tactic_list if el.Name == ATK_Tactic.CounteredBy][0]
+            Counter_tactic = [el for el in DEF_tactic_list if el.Name == ATK_Tactic.CounteredBy][0]  # Quel est la tactique de contre ?
             Counter_tactic.weight *= 1.35
         except: pass
     # DEF choice
@@ -102,6 +102,7 @@ def Initiative_round(Battle):
     """
     TODO -- NEED Leader Upgrade
     Choisis quel camp aura l'initiative
+        - Le camps qui remporte l'initiative choisiras sa tacttique en second pour essayer de contrer l'autre camps.
         - Basic pour le moment car leaders ne sont pas ajoutés
     """
     ATK_weight = int()
@@ -114,37 +115,21 @@ def Initiative_round(Battle):
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
 
 def apply_Tactics(Battle):
+    """
+    Applique tout les bonus multiplicateurs aux stats de chaque camps en fonctions des tactiques employés
+    """
     DEF = Battle.DEF
     DEF_Tac = Battle.DEF_Tactic
     ATK = Battle.ATK
     ATK_Tac = Battle.ATK_Tactic
 # Bonus for DEF
-    DEF.SoftAttack = DEF.SoftAttack * DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
-    DEF.HardAttack = DEF.HardAttack * DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
-    DEF.Defense = DEF.Defense * DEF_Tac.DEF_Defense * ATK_Tac.DEF_Defense
+    DEF.SA = DEF.SA * DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
+    DEF.HA = DEF.HA * DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
+    DEF.DEF = DEF.DEF * DEF_Tac.DEF_Defense * ATK_Tac.DEF_Defense
 # Bonus for ATK
-    ATK.SoftAttack = ATK.SoftAttack * ATK_Tac.ATK_Damage * ATK_Tac.ATK_Damage
-    ATK.HardAttack = ATK.HardAttack * ATK_Tac.ATK_Damage * ATK_Tac.ATK_Damage
-    ATK.Defense = ATK.Defense * ATK_Tac.ATK_Defense * ATK_Tac.ATK_Defense
-# Cac limit
-    set_CAC_limit(Battle)
-
-def set_CAC_limit(Battle):
-    DEF_Tac = Battle.DEF_Tactic
-    ATK_Tac = Battle.ATK_Tactic
-    if Battle.CAC_limit < 0:    Battle.CAC_limit = 0 # Mets le CAC limit entre 0 et 1
-    elif Battle.CAC_limit > 1:  Battle.CAC_limit = 1 # Pour préparer le nouvel CAC limit
-    Battle.CAC_limit = Battle.CAC_limit + np.sum(DEF_Tac.CAC + ATK_Tac.CAC)
-    if Battle.CAC_limit < -0.5: Battle.CAC_limit = -.5
-    elif Battle.CAC_limit > 1.5: Battle.CAC_limit = 1.5
-
-def update_CAC(Battle):
-    CAC_current = Battle.CAC_level
-    CAC_limit = Battle.CAC_limit
-    CAC_drift = (CAC_limit - CAC_current) / 10
-    Battle.CAC_level += CAC_drift
-    if Battle.CAC_level < 0: Battle.CAC_level = 0
-    elif Battle.CAC_level > 1: Battle.CAC_level = 1
+    ATK.SA = ATK.SA * ATK_Tac.ATK_Damage * ATK_Tac.ATK_Damage
+    ATK.HA = ATK.HA * ATK_Tac.ATK_Damage * ATK_Tac.ATK_Damage
+    ATK.DEF = ATK.DEF * ATK_Tac.ATK_Defense * ATK_Tac.ATK_Defense
 
 def change_weight(Battle):
     """Change tactics weight with regards to Generals skills and abilities and terrain"""

@@ -99,6 +99,8 @@ class Battle:
         self.DEF = DEF
         self.ATK_Tactic = None
         self.DEF_Tactic = None
+        self.ATK_Leader = None
+        self.DEF_Leader = None
         self.roundCounter = 0
         self.Phase = "Default"
     def isFinnish(self):
@@ -131,7 +133,7 @@ class Battle:
         """
         Lancement d'un round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
-        if self.roundCounter % 12 == 0:
+        if self.roundCounter % 12 == 0:  # Choix de Tactique tout les 12 rounds
             choose_Tactic(self)
             txt = "New tactics / Battle phase: {}".format(self.Phase)
             txt += "\n- {} choose {} tactic".format(self.ATK.Name, self.ATK_Tactic)
