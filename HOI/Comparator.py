@@ -5,7 +5,7 @@ from MyPack.Math import divide
 def Analyse_Division(Division):
     Div = Division
     txt = "Analyzer"
-    txt +="\n======= {} ========".format(Division.Name)
+    txt +="\n======= {} ========".format(Division.name)
     txt += "\n HA/SA = {} % ".format(divide(Div.HA, Div.SA)*100)
 #    txt += "\n - SA: {} /IC || {}/Width ".format(divide(Div.SA,Div.IC),divide(Div.SA,Div.Width))
 #    txt += "\n - HA: {} /IC || {}/Width ".format(divide(Div.HA,Div.IC),divide(Div.HA,Div.Width))
@@ -20,7 +20,7 @@ def Analyse_Division(Division):
 
 def Compare_Division(DivA, DivB):
     txt = "COMPARATOR"
-    txt += "\n========= {}  Vs {} =========".format(DivA.Name, DivB.Name)
+    txt += "\n========= {}  Vs {} =========".format(DivA.name, DivB.name)
     txt += "\nHP   |   {}    |   {}  (+ {} %)  ".format(DivA.PV, DivB.PV, 100*(divide(DivB.PV, DivA.PV) - 1))
     txt += "\nORG  |   {}    |   {}  (+ {} %)  ".format(DivA.ORG, DivB.ORG, 100*(divide(DivB.ORG, DivA.ORG) - 1))
     txt += "\nSA   |   {}    |   {}  (+ {} %)  ".format(DivA.SA, DivB.SA, 100*(divide(DivB.SA, DivA.SA) - 1))
@@ -41,7 +41,7 @@ def Compare_Division(DivA, DivB):
 def Analyze_Bataillon(Bataillon):
     Bat = Bataillon
     txt = "Analyzer"
-    txt += "\n======= {} ========".format(Bataillon.Name)
+    txt += "\n======= {} ========".format(Bataillon.name)
     txt += "\n HA/SA = {} % ".format(divide(Bat.HA, Bat.SA)*100)
     txt += "\n - SA: {} /IC || {}/Width ".format(divide(Bat.SA,Bat.IC),divide(Bat.SA,Bat.Width))
     txt += "\n - HA: {} /IC || {}/Width ".format(divide(Bat.HA,Bat.IC),divide(Bat.HA,Bat.Width))
@@ -57,7 +57,7 @@ def Analyze_Bataillon(Bataillon):
 
 def Compare_Bataillon(BatA, BatB):
     txt = "COMPARATOR"
-    txt += "\n========= {}  Vs {} =========".format(BatA.Name, BatB.Name)
+    txt += "\n========= {}  Vs {} =========".format(BatA.name, BatB.name)
     txt += "\nHP   |   {}    |   {}  (+ {} %)  ".format(BatA.PV, BatB.PV, 100*(divide(BatB.PV, BatA.PV) - 1))
     txt += "\nORG  |   {}    |   {}  (+ {} %)  ".format(BatA.ORG, BatB.ORG, 100*(divide(BatB.ORG, BatA.ORG) - 1))
     txt += "\nSA   |   {}    |   {}  (+ {} %)  ".format(BatA.SA, BatB.SA, 100*(divide(BatB.SA, BatA.SA) - 1))

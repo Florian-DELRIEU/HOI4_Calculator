@@ -1,17 +1,19 @@
+
+
 class Tactic:
-    def __init__(self,ATK_Damage=1,ATK_Defense=1,DEF_Damage=1,DEF_Defense=1,weight=4,CounteredBy=None,Name="",
+    def __init__(self, attacker_damage=1, attacker_defense=1, defender_damage=1, defender_defense=1, weight=4, countered_by=None, name="",
                  BeginPhase=None):
-        self.Name = Name
-        self.CounteredBy = CounteredBy
+        self.name = name
+        self.countered_by = countered_by
     # Bonus
-        self.ATK_Damage = ATK_Damage
-        self.ATK_Defense = ATK_Defense
-        self.DEF_Damage = DEF_Damage
-        self.DEF_Defense = DEF_Defense
+        self.attacker_damage = attacker_damage
+        self.attacker_defense = attacker_defense
+        self.defender_damage = defender_damage
+        self.defender_defense = defender_defense
     # Begin battle phase
         self.weight = weight
-        self.Begin_battle_phase = None
+        self.begin_battle_phase = None
 
     def __repr__(self):
-        return self.Name
+        return self.name
     

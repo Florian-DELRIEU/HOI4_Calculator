@@ -136,8 +136,8 @@ class Battle:
         if self.roundCounter % 12 == 0:  # Choix de Tactique tout les 12 rounds
             choose_Tactic(self)
             txt = "New tactics / Battle phase: {}".format(self.Phase)
-            txt += "\n- {} choose {} tactic".format(self.ATK.Name, self.ATK_Tactic)
-            txt += "\n- {} choose {} tactic".format(self.DEF.Name, self.DEF_Tactic)
+            txt += "\n- {} choose {} tactic".format(self.ATK.name, self.ATK_Tactic)
+            txt += "\n- {} choose {} tactic".format(self.DEF.name, self.DEF_Tactic)
         self.ATK.Attaque(self.DEF)  # ATK attaque
         self.DEF.Damage(self.ATK)   # DEF prend les dommages
         self.DEF.Attaque(self.ATK)  # DEF riposte
