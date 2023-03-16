@@ -7,64 +7,67 @@ class Division:
     self._Stat : stats de la division quand elle est en pleine santé "strenght = 1"
     self.Stat  : Stats de la division
     """
-    def __init__(self,PV,ORG,SA,HA,DEF,BRK,PRC,ARM,HARD,RTCH,Name=""):
-        self._PVmax = PV
-        self._ORG = ORG
-        self._SA = SA # Soft Attack
-        self._HA = HA # Hard Attack
-        self._DEF = DEF # Defense
-        self._BRK = BRK # Breakthought
-        self.PV = self._PVmax
-        self.ORG = self._ORG
-        self.PRC = PRC # Piercing
-        self.ARM = ARM # Armor
-        self.HARD = HARD # Hardness
-        self.RTCH = RTCH # Retranchement
-        self.NbATK = 0
-        self.Name = ""
-        self.set_STR()  # Mets a jour les stat en fonction des PV de la division
-        self.isDefending = True # TRUE si la division et en défense
-    def set_STR(self):
+    def __init__(self, pv_max, org, sa, ha, defense, attack, piercing, armor, hard, entrenchment, name=""):
+        self._PVMAX = pv_max
+        self._ORG = org
+        self._SA = sa # Soft Attack
+        self._HA = ha # Hard Attack
+        self._DEFENSE = defense # Defense
+        self._ATTACK = attack # Breakthought
+        self.pv = self._PVMAX
+        self.org = self._ORG
+        self.prc = piercing # Piercing
+        self.arm = armor # Armor
+        self.hard = hard # Hardness
+        self.rtch = entrenchment # Retranchement
+        self.defense = self._DEFENSE
+        self.attack = self._ATTACK
+        self.nb_atk = 0
+        self.NAME = name
+        self.set_str()  # Mets a jour les stat en fonction des PV de la division
+        self.is_defending = True # TRUE si la division et en défense
+
+    def set_str(self):
         """
         Calcul de la STR en fonction des PV
         """
-        self.STR = self.PV / self._PVmax
+        self.str = self.pv/self._PVMAX
     # MAJ des stats en fonction de STR
-        self.SA = self._SA * self.STR
-        self.HA = self._HA * self.STR
-        self.DEF = self._DEF * self.STR
-        self.BRK = self._BRK * self.STR
+        self.sa = self._SA*self.str
+        self.ha = self._HA*self.str
+        self.defense = self._DEFENSE*self.str
+        self.attack = self._ATTACK*self.str
     def Attaque(self,Target):
         """
         Calcul du nombre d'attaque de :self: sur :Target:
         :param Target: division cible de :self:
         """
-        self.set_STR() # MAJ des stats
-        NbATK = Target.HARD*self.HA + (1-Target.HARD)*self.SA  # Calcul du nbr d'attaque en fonction du Hardness
+        self.set_str() # MAJ des stats
+        nb_atk = Target.hard*self.ha + (1 - Target.hard)*self.sa  # Calcul du nbr d'attaque en fonction du Hardness
     # Piercing ?
-        self.NbATK = NbATK if self.PRC >= Target.ARM else NbATK/2
-        self.NbATK /= 10 # les attaques sont divisé par 10 (voir wiki)
+        self.nb_atk = nb_atk if self.prc >= Target.arm else nb_atk/2
+        self.nb_atk /= 10 # les attaques sont divisé par 10 (voir wiki)
     def Damage(self,Striker):
         """
         Calcul du nombre de touche et des dégats
         :param Striker: Division attaquante
         """
-        self.set_STR() # MAJ
-        NbDAMAGE = Striker.NbATK #Recupere le nombre d'attaque de l'attaquant
+        self.set_str() # MAJ
+        nb_damage = Striker.nb_atk #Recupere le nombre d'attaque de l'attaquant
     # Attaquant ou defenseur ?
-        DEF = self.DEF if self.isDefending else self.BRK
+        current_defense = self.defense if self.is_defending else self.attack
     # Defense de la cible
-        if DEF > NbDAMAGE: NbDAMAGE *= 0.1
-        else:              NbDAMAGE = self.DEF*0.1 + (NbDAMAGE-self.DEF)*0.4
+        if current_defense > nb_damage: nb_damage *= 0.1
+        else:                           nb_damage = self.defense*0.1 + (nb_damage - self.defense)*0.4
     # Calcul des dégats entre les PV et l'ORG
     # PV Dégats
-        self.PV -= 1.5*NbDAMAGE # Moyenne de D2
-        self.PV = truncDecimal(self.PV,1)
-        self.PV = max(self.PV, 0)
+        self.pv -= 1.5*nb_damage # Moyenne de D2
+        self.pv = truncDecimal(self.pv, 1)
+        self.pv = max(self.pv, 0)
     # ORG Dégats
-        self.ORG -= 3.5*NbDAMAGE if self.PRC > Striker.ARM else 2.5*NbDAMAGE
-        self.ORG = truncDecimal(self.ORG,1)
-        self.ORG = max(self.ORG, 0)
+        self.org -= 3.5*nb_damage if self.prc > Striker.arm else 2.5*nb_damage
+        self.org = truncDecimal(self.org, 1)
+        self.org = max(self.org, 0)
 
 class Bataillon:
     def __init__(self,PV,ORG,SA,HA,DEF,BRK,ARM,PRC,HARD,Width,Supply_use,Fuel_use,IC,Name=""):
@@ -93,8 +96,8 @@ class Battle:
     """
     def __init__(self, ATK, DEF):
         assert type(ATK) == Division and type(DEF) == Division , "campA and campB must be division class"
-        assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
-        assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
+        assert ATK.is_defending == False , "ATK.isDefending must be FALSE"
+        assert DEF.is_defending == True , "DEF.isDefending must be TRUE"
         self.ATK = ATK
         self.DEF = DEF
         self.ATK_Tactic = None
@@ -110,10 +113,10 @@ class Battle:
         :return: True ou False
         """
         return (
-            (self.ATK.PV <= 0)
-            or (self.DEF.PV <= 0)
-            or (self.ATK.ORG <= 0)
-            or (self.DEF.ORG <= 0)
+            (self.ATK.pv <= 0)
+            or (self.DEF.pv <= 0)
+            or (self.ATK.org <= 0)
+            or (self.DEF.org <= 0)
         )
     def Round(self,Nb=1):
         """
@@ -153,8 +156,8 @@ class Battle:
         txt = """----------- round {} -----------------
 DivATK: {}/{}   {}/{}
 DivDEF: {}/{}   {}/{}""".format(self.roundCounter,
-                                self.ATK.PV,self.ATK._PVmax,self.ATK.ORG,self.ATK._ORG,
-                                self.DEF.PV,self.DEF._PVmax,self.DEF.ORG,self.DEF._ORG)
+                                self.ATK.pv, self.ATK._PVMAX, self.ATK.org, self.ATK._ORG,
+                                self.DEF.pv, self.DEF._PVMAX, self.DEF.org, self.DEF._ORG)
         if self.isFinnish():
             txt += """
 ----------- End of Battle -----------------

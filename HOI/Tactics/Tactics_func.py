@@ -118,18 +118,18 @@ def apply_Tactics(Battle):
     """
     Applique tout les bonus multiplicateurs aux stats de chaque camps en fonctions des tactiques employés
     """
-    DEF = Battle.DEF
+    DEF = Battle.defense
     DEF_Tac = Battle.DEF_Tactic
     ATK = Battle.ATK
     ATK_Tac = Battle.ATK_Tactic
 # Bonus for DEF
-    DEF.SA = DEF.SA*DEF_Tac.defender_damage*ATK_Tac.defender_damage
-    DEF.HA = DEF.HA*DEF_Tac.defender_damage*ATK_Tac.defender_damage
-    DEF.DEF = DEF.DEF*DEF_Tac.defender_defense*ATK_Tac.defender_defense
+    DEF.sa = DEF.sa*DEF_Tac.defender_damage*ATK_Tac.defender_damage
+    DEF.ha = DEF.ha*DEF_Tac.defender_damage*ATK_Tac.defender_damage
+    DEF.defense = DEF.defense*DEF_Tac.defender_defense*ATK_Tac.defender_defense
 # Bonus for ATK
-    ATK.SA = ATK.SA*ATK_Tac.attacker_damage*ATK_Tac.attacker_damage
-    ATK.HA = ATK.HA*ATK_Tac.attacker_damage*ATK_Tac.attacker_damage
-    ATK.DEF = ATK.DEF*ATK_Tac.attacker_defense*ATK_Tac.attacker_defense
+    ATK.sa = ATK.sa*ATK_Tac.attacker_damage*ATK_Tac.attacker_damage
+    ATK.ha = ATK.ha*ATK_Tac.attacker_damage*ATK_Tac.attacker_damage
+    ATK.defense = ATK.defense*ATK_Tac.attacker_defense*ATK_Tac.attacker_defense
 
 def change_weight(Battle):
     """Change tactics weight with regards to Generals skills and abilities and terrain"""

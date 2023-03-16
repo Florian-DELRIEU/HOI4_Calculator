@@ -10,8 +10,8 @@ class Battle:
     def __init__(self, ATK, DEF):
     # Initials conditions
         assert type(ATK) == Regiment and type(DEF) == Regiment , "campA and campB must be regiment class"
-        assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
-        assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
+        assert ATK.is_defending == False , "ATK.isDefending must be FALSE"
+        assert DEF.is_defending == True , "DEF.isDefending must be TRUE"
     # ATK team
         self.ATK = ATK
         self.ATK_Tactic = None
@@ -35,8 +35,8 @@ class Battle:
         return (
                 (self.ATK.HP  <= 0)
             or  (self.DEF.HP  <= 0)
-            or  (self.ATK.ORG <= 0)
-            or  (self.DEF.ORG <= 0)
+            or  (self.ATK.org <= 0)
+            or  (self.DEF.org <= 0)
         )
     def Round(self,Nb:int()=1,LogLevel=True):
         """
@@ -112,8 +112,8 @@ class Battle:
         txt= """{}: {}/{}   {}/{}
 {}: {}/{}   {}/{}
 
-""".format(self.ATK.name, self.ATK.HP, self.ATK._Regiment__HP, self.ATK.ORG, self.ATK._Regiment__ORG,
-           self.DEF.name, self.DEF.HP, self.DEF._Regiment__HP, self.DEF.ORG, self.DEF._Regiment__ORG)
+""".format(self.ATK.name, self.ATK.HP, self.ATK._Regiment__HP, self.ATK.org, self.ATK._Regiment__ORG,
+           self.DEF.name, self.DEF.HP, self.DEF._Regiment__HP, self.DEF.org, self.DEF._Regiment__ORG)
         if self.isFinnish():
             txt += """
 ----------- End of Battle -----------------

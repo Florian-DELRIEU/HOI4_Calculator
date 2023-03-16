@@ -114,7 +114,7 @@ def Initiative_round(Battle):
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
 
 def apply_Tactics(Battle):
-    DEF = Battle.DEF
+    DEF = Battle.defense
     DEF_Tac = Battle.DEF_Tactic
     ATK = Battle.ATK
     ATK_Tac = Battle.ATK_Tactic
