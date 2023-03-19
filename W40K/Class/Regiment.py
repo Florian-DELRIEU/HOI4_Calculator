@@ -42,7 +42,7 @@ class Regiment:
     def HOI4_Profil(self):
     # Default Stats
         self.__HP = np.sum([el.HP for el in self.Companies])
-        self.__ORG = np.mean([el.ORG for el in self.Companies])
+        self.__ORG = np.mean([el.org for el in self.Companies])
         self.__SoftAttack = np.sum([el.SoftAttack for el in self.Companies])
         self.__SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Companies])
         self.__HardAttack = np.sum([el.HardAttack for el in self.Companies])
@@ -81,7 +81,7 @@ class Regiment:
         :param Striker: Division attaquante
         """
         self.set_STR() # MAJ
-        NbDAMAGE = Striker.NbATK #Recupere le nombre d'attaque de l'attaquant
+        NbDAMAGE = Striker.nbr_attack #Recupere le nombre d'attaque de l'attaquant
     # Attaquant ou defenseur ?
         DEF = self.Defense if self.isDefending else self.Breakthrought
     # Defense de la cible

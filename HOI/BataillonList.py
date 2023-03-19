@@ -1,26 +1,25 @@
 from HOI.Class import Bataillon
 
-
 ## INFANTERIE
-INF_36 = Bataillon(PV=25,ORG=60,SA=6,HA=1,DEF=23.1,BRK=3.15,ARM=0,PRC=4,HARD=0,Width=2,Supply_use=0.07,
-                   Fuel_use=0,IC=50,Name="Infanterie 36")
-CAV_36 = Bataillon(PV=25,ORG=70,SA=6,HA=1,DEF=22.44,BRK=3.06,ARM=0,PRC=4,HARD=0,Width=2,Supply_use=0.12,
-                   Fuel_use=0,IC=60,Name="Cavalerie 36")
-MOT_36 = Bataillon(PV=25, ORG=60, SA=6, HA=1, DEF=23.1, BRK=3.15, ARM=0, PRC=4, HARD=.1, Width=2, Supply_use=0.11,
-                   Fuel_use=1.2,IC=175, Name="Motorized 36")
+INF_36 = Bataillon(pv=25, org=60, sa=6, ha=1, defense=23.1, attack=3.15, armor=0, prc=4, hard=0, width=2, supply_use=0.07,
+                   fuel_use=0, ic=50, name="Infanterie 36")
+CAV_36 = Bataillon(pv=25, org=70, sa=6, ha=1, defense=22.44, attack=3.06, armor=0, prc=4, hard=0, width=2, supply_use=0.12,
+                   fuel_use=0, ic=60, name="Cavalerie 36")
+MOT_36 = Bataillon(pv=25, org=60, sa=6, ha=1, defense=23.1, attack=3.15, armor=0, prc=4, hard=.1, width=2, supply_use=0.11,
+                   fuel_use=1.2, ic=175, name="Motorized 36")
 
 ## ARTILLERIE
-ART_36 = Bataillon(PV=0.6, ORG=0, SA=27.5, HA=2, DEF=10, BRK=6, ARM=0, PRC=5, HARD=0, Width=3, Supply_use=0.2,
-                   Fuel_use=0,IC=126, Name="Artillerie 36")
+ART_36 = Bataillon(pv=0.6, org=0, sa=27.5, ha=2, defense=10, attack=6, armor=0, prc=5, hard=0, width=3, supply_use=0.2,
+                   fuel_use=0, ic=126, name="Artillerie 36")
 
 ## ARMOR
-LARM_36 = Bataillon(PV=2,ORG=10,SA=16,HA=6,DEF=5,BRK=36,ARM=15,PRC=30,HARD=.8,Width=2,Supply_use=0.2,
-                    Fuel_use=2.4,IC=540,Name="Light Armor 36")
-MARM_39 = Bataillon(PV=2,ORG=10,SA=19,HA=14,DEF=5,BRK=36,ARM=60,PRC=61,HARD=.9,Width=2,Supply_use=0.22,
-                    Fuel_use=3.6,IC=600,Name="Medium Armor 36")
-HARM_39 = Bataillon(PV=2,ORG=10,SA=15,HA=12,DEF=6,BRK=36,ARM=70,PRC=35,HARD=.95,Width=2,Supply_use=0.3,
-                    Fuel_use=4.4,IC=1000,Name="Heavy Armor 36")
+LARM_36 = Bataillon(pv=2, org=10, sa=16, ha=6, defense=5, attack=36, armor=15, prc=30, hard=.8, width=2, supply_use=0.2,
+                    fuel_use=2.4, ic=540, name="Light Armor 36")
+MARM_39 = Bataillon(pv=2, org=10, sa=19, ha=14, defense=5, attack=36, armor=60, prc=61, hard=.9, width=2, supply_use=0.22,
+                    fuel_use=3.6, ic=600, name="Medium Armor 36")
+HARM_39 = Bataillon(pv=2, org=10, sa=15, ha=12, defense=6, attack=36, armor=70, prc=35, hard=.95, width=2, supply_use=0.3,
+                    fuel_use=4.4, ic=1000, name="Heavy Armor 36")
 
 ## SUPPORT
-S_ART_36 = Bataillon(PV=0.2, ORG=0, SA=17.5, HA=1.2, DEF=6, BRK=3.6, ARM=0, PRC=5, HARD=0, Width=0, Supply_use=0.16,
-                   Fuel_use=0,IC=42, Name="Support Artillerie 36")
+S_ART_36 = Bataillon(pv=0.2, org=0, sa=17.5, ha=1.2, defense=6, attack=3.6, armor=0, prc=5, hard=0, width=0, supply_use=0.16,
+                     fuel_use=0, ic=42, name="Support Artillerie 36")

@@ -10,8 +10,8 @@ class Battle:
     def __init__(self, ATK, DEF):
     # Initials conditions
         assert type(ATK) == Regiment and type(DEF) == Regiment , "campA and campB must be regiment class"
-        assert ATK.isDefending == False , "ATK.isDefending must be FALSE"
-        assert DEF.isDefending == True ,  "DEF.isDefending must be TRUE"
+        assert ATK.is_defending == False , "ATK.isDefending must be FALSE"
+        assert DEF.is_defending == True , "DEF.isDefending must be TRUE"
     # ATK team
         self.ATK = ATK
         self.ATK_Tactic = None
@@ -35,8 +35,8 @@ class Battle:
         return (
                 (self.ATK.HP  <= 0)
             or  (self.DEF.HP  <= 0)
-            or  (self.ATK.ORG <= 0)
-            or  (self.DEF.ORG <= 0)
+            or  (self.ATK.org <= 0)
+            or  (self.DEF.org <= 0)
         )
     def Round(self,Nb:int()=1,LogLevel=True):
         """
@@ -62,8 +62,8 @@ class Battle:
             choose_Tactics(self)
             if Loglevel:
                 txt += "\nNew tactics / Battle phase: {}".format(self.Phase)
-                txt += "\n- {} choose {} tactic".format(self.ATK.Name,self.ATK_Tactic)
-                txt += "\n- {} choose {} tactic".format(self.DEF.Name,self.DEF_Tactic)
+                txt += "\n- {} choose {} tactic".format(self.ATK.name, self.ATK_Tactic)
+                txt += "\n- {} choose {} tactic".format(self.DEF.name, self.DEF_Tactic)
                 txt += "\n"
                 txt += "\nOld CAC limit = {}".format(previous_CAC_limit)
         update_CAC(self)
@@ -78,28 +78,28 @@ class Battle:
         round_Stats(self.DEF)
         round_Stats(self)
     # ATK Round
-        self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque
+        self.ATK.do_attack(self.DEF, self.CAC_level)  # ATK attaque
         if Loglevel:
-            txt += "\n{} round".format(self.ATK.Name)
+            txt += "\n{} round".format(self.ATK.name)
             txt += "\n - Shots: {} SA + {} HA = {}".format(self.ATK.SoftAttack,self.ATK.HardAttack,
                                                          self.ATK.SoftAttack+self.ATK.HardAttack)
             txt += "\n - Melee: {} SMA + {} HMA = {}".format(round(self.ATK.SoftMeleeAttack*self.CAC_level,2),
                                                              round(self.ATK.HardMeleeAttack*self.CAC_level,2),
                     round(self.ATK.SoftMeleeAttack*self.CAC_level,2)+round(self.ATK.SoftMeleeAttack*self.CAC_level,2))
     # DEF Round
-        self.DEF.Attaque(self.DEF,self.CAC_level)  # DEF riposte
+        self.DEF.do_attack(self.DEF, self.CAC_level)  # DEF riposte
         if Loglevel:
-            txt += "\n{} round".format(self.DEF.Name)
+            txt += "\n{} round".format(self.DEF.name)
             txt += "\n - Shots: {} SA + {} HA = {}".format(self.DEF.SoftAttack, self.DEF.HardAttack,
                                                            self.DEF.SoftAttack + self.DEF.HardAttack)
             txt += "\n - Melee: {} SMA + {} HMA = {}".format(round(self.DEF.SoftMeleeAttack*self.CAC_level, 2),
                                                              round(self.DEF.HardMeleeAttack*self.CAC_level, 2),
                                                              round(self.DEF.SoftMeleeAttack*self.CAC_level, 2) + round(
                                                                  self.DEF.SoftMeleeAttack*self.CAC_level, 2))
-        self.DEF.Damage(self.ATK)   # DEF prend les dommages
-        if Loglevel: txt+= "\n{} takes {} hits (-{} defenses)".format(self.DEF.Name,self.ATK.NbATK,self.DEF.Defense)
-        self.ATK.Damage(self.DEF)   # ATK prend les dommages
-        if Loglevel: txt+= "\n{} takes {} hits (-{} breakthrought)".format(self.ATK.Name,self.DEF.NbATK,self.ATK.Breakthrought)
+        self.DEF.take_damage(self.ATK)   # DEF prend les dommages
+        if Loglevel: txt+= "\n{} takes {} hits (-{} defenses)".format(self.DEF.name, self.ATK.nbr_attack, self.DEF.Defense)
+        self.ATK.take_damage(self.DEF)   # ATK prend les dommages
+        if Loglevel: txt+= "\n{} takes {} hits (-{} breakthrought)".format(self.ATK.name, self.DEF.nbr_attack, self.ATK.Breakthrought)
         print(txt)
     # Log de fin de round
         self.roundCounter += 1
@@ -112,8 +112,8 @@ class Battle:
         txt= """{}: {}/{}   {}/{}
 {}: {}/{}   {}/{}
 
-""".format(self.ATK.Name,self.ATK.HP,self.ATK._Regiment__HP,self.ATK.ORG,self.ATK._Regiment__ORG,
-           self.DEF.Name,self.DEF.HP,self.DEF._Regiment__HP,self.DEF.ORG,self.DEF._Regiment__ORG)
+""".format(self.ATK.name, self.ATK.HP, self.ATK._Regiment__HP, self.ATK.org, self.ATK._Regiment__ORG,
+           self.DEF.name, self.DEF.HP, self.DEF._Regiment__HP, self.DEF.org, self.DEF._Regiment__ORG)
         if self.isFinnish():
             txt += """
 ----------- End of Battle -----------------

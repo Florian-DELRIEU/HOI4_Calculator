@@ -3,7 +3,7 @@ from MyPack2.Utilities import truncDecimal
 
 ########################################################################################################################
 def setHP(object):
-    if object.Class == "Infantry":  HP = object.PV * 1.5**(object.E-3)
+    if object.Class == "Infantry":  HP = object.pv*1.5**(object.E - 3)
     elif object.Class == "Tank":    HP = object.PC
     else:                       return AttributeError ,"object.Class not found"
     object.HP = HP/4
@@ -17,7 +17,7 @@ def setORG(object):
         else:                               ORG = 10
     elif object.Class == "Walker":            ORG = 40
     else:                                   return AttributeError ,"object.Type not found"
-    object.ORG = ORG
+    object.org = ORG
 ########################################################################################################################
 def setSA(object):
     # sourcery skip: assign-if-exp, remove-unnecessary-else, swap-if-else-branches

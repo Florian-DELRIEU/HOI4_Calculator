@@ -37,7 +37,7 @@ class Company:
             self.Quantity_Equipement = np.sum([el.Quantity for el in self.Equipement])
         # HEALTH
             self.HP = self.Unit.HP
-            self.ORG = self.Unit.ORG
+            self.ORG = self.Unit.org
         # ATTACK
             self.SoftAttack = (self.Unit.SoftAttack + np.sum([el.SoftAttack for el in self.Equipement]))\
                                                                                 *self.Unit.bonus_CT
