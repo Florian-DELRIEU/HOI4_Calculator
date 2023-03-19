@@ -2,13 +2,13 @@ from HOI.Tactics.Tactics_list import Tactic
 import random as rd
 import numpy as np
 from MyPack.Utilities import truncDecimal
-from  HOI.Tactics.Tactics_list import ATK_tactics, ATK_HB_tactics, ATK_CQ_tactics, ATK_SB_tactics, ATK_TW_tactics
-from  HOI.Tactics.Tactics_list import DEF_tactics, DEF_HB_tactics, DEF_CQ_tactics, DEF_SB_tactics, DEF_TW_tactics
+from  HOI.Tactics.Tactics_list import ATK_TACTICS, ATK_HB_TACTICS, ATK_CQ_TACTICS, ATK_SB_TACTICS, ATK_TW_TACTICS
+from  HOI.Tactics.Tactics_list import DEF_TACTICS, DEF_HB_TACTICS, DEF_CQ_TACTICS, DEF_SB_TACTICS, DEF_TW_TACTICS
 
 
 ########################################################################################################################
 
-def choose_Tactic(Battle):
+def choose_tactic(Battle):
     """
     Choisi une tactique selon une sélection pondéré
         - run change-weight
@@ -20,25 +20,25 @@ def choose_Tactic(Battle):
     change_weight(Battle)
 # Which tactics lists is used according the battle phase
     if Battle.Phase == "Default":
-        attacker_tactic_list = ATK_tactics
-        defender_tactic_list = DEF_tactics
+        attacker_tactic_list = ATK_TACTICS
+        defender_tactic_list = DEF_TACTICS
     elif Battle.Phase == "Close Quarter Combat":
-        attacker_tactic_list = ATK_CQ_tactics
-        defender_tactic_list = DEF_CQ_tactics
+        attacker_tactic_list = ATK_CQ_TACTICS
+        defender_tactic_list = DEF_CQ_TACTICS
     elif Battle.Phase == "Seize Bridge":
-        attacker_tactic_list = ATK_SB_tactics
-        defender_tactic_list = DEF_SB_tactics
+        attacker_tactic_list = ATK_SB_TACTICS
+        defender_tactic_list = DEF_SB_TACTICS
     elif Battle.Phase == "Hold Bridge":
-        attacker_tactic_list = ATK_HB_tactics
-        defender_tactic_list = DEF_HB_tactics
+        attacker_tactic_list = ATK_HB_TACTICS
+        defender_tactic_list = DEF_HB_TACTICS
     elif Battle.Phase == "Tactical Withdraw":
-        attacker_tactic_list = ATK_TW_tactics
-        defender_tactic_list = DEF_TW_tactics
+        attacker_tactic_list = ATK_TW_TACTICS
+        defender_tactic_list = DEF_TW_TACTICS
     else: return NameError , "Wrong phase name"
     intiative_winner = initiative_round(Battle) # wich side has initiative
     attacker_Tactic, defender_Tactic = _choose_tactic(attacker_tactic_list, defender_tactic_list, intiative_winner) # choose tactics
-    Battle.ATK_Tactic = attacker_Tactic
-    Battle.DEF_Tactic = defender_Tactic
+    Battle.attacker_tactic = attacker_Tactic
+    Battle.defender_tactic = defender_Tactic
     isCountered(Battle) # test if any tactics has been coutered
     apply_Tactics(Battle) # apply bonuses
 
@@ -78,11 +78,11 @@ def isCountered(Battle):
     """
     Check if a tactic has been countered. Cancel countered ones
     """
-    if Battle.DEF_Tactic.name == Battle.ATK_Tactic.countered_by:
-        Cancel_Tactic(Battle.ATK_Tactic)
+    if Battle.defender_tactic.name == Battle.attacker_tactic.countered_by:
+        Cancel_Tactic(Battle.attacker_tactic)
         print("ATK tactic COUNTERED !!")
-    if Battle.ATK_Tactic.name == Battle.DEF_Tactic.countered_by:
-        Cancel_Tactic(Battle.DEF_Tactic)
+    if Battle.attacker_tactic.name == Battle.defender_tactic.countered_by:
+        Cancel_Tactic(Battle.defender_tactic)
         print("DEF tactic COUNTERED !!")
 
 def Cancel_Tactic(Tactic_to_cancel):
@@ -107,9 +107,9 @@ def initiative_round(Battle):
     """
     ATK_weight = int()
     DEF_weight = int()
-    if Battle.ATK_Leader is None:   ATK_weight = 1
+    if Battle.attacker_leader is None:   ATK_weight = 1
     else:   pass  # Need Leader upgrade
-    if Battle.DEF_Leader is None:   DEF_weight = 1
+    if Battle.defender_tactic is None:   DEF_weight = 1
     else:   pass  # Need Leader upgrade
 
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
@@ -119,9 +119,9 @@ def apply_Tactics(Battle):
     Applique tout les bonus multiplicateurs aux stats de chaque camps en fonctions des tactiques employés
     """
     DEF = Battle.defense
-    DEF_Tac = Battle.DEF_Tactic
-    ATK = Battle.ATK
-    ATK_Tac = Battle.ATK_Tactic
+    DEF_Tac = Battle.defender_tactic
+    ATK = Battle.attacker
+    ATK_Tac = Battle.attacker_tactic
 # Bonus for DEF
     DEF.sa = DEF.sa*DEF_Tac.defender_damage*ATK_Tac.defender_damage
     DEF.ha = DEF.ha*DEF_Tac.defender_damage*ATK_Tac.defender_damage

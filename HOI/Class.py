@@ -1,5 +1,5 @@
 from MyPack.Utilities import *
-from HOI.Tactics.Tactics_func import choose_Tactic
+from HOI.Tactics.Tactics_func import choose_tactic
 
 class Division:
     """
@@ -37,27 +37,27 @@ class Division:
         self.ha = self._HA*self.str
         self.defense = self._DEFENSE*self.str
         self.attack = self._ATTACK*self.str
-    def Attaque(self,Target):
+    def do_attack(self, target):
         """
         Calcul du nombre d'attaque de :self: sur :Target:
-        :param Target: division cible de :self:
+        :param target: division cible de :self:
         """
         self.set_str() # MAJ des stats
-        nb_atk = Target.hard*self.ha + (1 - Target.hard)*self.sa  # Calcul du nbr d'attaque en fonction du Hardness
+        nb_atk = target.hard*self.ha + (1 - target.hard)*self.sa  # Calcul du nbr d'attaque en fonction du Hardness
     # Piercing ?
-        self.nb_atk = nb_atk if self.prc >= Target.arm else nb_atk/2
+        self.nb_atk = nb_atk if self.prc >= target.arm else nb_atk/2
         self.nb_atk /= 10 # les attaques sont divisé par 10 (voir wiki)
-    def Damage(self,Striker):
+    def take_damage(self, striker):
         """
         Calcul du nombre de touche et des dégats
-        :param Striker: Division attaquante
+        :param striker: Division attaquante
         """
         self.set_str() # MAJ
-        nb_damage = Striker.nb_atk #Recupere le nombre d'attaque de l'attaquant
+        nb_damage = striker.nb_atk #Recupere le nombre d'attaque de l'attaquant
     # Attaquant ou defenseur ?
-        current_defense = self.defense if self.is_defending else self.attack
+        tmp_defense = self.defense if self.is_defending else self.attack
     # Defense de la cible
-        if current_defense > nb_damage: nb_damage *= 0.1
+        if tmp_defense > nb_damage:     nb_damage *= 0.1
         else:                           nb_damage = self.defense*0.1 + (nb_damage - self.defense)*0.4
     # Calcul des dégats entre les PV et l'ORG
     # PV Dégats
@@ -65,26 +65,27 @@ class Division:
         self.pv = truncDecimal(self.pv, 1)
         self.pv = max(self.pv, 0)
     # ORG Dégats
-        self.org -= 3.5*nb_damage if self.prc > Striker.arm else 2.5*nb_damage
+        self.org -= 3.5*nb_damage if self.prc > striker.arm else 2.5*nb_damage
         self.org = truncDecimal(self.org, 1)
         self.org = max(self.org, 0)
 
 class Bataillon:
-    def __init__(self,PV,ORG,SA,HA,DEF,BRK,ARM,PRC,HARD,Width,Supply_use,Fuel_use,IC,Name=""):
-        self.PV = PV
-        self.ORG = ORG
-        self.SA = SA
-        self.HA = HA
-        self.DEF = DEF
-        self.BRK = BRK
-        self.ARM = ARM
-        self.PRC = PRC
-        self.HARD = HARD
-        self.Width = Width
-        self.Supply_use = Supply_use
-        self.Fuel_use = Fuel_use
-        self.IC = IC
-        self.Name = Name
+    def __init__(self, pv, org, sa, ha, defense, attack, armor, prc, hard, width, supply_use=None, fuel_use=None, ic=None, name=""):
+        self.pv = pv
+        self.org = org
+        self.sa = sa
+        self.ha = ha
+        self.defense = defense
+        self.attack = attack
+        self.armor = armor
+        self.prc = prc
+        self.hard = hard
+        self.width = width
+        self.supply_use = supply_use
+        self.fuel_use = fuel_use
+        self.ic = ic
+        self.name = name
+
 
 
 #######################################################################################################################
@@ -94,73 +95,72 @@ class Battle:
     """
     Objet contenant les divisions permettant de lancer les round et les logs
     """
-    def __init__(self, ATK, DEF):
-        assert type(ATK) == Division and type(DEF) == Division , "campA and campB must be division class"
-        assert ATK.is_defending == False , "ATK.isDefending must be FALSE"
-        assert DEF.is_defending == True , "DEF.isDefending must be TRUE"
-        self.ATK = ATK
-        self.DEF = DEF
-        self.ATK_Tactic = None
-        self.DEF_Tactic = None
-        self.ATK_Leader = None
-        self.DEF_Leader = None
-        self.roundCounter = 0
+    def __init__(self, attacker, defender):
+        assert type(attacker) == Division and type(defender) == Division , "campA and campB must be division class"
+        assert attacker.is_defending == False , "ATK.isDefending must be FALSE"
+        assert defender.is_defending == True , "DEF.isDefending must be TRUE"
+        self.attacker = attacker
+        self.defender = defender
+        self.attacker_tactic = None
+        self.defender_tactic = None
+        self.attacker_leader = None
+        self.defender_tactic = None
+        self.round_counter = 0
         self.Phase = "Default"
-    def isFinnish(self):
+    def is_finnish(self):
         """
         Check si le combat est terminé
             - Si l'un des deux camps n'as plus de PV ou d'Organisation
         :return: True ou False
         """
-        return (
-            (self.ATK.pv <= 0)
-            or (self.DEF.pv <= 0)
-            or (self.ATK.org <= 0)
-            or (self.DEF.org <= 0)
-        )
-    def Round(self,Nb=1):
+        return any(val <= 0 for val in [self.attacker.pv,
+                                        self.defender.pv,
+                                        self.attacker.org,
+                                        self.defender.org])  # Si PV ou orga des def ou attck est nulle ou moins
+
+    def run_rounds(self, nb_rounds=1):
         """
         Definit le nombre de lancement de round
-        :param Nb: Nombre de round souhaité (-1 si jusqu'a fin du combat)
+        :param nb_rounds: Nombre de round souhaité (-1 si jusqu'a fin du combat)
         """
-        assert type(Nb) is int , "Nb must be an :int:"
-        if Nb != -1:
+        assert type(nb_rounds) is int , "Nb must be an :int:"
+        if nb_rounds != -1:
             i = 1
-            while i <= Nb: # Lancement de :Nb: rounds
-                self._Round()
+            while i <= nb_rounds: # Lancement de :Nb: rounds
+                self._round()
                 i += 1
         else: # Lancement des rounds jusqu'a fin du combat
-            while not self.isFinnish():
-                self._Round()
-    def _Round(self):
+            while not self.is_finnish():
+                self._round()
+    def _round(self):
         """
         Lancement d'un round ATTAQUE et RIPOSTE (1h de combat dans HOI IV)
         """
-        if self.roundCounter % 12 == 0:  # Choix de Tactique tout les 12 rounds
-            choose_Tactic(self)
+        if self.round_counter % 12 == 0:  # Choix de Tactique tout les 12 rounds
+            choose_tactic(self)
             txt = "New tactics / Battle phase: {}".format(self.Phase)
-            txt += "\n- {} choose {} tactic".format(self.ATK.name, self.ATK_Tactic)
-            txt += "\n- {} choose {} tactic".format(self.DEF.name, self.DEF_Tactic)
-        self.ATK.Attaque(self.DEF)  # ATK attaque
-        self.DEF.Damage(self.ATK)   # DEF prend les dommages
-        self.DEF.Attaque(self.ATK)  # DEF riposte
-        self.ATK.Damage(self.DEF)   # ATK prend les dommages
+            txt += "\n- {} choose {} tactic".format(self.attacker.name, self.attacker_tactic)
+            txt += "\n- {} choose {} tactic".format(self.defender.name, self.defender_tactic)
+        self.attacker.do_attack(self.defender)  # ATK attaque
+        self.defender.take_damage(self.attacker)   # DEF prend les dommages
+        self.defender.do_attack(self.attacker)  # DEF riposte
+        self.attacker.take_damage(self.defender)   # ATK prend les dommages
     # Log de fin de round
-        self.roundCounter += 1
-        self.printLOG()
-    def printLOG(self):
+        self.round_counter += 1
+        self.print_log()
+    def print_log(self):
         """
         log pour chaque heure de combats
             - résulat des PV et ORG de chaques divisions
         """
         txt = """----------- round {} -----------------
 DivATK: {}/{}   {}/{}
-DivDEF: {}/{}   {}/{}""".format(self.roundCounter,
-                                self.ATK.pv, self.ATK._PVMAX, self.ATK.org, self.ATK._ORG,
-                                self.DEF.pv, self.DEF._PVMAX, self.DEF.org, self.DEF._ORG)
-        if self.isFinnish():
+DivDEF: {}/{}   {}/{}""".format(self.round_counter,
+                                self.attacker.pv, self.attacker._PVMAX, self.attacker.org, self.attacker._ORG,
+                                self.defender.pv, self.defender._PVMAX, self.defender.org, self.defender._ORG)
+        if self.is_finnish():
             txt += """
 ----------- End of Battle -----------------
 The battle finnish after {} hours
-            """.format(self.roundCounter)
+            """.format(self.round_counter)
         print(txt)

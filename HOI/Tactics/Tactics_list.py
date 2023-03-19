@@ -1,7 +1,7 @@
 from HOI.Tactics.Tactics import Tactic
 
 ## ATTACKS
-ATK_tactics = [
+ATK_TACTICS = [
 Tactic(attacker_damage=1.05, name="Attaque",
        countered_by="Counter Attack"),
 Tactic(attacker_damage=1.25, weight=2, name="Assaut",
@@ -27,7 +27,7 @@ Tactic(defender_damage=1.1, attacker_damage=1.1, weight=0, name="Mass Charge"),
 ]
 
 ## DEFENSES
-DEF_tactics = [
+DEF_TACTICS = [
 Tactic(defender_damage=1.05, name="Defense"),
 Tactic(defender_damage=1.25, name="Counter Attack"),
 Tactic(attacker_damage=0.75, defender_damage=0.95, name="Tactic Withdrawal",
@@ -48,7 +48,7 @@ Tactic(attacker_damage=1.2, defender_damage=.95, weight=0, name="Hold Bridge",
 
 ########################################################################################################################
 ## Close Quarter Attack
-ATK_CQ_tactics = [
+ATK_CQ_TACTICS = [
 Tactic(attacker_damage=1.1, defender_damage=1.05, name="Close Quarter Attack"),
 Tactic(attacker_damage=1.2, defender_damage=1.2, weight=2, name="Close Quarter Storm"),
 Tactic(attacker_damage=1.05, defender_damage=1.05, weight=1, name="Close Quarter Withdraw",
@@ -56,7 +56,7 @@ Tactic(attacker_damage=1.05, defender_damage=1.05, weight=1, name="Close Quarter
 ]
 
 ## Close Quarter Defense
-DEF_CQ_tactics = [
+DEF_CQ_TACTICS = [
 Tactic(attacker_damage=1.1, defender_damage=1.05, name="Close Quarter Defense"),
 Tactic(attacker_damage=0.8, defender_damage=1, weight=2, name="Close Quarter Local Strongpoint"),
 ]
@@ -64,7 +64,7 @@ Tactic(attacker_damage=0.8, defender_damage=1, weight=2, name="Close Quarter Loc
 
 ########################################################################################################################
 ## Tactical withdraw Attack
-ATK_TW_tactics = [
+ATK_TW_TACTICS = [
 Tactic(attacker_damage=0.75, defender_damage=0.9, name="Tactical withdraw Attack"),
 Tactic(attacker_damage=0.85, defender_damage=0.95, name="Pursuit"),
 Tactic(attacker_damage=0.95, defender_damage=0.90, name="Intercept",
@@ -72,7 +72,7 @@ Tactic(attacker_damage=0.95, defender_damage=0.90, name="Intercept",
 ]
 
 ## Tactical withdraw Defend
-DEF_TW_tactics = [
+DEF_TW_TACTICS = [
 Tactic(attacker_damage=0.7, defender_damage=0.95, name="Withdrawal"),
 Tactic(attacker_damage=0.6, defender_damage=0.9, name="Evade"),
 ]
@@ -80,13 +80,13 @@ Tactic(attacker_damage=0.6, defender_damage=0.9, name="Evade"),
 
 ########################################################################################################################
 ## Seize Bridge Attacks
-ATK_SB_tactics = [
+ATK_SB_TACTICS = [
 Tactic(attacker_damage=1.2, defender_damage=1, name="Hold Bridge"),
 Tactic(attacker_damage=1.2, defender_damage=0.9, name="Defend Bridge"),
 ]
 
 ## Seize Bridge Defend
-DEF_SB_tactics = [
+DEF_SB_TACTICS = [
 Tactic(attacker_damage=1, defender_damage=0.95, name="Bridge Assaut"),
 Tactic(attacker_damage=1.25, defender_damage=0.9, name="Bridge Reckless Assaut"),
 Tactic(attacker_damage=1.1, defender_damage=0.95, name="Recapture Bridge",
@@ -97,7 +97,7 @@ Tactic(attacker_damage=1.1, defender_damage=0.95, name="Recapture Bridge",
 
 ########################################################################################################################
 ## Hold Bridge Attacks
-ATK_HB_tactics = [
+ATK_HB_TACTICS = [
 Tactic(attacker_damage=1.1, defender_damage=1, name="Attack Bridge"),
 Tactic(attacker_damage=1.2, defender_damage=1, name="Rush Bridge"),
 Tactic(attacker_damage=1.2, defender_damage=1.05, weight=2, name="Storm Bridge",
@@ -106,7 +106,7 @@ Tactic(attacker_damage=1.2, defender_damage=1.05, weight=2, name="Storm Bridge",
 ]
 
 ## Hold Bridge Defend
-DEF_HB_tactics = [
+DEF_HB_TACTICS = [
 Tactic(attacker_damage=1.2, defender_damage=0.9, name="Hold Bridge"),
 Tactic(attacker_damage=1.1, defender_damage=1.05, name="Defend Bridge"),
 ]

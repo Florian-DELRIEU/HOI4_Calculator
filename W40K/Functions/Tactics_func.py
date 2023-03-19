@@ -37,8 +37,8 @@ def choose_Tactics(Battle):
     else: return NameError , "Wrong phase name"
     winner = Initiative_round(Battle) # wich side has initiative
     ATK_Tactic, DEF_Tactic = _choose_tactics(ATK_tactic_list,DEF_tactic_list,winner) # choose tactics
-    Battle.ATK_Tactic = ATK_Tactic
-    Battle.DEF_Tactic = DEF_Tactic
+    Battle.attacker_tactic = ATK_Tactic
+    Battle.defender_tactic = DEF_Tactic
     isCountered(Battle) # test if any tactics has been coutered
     apply_Tactics(Battle) # apply bonuses
 
@@ -78,11 +78,11 @@ def isCountered(Battle):
     """
     Check if a tactic has been countered. Cancel countered ones
     """
-    if Battle.DEF_Tactic.name == Battle.ATK_Tactic.countered_by:
-        Cancel_Tactic(Battle.ATK_Tactic)
+    if Battle.defender_tactic.name == Battle.attacker_tactic.countered_by:
+        Cancel_Tactic(Battle.attacker_tactic)
         print("ATK tactic COUNTERED !!")
-    if Battle.ATK_Tactic.name == Battle.DEF_Tactic.countered_by:
-        Cancel_Tactic(Battle.DEF_Tactic)
+    if Battle.attacker_tactic.name == Battle.defender_tactic.countered_by:
+        Cancel_Tactic(Battle.defender_tactic)
         print("DEF tactic COUNTERED !!")
 
 def Cancel_Tactic(Tactic_to_cancel):
@@ -106,18 +106,18 @@ def Initiative_round(Battle):
     """
     ATK_weight = int()
     DEF_weight = int()
-    if Battle.ATK_Leader is None:   ATK_weight = 1
+    if Battle.attacker_leader is None:   ATK_weight = 1
     else:   pass  # Need Leader upgrade
-    if Battle.DEF_Leader is None:   DEF_weight = 1
+    if Battle.defender_tactic is None:   DEF_weight = 1
     else:   pass  # Need Leader upgrade
 
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
 
 def apply_Tactics(Battle):
     DEF = Battle.defense
-    DEF_Tac = Battle.DEF_Tactic
-    ATK = Battle.ATK
-    ATK_Tac = Battle.ATK_Tactic
+    DEF_Tac = Battle.defender_tactic
+    ATK = Battle.attacker
+    ATK_Tac = Battle.attacker_tactic
 # Bonus for DEF
     DEF.SoftAttack = DEF.SoftAttack*DEF_Tac.defender_damage*ATK_Tac.defender_damage
     DEF.HardAttack = DEF.HardAttack*DEF_Tac.defender_damage*ATK_Tac.defender_damage
@@ -130,8 +130,8 @@ def apply_Tactics(Battle):
     set_CAC_limit(Battle)
 
 def set_CAC_limit(Battle):
-    DEF_Tac = Battle.DEF_Tactic
-    ATK_Tac = Battle.ATK_Tactic
+    DEF_Tac = Battle.defender_tactic
+    ATK_Tac = Battle.attacker_tactic
     if Battle.CAC_limit < 0:    Battle.CAC_limit = 0 # Mets le CAC limit entre 0 et 1
     elif Battle.CAC_limit > 1:  Battle.CAC_limit = 1 # Pour préparer le nouvel CAC limit
     Battle.CAC_limit = Battle.CAC_limit + np.sum(DEF_Tac.CAC + ATK_Tac.CAC)

@@ -1,10 +1,10 @@
 from Class import *
-from DivisionList import Div_Dico
+from DivisionList import DIVISION_DICT
 
-DivA = Div_Dico["Infantry_72"]
+DivA = DIVISION_DICT["Infantry_72"]
 DivA.is_defending = False
-DivB = Div_Dico["Armored_432"]
+DivB = DIVISION_DICT["Armored_432"]
 DivB.is_defending = True
 
 BATTLE = Battle(DivA,DivB)
-BATTLE.Round(-1)
+BATTLE.run_rounds(-1)

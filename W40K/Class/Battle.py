@@ -78,7 +78,7 @@ class Battle:
         round_Stats(self.DEF)
         round_Stats(self)
     # ATK Round
-        self.ATK.Attaque(self.DEF,self.CAC_level)  # ATK attaque
+        self.ATK.do_attack(self.DEF, self.CAC_level)  # ATK attaque
         if Loglevel:
             txt += "\n{} round".format(self.ATK.name)
             txt += "\n - Shots: {} SA + {} HA = {}".format(self.ATK.SoftAttack,self.ATK.HardAttack,
@@ -87,7 +87,7 @@ class Battle:
                                                              round(self.ATK.HardMeleeAttack*self.CAC_level,2),
                     round(self.ATK.SoftMeleeAttack*self.CAC_level,2)+round(self.ATK.SoftMeleeAttack*self.CAC_level,2))
     # DEF Round
-        self.DEF.Attaque(self.DEF,self.CAC_level)  # DEF riposte
+        self.DEF.do_attack(self.DEF, self.CAC_level)  # DEF riposte
         if Loglevel:
             txt += "\n{} round".format(self.DEF.name)
             txt += "\n - Shots: {} SA + {} HA = {}".format(self.DEF.SoftAttack, self.DEF.HardAttack,
@@ -96,9 +96,9 @@ class Battle:
                                                              round(self.DEF.HardMeleeAttack*self.CAC_level, 2),
                                                              round(self.DEF.SoftMeleeAttack*self.CAC_level, 2) + round(
                                                                  self.DEF.SoftMeleeAttack*self.CAC_level, 2))
-        self.DEF.Damage(self.ATK)   # DEF prend les dommages
+        self.DEF.take_damage(self.ATK)   # DEF prend les dommages
         if Loglevel: txt+= "\n{} takes {} hits (-{} defenses)".format(self.DEF.name, self.ATK.nbr_attack, self.DEF.Defense)
-        self.ATK.Damage(self.DEF)   # ATK prend les dommages
+        self.ATK.take_damage(self.DEF)   # ATK prend les dommages
         if Loglevel: txt+= "\n{} takes {} hits (-{} breakthrought)".format(self.ATK.name, self.DEF.nbr_attack, self.ATK.Breakthrought)
         print(txt)
     # Log de fin de round
