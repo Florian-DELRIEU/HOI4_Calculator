@@ -31,8 +31,6 @@ def apply_SpecialsRules(Weapon):
         Weapon.Defense_bonus += 0.15
     if "Assault Grenade" in Rules:
         Weapon.Breakthrought_bonus += 0.15
-    if "Gets Hot" in Rules:
-        pass
 
 
 ########################################################################################################################

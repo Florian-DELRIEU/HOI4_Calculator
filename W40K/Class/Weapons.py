@@ -20,8 +20,8 @@ class Weapon:
         self.SoftMeleeAttack = float()
         self.HardMeleeAttack = float()
         self.Piercing = float()
-        self.Defense_bonus = float(1.0)
-        self.Breakthrought_bonus = float(1.0)
+        self.Defense_bonus = 1.0
+        self.Breakthrought_bonus = 1.0
         self.HOI4_Profil()
 
     def HOI4_Profil(self):
@@ -60,7 +60,7 @@ class Weapon:
         return any(("Grenade" or "grenade") in rule for rule in self.SpecialsRules)
 
     def __repr__(self):
-        return str(self.Quantity) + " " + self.Name
+        return f"{str(self.Quantity)} {self.Name}"
 
     def __copy__(self, Quantity=None):
         if Quantity is None: Quantity = self.Quantity
@@ -83,4 +83,4 @@ class Upgrade:
         self.Breakthrought_Bonus = BRK
 
     def __repr__(self):
-        return str(self.Quantity) + " " + self.Name
+        return f"{str(self.Quantity)} {self.Name}"

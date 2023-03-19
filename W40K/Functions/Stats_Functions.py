@@ -185,19 +185,17 @@ def setBreakthrought(object):
         elif Type == ("Tank" or ""):                BRK = 30 / 15
         elif Type == "Heavy":                       BRK = 40 / 10
         elif Type == "SuperHeavy":                  BRK = 70 / 4
-
         elif Type == "Chariot SP Artillery":        BRK = 2 / 15
         elif Type == ("Tank SP Artillery"
                       or "SP Artillery"):           BRK = 3 / 15
         elif Type == "Heavy SP Artillery":          BRK = 2 / 10
         elif Type == "SuperHeavy SP Artillery":     BRK = 3 /4
-
         elif Type == "Chariot Destroyer":           BRK = 1 / 15
         elif Type == ("Tank Destroyer"
                       or "Destroyer"):              BRK = 1.3 / 15
         elif Type == "Heavy Destroyer":             BRK = 1 / 10
-        elif Type == "SuperHeavy Destroyer":        BRK = 4 / 4
-
+        elif Type == "SuperHeavy Destroyer":
+            BRK = 1
         elif Type == "Walker":                      BRK = 12 / 15
         else:                                       return AttributeError, "Tank Type not Found"
 

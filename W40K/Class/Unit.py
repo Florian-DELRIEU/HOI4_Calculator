@@ -83,7 +83,7 @@ class Infantry:
                    self.Hardness,self.Armor)
         print(txt)
     def __repr__(self):
-        return str(self.Quantity) + " " + self.Name
+        return f"{str(self.Quantity)} {self.Name}"
     def set_Quantity(self, Quantity):
         setQuantity(self,Quantity)
     def __copy__(self,Quantity):
@@ -161,7 +161,7 @@ class Tank:
         round_Stats(self)
 
     def __repr__(self):
-            return str(self.Quantity) + " " + self.Name
+        return f"{str(self.Quantity)} {self.Name}"
 
     def Bonus(self):
         apply_SpecialRules(self)
@@ -313,7 +313,7 @@ class Walker:
         print(txt)
 
     def __repr__(self):
-        return str(self.Quantity) + " " + self.Name
+        return f"{str(self.Quantity)} {self.Name}"
 
     def set_Quantity(self,Quantity):
         setQuantity(self, Quantity)

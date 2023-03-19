@@ -18,4 +18,4 @@ def apply_LeaderTactic(Battle):
                 each_tactic.weight *= 1.35
 
 def apply_LeaderTraits(Leader):  # sourcery skip: for-index-underscore
-    for trait in Leader.Traits_list: pass
+    pass
