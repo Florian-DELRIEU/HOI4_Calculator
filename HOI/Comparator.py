@@ -4,14 +4,13 @@ from MyPack.Math import divide
 
 def Analyse_Division(Division):
     Div = Division
-    txt = "Analyzer"
-    txt +="\n======= {} ========".format(Division.name)
-    txt += "\n HA/SA = {} % ".format(divide(Div.ha, Div.sa)*100)
+    txt = f"Analyzer\n======= {Division.name} ========"
+    txt += f"\n HA/SA = {divide(Div.ha, Div.sa) * 100} % "
 #    txt += "\n - SA: {} /IC || {}/Width ".format(divide(Div.SA,Div.IC),divide(Div.SA,Div.Width))
 #    txt += "\n - HA: {} /IC || {}/Width ".format(divide(Div.HA,Div.IC),divide(Div.HA,Div.Width))
 #    txt += "\n - {} SA/Supply || {} HA/Supply ".format(divide(Div.SA,Div.Supply_use),divide(Div.HA,Div.Supply_use))
 #    txt += "\n - {} SA/Fuel || {} HA/Fuel ".format(divide(Div.SA,Div.Fuel_use),divide(Div.HA,Div.Fuel_use))
-    txt += "\n BRK/DEF = {} ".format(divide(Div.attack, Div.defense))
+    txt += f"\n BRK/DEF = {divide(Div.attack, Div.defense)} "
 #    txt += "\n - DEF: {} /IC || {}/Width ".format(divide(Div.DEF,Div.IC),divide(Div.DEF,Div.Width))
 #    txt += "\n - BRK: {} /IC || {}/Width ".format(divide(Div.BRK,Div.IC),divide(Div.BRK,Div.Width))
 #    txt += "\n - {} DEF/Supply || {} BRK/Supply ".format(divide(Div.DEF,Div.Supply_use),divide(Div.BRK,Div.Supply_use))
@@ -19,17 +18,16 @@ def Analyse_Division(Division):
     print(txt)
 
 def Compare_Division(DivA, DivB):
-    txt = "COMPARATOR"
-    txt += "\n========= {}  Vs {} =========".format(DivA.name, DivB.name)
-    txt += "\nHP   |   {}    |   {}  (+ {} %)  ".format(DivA.pv, DivB.pv, 100*(divide(DivB.pv, DivA.pv) - 1))
-    txt += "\nORG  |   {}    |   {}  (+ {} %)  ".format(DivA.org, DivB.org, 100*(divide(DivB.org, DivA.org) - 1))
-    txt += "\nSA   |   {}    |   {}  (+ {} %)  ".format(DivA.sa, DivB.sa, 100*(divide(DivB.sa, DivA.sa) - 1))
-    txt += "\nHA   |   {}    |   {}  (+ {} %)  ".format(DivA.ha, DivB.ha, 100*(divide(DivB.ha, DivA.ha) - 1))
-    txt += "\nDEF  |   {}    |   {}  (+ {} %)  ".format(DivA.defense, DivB.defense, 100*(divide(DivB.defense, DivA.defense) - 1))
-    txt += "\nBRK  |   {}    |   {}  (+ {} %)  ".format(DivA.attack, DivB.attack, 100*(divide(DivB.attack, DivA.attack) - 1))
-    txt += "\nARM  |   {}    |   {}  (+ {} %)  ".format(DivA.arm, DivB.arm, 100*(divide(DivB.arm, DivA.arm) - 1))
-    txt += "\nPRC  |   {}    |   {}  (+ {} %)  ".format(DivA.prc, DivB.prc, 100*(divide(DivB.prc, DivA.prc) - 1))
-    txt += "\nHRD  |   {}    |   {}  (+ {} %)  ".format(DivA.hard, DivB.hard, 100*(divide(DivB.hard, DivA.hard) - 1))
+    txt = f"COMPARATOR\n========= {DivA.name}  Vs {DivB.name} ========="
+    txt += f"\nHP   |   {DivA.pv}    |   {DivB.pv}  (+ {100 * (divide(DivB.pv, DivA.pv) - 1)} %)  "
+    txt += f"\nORG  |   {DivA.org}    |   {DivB.org}  (+ {100 * (divide(DivB.org, DivA.org) - 1)} %)  "
+    txt += f"\nSA   |   {DivA.sa}    |   {DivB.sa}  (+ {100 * (divide(DivB.sa, DivA.sa) - 1)} %)  "
+    txt += f"\nHA   |   {DivA.ha}    |   {DivB.ha}  (+ {100 * (divide(DivB.ha, DivA.ha) - 1)} %)  "
+    txt += f"\nDEF  |   {DivA.defense}    |   {DivB.defense}  (+ {100 * (divide(DivB.defense, DivA.defense) - 1)} %)  "
+    txt += f"\nBRK  |   {DivA.attack}    |   {DivB.attack}  (+ {100 * (divide(DivB.attack, DivA.attack) - 1)} %)  "
+    txt += f"\nARM  |   {DivA.arm}    |   {DivB.arm}  (+ {100 * (divide(DivB.arm, DivA.arm) - 1)} %)  "
+    txt += f"\nPRC  |   {DivA.prc}    |   {DivB.prc}  (+ {100 * (divide(DivB.prc, DivA.prc) - 1)} %)  "
+    txt += f"\nHRD  |   {DivA.hard}    |   {DivB.hard}  (+ {100 * (divide(DivB.hard, DivA.hard) - 1)} %)  "
 #    txt += "\nIC   |   {}    |   {}  (+ {} %)  ".format(DivA.IC, DivB.IC, 100*(divide(DivB.IC, DivA.IC) - 1))
 #    txt += "\nSupply   |   {}    |   {}  (+ {} %)  ".format(DivA.Supply_use, DivB.Supply_use,
 #                                                            100*(divide(DivB.Supply_use, DivA.Supply_use) - 1))
@@ -40,38 +38,34 @@ def Compare_Division(DivA, DivB):
 
 def Analyze_Bataillon(Bataillon):
     Bat = Bataillon
-    txt = "Analyzer"
-    txt += "\n======= {} ========".format(Bataillon.name)
-    txt += "\n HA/SA = {} % ".format(divide(Bat.ha, Bat.sa)*100)
-    txt += "\n - SA: {} /IC || {}/Width ".format(divide(Bat.sa, Bat.IC), divide(Bat.sa, Bat.Width))
-    txt += "\n - HA: {} /IC || {}/Width ".format(divide(Bat.ha, Bat.IC), divide(Bat.ha, Bat.Width))
-    txt += "\n - {} SA/Supply || {} HA/Supply ".format(divide(Bat.sa, Bat.Supply_use), divide(Bat.ha, Bat.Supply_use))
-    txt += "\n - {} SA/Fuel || {} HA/Fuel ".format(divide(Bat.sa, Bat.Fuel_use), divide(Bat.ha, Bat.Fuel_use))
-    txt += "\n BRK/DEF = {} ".format(divide(Bat.attack, Bat.defense))
-    txt += "\n - DEF: {} /IC || {}/Width ".format(divide(Bat.defense, Bat.IC), divide(Bat.defense, Bat.Width))
-    txt += "\n - BRK: {} /IC || {}/Width ".format(divide(Bat.attack, Bat.IC), divide(Bat.attack, Bat.Width))
-    txt += "\n - {} DEF/Supply || {} BRK/Supply ".format(divide(Bat.defense, Bat.Supply_use), divide(Bat.attack, Bat.Supply_use))
-    txt += "\n - {} DEF/Fuel || {} BRK/Fuel ".format(divide(Bat.defense, Bat.Fuel_use), divide(Bat.attack, Bat.Fuel_use))
+    txt = f"Analyzer\n======= {Bataillon.name} ========"
+    txt += f"\n HA/SA = {divide(Bat.ha, Bat.sa) * 100} % "
+    txt += f"\n - SA: {divide(Bat.sa, Bat.IC)} /IC || {divide(Bat.sa, Bat.Width)}/Width "
+    txt += f"\n - HA: {divide(Bat.ha, Bat.IC)} /IC || {divide(Bat.ha, Bat.Width)}/Width "
+    txt += f"\n - {divide(Bat.sa, Bat.Supply_use)} SA/Supply || {divide(Bat.ha, Bat.Supply_use)} HA/Supply "
+    txt += f"\n - {divide(Bat.sa, Bat.Fuel_use)} SA/Fuel || {divide(Bat.ha, Bat.Fuel_use)} HA/Fuel "
+    txt += f"\n BRK/DEF = {divide(Bat.attack, Bat.defense)} "
+    txt += f"\n - DEF: {divide(Bat.defense, Bat.IC)} /IC || {divide(Bat.defense, Bat.Width)}/Width "
+    txt += f"\n - BRK: {divide(Bat.attack, Bat.IC)} /IC || {divide(Bat.attack, Bat.Width)}/Width "
+    txt += f"\n - {divide(Bat.defense, Bat.Supply_use)} DEF/Supply || {divide(Bat.attack, Bat.Supply_use)} BRK/Supply "
+    txt += f"\n - {divide(Bat.defense, Bat.Fuel_use)} DEF/Fuel || {divide(Bat.attack, Bat.Fuel_use)} BRK/Fuel "
     txt += "\n \n"
     print(txt)
 
 def Compare_Bataillon(BatA, BatB):
-    txt = "COMPARATOR"
-    txt += "\n========= {}  Vs {} =========".format(BatA.name, BatB.name)
-    txt += "\nHP   |   {}    |   {}  (+ {} %)  ".format(BatA.pv, BatB.pv, 100*(divide(BatB.pv, BatA.pv) - 1))
-    txt += "\nORG  |   {}    |   {}  (+ {} %)  ".format(BatA.org, BatB.org, 100*(divide(BatB.org, BatA.org) - 1))
-    txt += "\nSA   |   {}    |   {}  (+ {} %)  ".format(BatA.sa, BatB.sa, 100*(divide(BatB.sa, BatA.sa) - 1))
-    txt += "\nHA   |   {}    |   {}  (+ {} %)  ".format(BatA.ha, BatB.ha, 100*(divide(BatB.ha, BatA.ha) - 1))
-    txt += "\nDEF  |   {}    |   {}  (+ {} %)  ".format(BatA.defense, BatB.defense, 100*(divide(BatB.defense, BatA.defense) - 1))
-    txt += "\nBRK  |   {}    |   {}  (+ {} %)  ".format(BatA.attack, BatB.attack, 100*(divide(BatB.attack, BatA.attack) - 1))
-    txt += "\nARM  |   {}    |   {}  (+ {} %)  ".format(BatA.arm, BatB.arm, 100*(divide(BatB.arm, BatA.arm) - 1))
-    txt += "\nPRC  |   {}    |   {}  (+ {} %)  ".format(BatA.prc, BatB.prc, 100*(divide(BatB.prc, BatA.prc) - 1))
-    txt += "\nHRD  |   {}    |   {}  (+ {} %)  ".format(BatA.hard, BatB.hard, 100*(divide(BatB.hard, BatA.hard) - 1))
-    txt += "\nIC   |   {}    |   {}  (+ {} %)  ".format(BatA.IC, BatB.IC, 100*(divide(BatB.IC, BatA.IC) - 1))
-    txt += "\nSupply   |   {}    |   {}  (+ {} %)  ".format(BatA.Supply_use, BatB.Supply_use,
-                                                            100*(divide(BatB.Supply_use, BatA.Supply_use) - 1))
-    txt += "\nFuel   |   {}    |   {}  (+ {} %)  ".format(BatA.Fuel_use, BatB.Fuel_use,
-                                                            100*(divide(BatB.Fuel_use, BatA.Fuel_use) - 1))
+    txt = f"COMPARATOR\n========= {BatA.name}  Vs {BatB.name} ========="
+    txt += f"\nHP   |   {BatA.pv}    |   {BatB.pv}  (+ {100 * (divide(BatB.pv, BatA.pv) - 1)} %)  "
+    txt += f"\nORG  |   {BatA.org}    |   {BatB.org}  (+ {100 * (divide(BatB.org, BatA.org) - 1)} %)  "
+    txt += f"\nSA   |   {BatA.sa}    |   {BatB.sa}  (+ {100 * (divide(BatB.sa, BatA.sa) - 1)} %)  "
+    txt += f"\nHA   |   {BatA.ha}    |   {BatB.ha}  (+ {100 * (divide(BatB.ha, BatA.ha) - 1)} %)  "
+    txt += f"\nDEF  |   {BatA.defense}    |   {BatB.defense}  (+ {100 * (divide(BatB.defense, BatA.defense) - 1)} %)  "
+    txt += f"\nBRK  |   {BatA.attack}    |   {BatB.attack}  (+ {100 * (divide(BatB.attack, BatA.attack) - 1)} %)  "
+    txt += f"\nARM  |   {BatA.arm}    |   {BatB.arm}  (+ {100 * (divide(BatB.arm, BatA.arm) - 1)} %)  "
+    txt += f"\nPRC  |   {BatA.prc}    |   {BatB.prc}  (+ {100 * (divide(BatB.prc, BatA.prc) - 1)} %)  "
+    txt += f"\nHRD  |   {BatA.hard}    |   {BatB.hard}  (+ {100 * (divide(BatB.hard, BatA.hard) - 1)} %)  "
+    txt += f"\nIC   |   {BatA.IC}    |   {BatB.IC}  (+ {100 * (divide(BatB.IC, BatA.IC) - 1)} %)  "
+    txt += f"\nSupply   |   {BatA.Supply_use}    |   {BatB.Supply_use}  (+ {100 * (divide(BatB.Supply_use, BatA.Supply_use) - 1)} %)  "
+    txt += f"\nFuel   |   {BatA.Fuel_use}    |   {BatB.Fuel_use}  (+ {100 * (divide(BatB.Fuel_use, BatA.Fuel_use) - 1)} %)  "
 
     txt +="\n \n"
     print(txt)
