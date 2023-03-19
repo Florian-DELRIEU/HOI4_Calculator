@@ -23,9 +23,12 @@ class Division:
         self.defense = self._DEFENSE
         self.attack = self._ATTACK
         self.nb_atk = 0
-        self.NAME = name
+        self.name = name
         self.set_str()  # Mets a jour les stat en fonction des PV de la division
         self.is_defending = True # TRUE si la division et en défense
+
+    def __repr__(self):
+        return self.name
 
     def set_str(self):
         """
@@ -86,6 +89,8 @@ class Bataillon:
         self.ic = ic
         self.name = name
 
+    def __repr__(self):
+        return self.name
 
 
 #######################################################################################################################

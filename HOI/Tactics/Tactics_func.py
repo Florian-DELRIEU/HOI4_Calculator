@@ -100,7 +100,6 @@ def Cancel_Tactic(Tactic_to_cancel):
 def initiative_round(Battle):
     # sourcery skip: assign-if-exp, remove-redundant-pass
     """
-    TODO -- NEED Leader Upgrade
     Choisis quel camp aura l'initiative
         - Le camps qui remporte l'initiative choisiras sa tacttique en second pour essayer de contrer l'autre camps.
         - Basic pour le moment car leaders ne sont pas ajoutés
@@ -118,18 +117,18 @@ def apply_Tactics(Battle):
     """
     Applique tout les bonus multiplicateurs aux stats de chaque camps en fonctions des tactiques employés
     """
-    DEF = Battle.defense
-    DEF_Tac = Battle.defender_tactic
-    ATK = Battle.attacker
-    ATK_Tac = Battle.attacker_tactic
-# Bonus for DEF
-    DEF.sa = DEF.sa*DEF_Tac.defender_damage*ATK_Tac.defender_damage
-    DEF.ha = DEF.ha*DEF_Tac.defender_damage*ATK_Tac.defender_damage
-    DEF.defense = DEF.defense*DEF_Tac.defender_defense*ATK_Tac.defender_defense
-# Bonus for ATK
-    ATK.sa = ATK.sa*ATK_Tac.attacker_damage*ATK_Tac.attacker_damage
-    ATK.ha = ATK.ha*ATK_Tac.attacker_damage*ATK_Tac.attacker_damage
-    ATK.defense = ATK.defense*ATK_Tac.attacker_defense*ATK_Tac.attacker_defense
+    defender_side = Battle.defender
+    defender_tactic = Battle.defender_tactic
+    attacker_side = Battle.attacker
+    attacker_tactic = Battle.attacker_tactic
+# Bonus for defender_side
+    defender_side.sa = defender_side.sa*defender_tactic.defender_damage*attacker_tactic.defender_damage
+    defender_side.ha = defender_side.ha*defender_tactic.defender_damage*attacker_tactic.defender_damage
+    defender_side.defense = defender_side.defense*defender_tactic.defender_defense*attacker_tactic.defender_defense
+# Bonus for attacker_side
+    attacker_side.sa = attacker_side.sa*attacker_tactic.attacker_damage*attacker_tactic.attacker_damage
+    attacker_side.ha = attacker_side.ha*attacker_tactic.attacker_damage*attacker_tactic.attacker_damage
+    attacker_side.defense = attacker_side.defense*attacker_tactic.attacker_defense*attacker_tactic.attacker_defense
 
 def change_weight(Battle):
     """Change tactics weight with regards to Generals skills and abilities and terrain"""
