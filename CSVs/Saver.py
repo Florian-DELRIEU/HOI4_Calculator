@@ -43,8 +43,8 @@ fisrt_column_A = ["HP","ORG","SoftAttack","HardAttack","SoftMeleeAttack","HardMe
 DICO_3A["Units"] = fisrt_column_A
 for key, cur in DICO_2A.items():
     assert type(cur) == Infantry or Tank or Walker
-    cur_list = [cur.HP, cur.org, cur.SoftAttack, cur.HardAttack, cur.SoftMeleeAttack, cur.HardMeleeAttack, cur.Defense,
-                cur.Breakthrought, cur.Armor, cur.Piercing, cur.Hardness]
+    cur_list = [cur.HP,cur.ORG,cur.SoftAttack,cur.HardAttack,cur.SoftMeleeAttack,cur.HardMeleeAttack,cur.Defense,
+            cur.Breakthrought,cur.Armor,cur.Piercing,cur.Hardness]
     round_Stats(cur)
     DICO_3A[key] = cur_list
 
@@ -54,8 +54,8 @@ fisrt_column_B = ["SoftAttack","HardAttack","SoftMeleeAttack","HardMeleeAttack",
 DICO_3B["Weapons"] = fisrt_column_B
 for key,cur in DICO_2B.items():
     assert type(cur) == Weapon
-    cur_list = [cur.SoftAttack,cur.HardAttack,cur.SoftMeleeAttack,cur.HardMeleeAttack,cur.Defense,
-            cur.Breakthrought]
+    cur_list = [cur.SoftAttack,cur.HardAttack,cur.SoftMeleeAttack,cur.HardMeleeAttack,cur.Defense_bonus,
+            cur.Breakthrought_bonus]
     round_Stats(cur)
     DICO_3B[key] = cur_list
 
@@ -65,8 +65,8 @@ fisrt_column_C = ["HP","ORG","SoftAttack","HardAttack","SoftMeleeAttack","HardMe
 DICO_3C["Companies"] = fisrt_column_C
 for key,cur in DICO_2C.items():
     assert type(cur) == Company
-    cur_list = [cur.HP, cur.org, cur.SoftAttack, cur.HardAttack, cur.SoftMeleeAttack, cur.HardMeleeAttack, cur.Defense,
-                cur.Breakthrought, cur.Armor, cur.Piercing, cur.Hardness]
+    cur_list = [cur.HP,cur.ORG,cur.SoftAttack,cur.HardAttack,cur.SoftMeleeAttack,cur.HardMeleeAttack,cur.Defense,
+            cur.Breakthrought,cur.Armor,cur.Piercing,cur.Hardness]
     round_Stats(cur)
     DICO_3C[key] = cur_list
 

@@ -18,9 +18,9 @@ def setUpgradeBonus(company):
         Defense_Bonus *= 1 + (el.Defense_Bonus-1)*equip_ratio
         Breakthrought_Bonus *= 1 + (el.Breakthrought_Bonus-1)*equip_ratio
 # Application des bonus
-    company.SoftAttack = company.SoftAttack*SoftAttack_Bonus
-    company.HardAttack = company.HardAttack*HardAttack_Bonus
-    company.SoftMeleeAttack = company.SoftMeleeAttack*SoftMeleeAttack_Bonus
-    company.HardMeleeAttack = company.HardMeleeAttack*HardMeleeAttack_Bonus
-    company.Defense = company.Defense*Defense_Bonus
-    company.Breakthrought = company.Breakthrought*Breakthrought_Bonus
+    company.SoftAttack *= SoftAttack_Bonus
+    company.HardAttack *= HardAttack_Bonus
+    company.SoftMeleeAttack *= SoftMeleeAttack_Bonus
+    company.HardMeleeAttack *= HardMeleeAttack_Bonus
+    company.Defense *= Defense_Bonus
+    company.Breakthrought *= Breakthrought_Bonus

@@ -1,9 +1,10 @@
 import numpy as np
 from MyPack2.Utilities import truncDecimal
 from W40K.Functions.Functions import round_Stats
+from W40K.Functions.Leader_func import set_LeaderSkills
 
 class Regiment:
-    def __init__(self,CompagnieList=[],Name=""):
+    def __init__(self,CompagnieList=[],XP=0,Entrenchment_level=0,Name=""):
         self.Companies = CompagnieList
         self.Name = Name
     # Stats when stregth == 1
@@ -19,6 +20,8 @@ class Regiment:
         self.Piercing = float()
         self.Hardness = float()
     # Current Stats
+        self.Experience = XP
+        self.Entrenchment = Entrenchment_level
         self.Strength = 1
         self.SoftAttack = float()
         self.SoftMeleeAttack = float()
@@ -34,25 +37,56 @@ class Regiment:
         self.NbATK = float()
         self.isDefending = True
         self.set_STR()
+        round_Stats(self)
+
     def __repr__(self):
         return self.Name
+
     def setCompanies(self,CompaniesList=[]):
         self.Companies = CompaniesList
         self.HOI4_Profil()
+
     def HOI4_Profil(self):
     # Default Stats
         self.__HP = np.sum([el.HP for el in self.Companies])
-        self.__ORG = np.mean([el.org for el in self.Companies])
+        self.__ORG = np.mean([el.ORG for el in self.Companies])
         self.__SoftAttack = np.sum([el.SoftAttack for el in self.Companies])
         self.__SoftMeleeAttack = np.sum([el.SoftMeleeAttack for el in self.Companies])
         self.__HardAttack = np.sum([el.HardAttack for el in self.Companies])
         self.__HardMeleeAttack = np.sum([el.HardMeleeAttack for el in self.Companies])
         self.Hardness = np.mean([el.Hardness for el in self.Companies])
-        self.Armor = np.mean([el.Armor for el in self.Companies])
-        self.Piercing = np.mean([el.Piercing for el in self.Companies])
+        self.Armor = 0.7*np.mean([el.Armor for el in self.Companies]) + 0.3*np.max([el.Armor for el in self.Companies])
+        self.Piercing = 0.7*np.mean([el.Piercing for el in self.Companies]) + 0.3*np.max([el.Piercing for el in self.Companies])
         self.__Breakthrought = np.sum([el.Breakthrought for el in self.Companies])
         self.__Defense = np.sum([el.Defense for el in self.Companies])
         self.Width = np.sum([el.Width for el in self.Companies])
+        self.apply_bonuses()
+
+    def apply_bonuses(self):
+        """Regroupe toutes les fonctions donnant des bonuses aux stats des Régiments"""
+        self.set_XP()
+        self.set_Entrenchment()
+
+    def set_XP(self):  # sourcery skip: flip-comparison
+        XP = self.Experience
+        if   0  <= XP < 10: Land_modificator = 0.75
+        elif 10 <= XP < 30: Land_modificator = 1
+        elif 30 <= XP < 75: Land_modificator = 1.25
+        elif 75 <= XP < 90: Land_modificator = 0.50
+        elif 90 <= XP     : Land_modificator = 1.75
+        else:               Land_modificator = 1
+        self.__SoftAttack *= Land_modificator
+        self.__HardAttack *= Land_modificator
+        self.__SoftMeleeAttack *= Land_modificator
+        self.__HardMeleeAttack *= Land_modificator
+        self.__Breakthrought *= Land_modificator
+        self.__Defense *= Land_modificator
+
+    def set_Entrenchment(self):
+        self.__Defense *= 1.02**(self.Entrenchment)
+        self.__SoftAttack *= 1.02**(self.Entrenchment)
+        self.__HardAttack *= 1.02**(self.Entrenchment)
+
     def set_STR(self):
         self.Strength = self.HP / self.__HP
     # Maj des stats
@@ -62,6 +96,7 @@ class Regiment:
         self.HardMeleeAttack = self.__HardMeleeAttack * self.Strength
         self.Breakthrought = self.__Breakthrought * self.Strength
         self.Defense = self.__Defense * self.Strength
+
     def Attaque(self,Target,CAC_level):
         assert type(Target) == Regiment
         self.set_STR()
@@ -75,18 +110,19 @@ class Regiment:
             self.NbATK = NbATK  # si perce
         self.NbATK /= 10  # les attaques sont divisé par 10 (voir wiki)
         round_Stats(self)
+
     def Damage(self,Striker):
         """
         Calcul du nombre de touche et des dégats
         :param Striker: Division attaquante
         """
         self.set_STR() # MAJ
-        NbDAMAGE = Striker.nbr_attack #Recupere le nombre d'attaque de l'attaquant
+        NbDAMAGE = Striker.NbATK #Recupere le nombre d'attaque de l'attaquant
     # Attaquant ou defenseur ?
-        DEF = self.Defense if self.isDefending else self.Breakthrought
+        DEF = self.Defense/10 if self.isDefending else self.Breakthrought/10
     # Defense de la cible
         if DEF > NbDAMAGE: NbDAMAGE *= 0.1
-        else:              NbDAMAGE = self.Defense*0.1 + (NbDAMAGE-self.Defense)*0.4
+        else:              NbDAMAGE = DEF*0.1 + (NbDAMAGE-DEF)*0.4
     # Arrondissement des dégats
         round_Stats(self)
     # Calcul des dégats entre les PV et l'ORG
@@ -98,6 +134,7 @@ class Regiment:
         self.ORG -= 3.5*NbDAMAGE if self.Piercing < Striker.Armor else 2.5*NbDAMAGE
         self.ORG = truncDecimal(self.ORG,1)
         self.ORG = max(self.ORG, 0)
+
     def Show_HOI_Stats(self):
         self.HOI4_Profil()
         txt = """

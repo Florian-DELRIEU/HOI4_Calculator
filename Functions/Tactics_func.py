@@ -5,7 +5,8 @@ from MyPack.Utilities import truncDecimal
 from  W40K.Lists.Tactics_list import ATK_tactics, ATK_HB_tactics, ATK_CQ_tactics, ATK_SB_tactics, ATK_TW_tactics
 from  W40K.Lists.Tactics_list import DEF_tactics, DEF_HB_tactics, DEF_CQ_tactics, DEF_SB_tactics, DEF_TW_tactics
 
-
+all_Tactics_list = ATK_tactics + ATK_HB_tactics + ATK_CQ_tactics + ATK_SB_tactics + ATK_TW_tactics\
+                 + DEF_tactics + DEF_HB_tactics + DEF_CQ_tactics + DEF_SB_tactics + DEF_TW_tactics
 ########################################################################################################################
 
 def choose_Tactics(Battle):
@@ -19,33 +20,38 @@ def choose_Tactics(Battle):
     """
     change_weight(Battle)
 # Which tactics lists is used according the battle phase
-    if Battle.Phase == "Default":
+    if Battle.Current_Phase == "Default":
         ATK_tactic_list = ATK_tactics
         DEF_tactic_list = DEF_tactics
-    elif Battle.Phase == "Close Quarter Combat":
+        Battle.Current_Phase == "Default"
+    elif Battle.Current_Phase == "Close Quarter Combat":
         ATK_tactic_list = ATK_CQ_tactics
         DEF_tactic_list = DEF_CQ_tactics
-    elif Battle.Phase == "Seize Bridge":
+    elif Battle.Current_Phase == "Seize Bridge":
         ATK_tactic_list = ATK_SB_tactics
         DEF_tactic_list = DEF_SB_tactics
-    elif Battle.Phase == "Hold Bridge":
+    elif Battle.Current_Phase == "Hold Bridge":
         ATK_tactic_list = ATK_HB_tactics
         DEF_tactic_list = DEF_HB_tactics
-    elif Battle.Phase == "Tactical Withdraw":
+    elif Battle.Current_Phase == "Tactical Withdraw":
         ATK_tactic_list = ATK_TW_tactics
         DEF_tactic_list = DEF_TW_tactics
     else: return NameError , "Wrong phase name"
     winner = Initiative_round(Battle) # wich side has initiative
     ATK_Tactic, DEF_Tactic = _choose_tactics(ATK_tactic_list,DEF_tactic_list,winner) # choose tactics
-    Battle.attacker_tactic = ATK_Tactic
-    Battle.defender_tactic = DEF_Tactic
+    Battle.ATK_Tactic_chosen = ATK_Tactic
+    Battle.DEF_Tactic_chosen = DEF_Tactic
+    Battle.Initiative_winner = winner
     isCountered(Battle) # test if any tactics has been coutered
     apply_Tactics(Battle) # apply bonuses
+    change_BattlePhase(Battle)
 
 def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
     """
     Le perdant du :initiative round: choisi la tactique en premier. Ensuite le gagnant tente de le contrer.
     :return: Tactiques choisis par les deux camps
+    FIXME
+        - Fusionner les boucles pour les cas ou le gagnant est soit le DEF / ATK dans une seule boucle
     """
     ATK_Tactic = Tactic()
     DEF_Tactic = Tactic()
@@ -55,7 +61,7 @@ def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
         DEF_Tactic = rd.choices(DEF_tactic_list, DEF_tactic_weight)[0]
     # Change weight for try counter DEF tactic
         try: # Increase weight if counter tactic exist
-            Counter_tactic = [el for el in ATK_tactic_list if el.name == DEF_Tactic.countered_by][0]
+            Counter_tactic = [el for el in ATK_tactic_list if el.Name == DEF_Tactic.CounteredBy][0]
             Counter_tactic.weight *= 1.35
         except: pass # if counter tactic doesn't exist
     # ATK choice finnaly
@@ -66,7 +72,7 @@ def _choose_tactics(ATK_tactic_list,DEF_tactic_list,Initiative_winner):
         ATK_tactic_weight = [el.weight for el in ATK_tactic_list]
         ATK_Tactic = rd.choices(ATK_tactic_list, ATK_tactic_weight)[0]
         try: # Change weight for try counter ATK tactic
-            Counter_tactic = [el for el in DEF_tactic_list if el.name == ATK_Tactic.countered_by][0]
+            Counter_tactic = [el for el in DEF_tactic_list if el.Name == ATK_Tactic.CounteredBy][0]
             Counter_tactic.weight *= 1.35
         except: pass
     # DEF choice
@@ -78,11 +84,11 @@ def isCountered(Battle):
     """
     Check if a tactic has been countered. Cancel countered ones
     """
-    if Battle.defender_tactic.name == Battle.attacker_tactic.countered_by:
-        Cancel_Tactic(Battle.attacker_tactic)
+    if Battle.DEF_Tactic_chosen.Name == Battle.ATK_Tactic_chosen.CounteredBy:
+        Cancel_Tactic(Battle.ATK_Tactic_chosen)
         print("ATK tactic COUNTERED !!")
-    if Battle.attacker_tactic.name == Battle.defender_tactic.countered_by:
-        Cancel_Tactic(Battle.defender_tactic)
+    if Battle.ATK_Tactic_chosen.Name == Battle.DEF_Tactic_chosen.CounteredBy:
+        Cancel_Tactic(Battle.DEF_Tactic_chosen)
         print("DEF tactic COUNTERED !!")
 
 def Cancel_Tactic(Tactic_to_cancel):
@@ -90,48 +96,45 @@ def Cancel_Tactic(Tactic_to_cancel):
     Retire tout les bonus d'une tactique
     """
     assert type(Tactic_to_cancel) is Tactic
-    Tactic_to_cancel.attacker_damage = 1
-    Tactic_to_cancel.attacker_defense = 1
-    Tactic_to_cancel.defender_damage = 1
-    Tactic_to_cancel.defender_defense = 1
+    Tactic_to_cancel.ATK_Damage = 1
+    Tactic_to_cancel.ATK_Defense = 1
+    Tactic_to_cancel.DEF_Damage = 1
+    Tactic_to_cancel.DEF_Defense = 1
     Tactic_to_cancel.CAC = 0
-    Tactic_to_cancel.begin_battle_phase = None
+    Tactic_to_cancel.Begin_battle_phase = None
 
 def Initiative_round(Battle):
     # sourcery skip: assign-if-exp, remove-redundant-pass
     """
-    TODO -- NEED Leader Upgrade
     Choisis quel camp aura l'initiative
-        - Basic pour le moment car leaders ne sont pas ajoutés
+        - Pas en accord avec le wiki (a voir)
+        - Code perso
     """
-    ATK_weight = int()
-    DEF_weight = int()
-    if Battle.AttackerLeader is None:   ATK_weight = 1
-    else:   pass  # Need Leader upgrade
-    if Battle.DefenderLeader is None:   DEF_weight = 1
-    else:   pass  # Need Leader upgrade
-
+    DEF_leader = Battle.DEF["Leader"]
+    DEF_weight = DEF_leader.Defense_skill + DEF_leader.Level
+    ATK_leader = Battle.ATK["Leader"]
+    ATK_weight = ATK_leader.Attack_skill + ATK_leader.Level
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
 
 def apply_Tactics(Battle):
-    DEF = Battle.defense
-    DEF_Tac = Battle.defender_tactic
-    ATK = Battle.attacker
-    ATK_Tac = Battle.attacker_tactic
+    DEF = Battle.DEF["Regiment"]
+    DEF_Tac = Battle.DEF_Tactic_chosen
+    ATK = Battle.ATK["Regiment"]
+    ATK_Tac = Battle.ATK_Tactic_chosen
 # Bonus for DEF
-    DEF.SoftAttack = DEF.SoftAttack*DEF_Tac.defender_damage*ATK_Tac.defender_damage
-    DEF.HardAttack = DEF.HardAttack*DEF_Tac.defender_damage*ATK_Tac.defender_damage
-    DEF.Defense = DEF.Defense*DEF_Tac.defender_defense*ATK_Tac.defender_defense
+    DEF.SoftAttack *= DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
+    DEF.HardAttack *= DEF_Tac.DEF_Damage * ATK_Tac.DEF_Damage
+    DEF.Defense *= DEF_Tac.DEF_Defense * ATK_Tac.DEF_Defense
 # Bonus for ATK
-    ATK.SoftAttack = ATK.SoftAttack*ATK_Tac.attacker_damage*ATK_Tac.attacker_damage
-    ATK.HardAttack = ATK.HardAttack*ATK_Tac.attacker_damage*ATK_Tac.attacker_damage
-    ATK.Defense = ATK.Defense*ATK_Tac.attacker_defense*ATK_Tac.attacker_defense
+    ATK.SoftAttack *= DEF_Tac.ATK_Damage * ATK_Tac.ATK_Damage
+    ATK.HardAttack *= DEF_Tac.ATK_Damage * ATK_Tac.ATK_Damage
+    ATK.Defense *= DEF_Tac.ATK_Defense * ATK_Tac.ATK_Defense
 # Cac limit
     set_CAC_limit(Battle)
 
 def set_CAC_limit(Battle):
-    DEF_Tac = Battle.defender_tactic
-    ATK_Tac = Battle.attacker_tactic
+    DEF_Tac = Battle.DEF_Tactic_chosen
+    ATK_Tac = Battle.ATK_Tactic_chosen
     if Battle.CAC_limit < 0:    Battle.CAC_limit = 0 # Mets le CAC limit entre 0 et 1
     elif Battle.CAC_limit > 1:  Battle.CAC_limit = 1 # Pour préparer le nouvel CAC limit
     Battle.CAC_limit = Battle.CAC_limit + np.sum(DEF_Tac.CAC + ATK_Tac.CAC)
@@ -145,6 +148,13 @@ def update_CAC(Battle):
     Battle.CAC_level += CAC_drift
     if Battle.CAC_level < 0: Battle.CAC_level = 0
     elif Battle.CAC_level > 1: Battle.CAC_level = 1
+
+def change_BattlePhase(Battle):
+    if Battle.Initiative_winner == "ATK":   winner_tactic = Battle.ATK_Tactic_chosen
+    elif Battle.Initiative_winner == "DEF": winner_tactic = Battle.DEF_Tactic_chosen
+    else: return AttributeError , "Winner not exists"
+    if winner_tactic.Begin_battle_phase != None:
+        Battle.Following_Phase = winner_tactic.Begin_battle_phase
 
 def change_weight(Battle):
     """Change tactics weight with regards to Generals skills and abilities and terrain"""
