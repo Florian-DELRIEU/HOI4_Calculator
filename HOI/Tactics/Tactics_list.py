@@ -6,7 +6,7 @@ Tactic(attacker_damage=1.05, name="Attaque",
        countered_by="Counter Attack"),
 Tactic(attacker_damage=1.25, weight=2, name="Assaut",
        countered_by="Counter Attack",
-       BeginPhase="Close Quarter Combat"),
+       begin_phase="Close Quarter Combat"),
 Tactic(defender_damage=0.75, name="Shock",
        countered_by="Ambush"),
 Tactic(attacker_damage=1.1, defender_damage=0.95, name="Infiltration Assaut"),
@@ -22,7 +22,7 @@ Tactic(defender_damage=0.85, attacker_damage=1.25, weight=0, name="Breakthrough"
 Tactic(defender_damage=0.85, attacker_damage=1.15, weight=0, name="Blitz",
        countered_by="Elastic Defense"),
 Tactic(defender_damage=0.95, attacker_damage=1.2, weight=0, name="Seize Bridge",
-       BeginPhase="Seize Bridge"),
+       begin_phase="Seize Bridge"),
 Tactic(defender_damage=1.1, attacker_damage=1.1, weight=0, name="Mass Charge"),
 ]
 
@@ -31,7 +31,7 @@ DEF_TACTICS = [
 Tactic(defender_damage=1.05, name="Defense"),
 Tactic(defender_damage=1.25, name="Counter Attack"),
 Tactic(attacker_damage=0.75, defender_damage=0.95, name="Tactic Withdrawal",
-       BeginPhase="Tactic Withdraw"),
+       begin_phase="Tactic Withdraw"),
 Tactic(attacker_damage=0.75, defender_damage=1.15, name="Delay",
        countered_by="Shock"),
 Tactic(attacker_damage=0.75, defender_damage=1, name="Ambush",
@@ -42,7 +42,7 @@ Tactic(attacker_damage=0.3, defender_damage=.4, name="Guerrilla"),
 Tactic(attacker_damage=0.9, defender_damage=1.1, weight=2, name="Overwhelming Fire"),
 # Need Requirement
 Tactic(attacker_damage=1.2, defender_damage=.95, weight=0, name="Hold Bridge",
-       BeginPhase="Hold Bridge"),
+       begin_phase="Hold Bridge"),
 ]
 
 
@@ -52,7 +52,7 @@ ATK_CQ_TACTICS = [
 Tactic(attacker_damage=1.1, defender_damage=1.05, name="Close Quarter Attack"),
 Tactic(attacker_damage=1.2, defender_damage=1.2, weight=2, name="Close Quarter Storm"),
 Tactic(attacker_damage=1.05, defender_damage=1.05, weight=1, name="Close Quarter Withdraw",
-       BeginPhase="Default"),
+       begin_phase="Default"),
 ]
 
 ## Close Quarter Defense
@@ -68,7 +68,7 @@ ATK_TW_TACTICS = [
 Tactic(attacker_damage=0.75, defender_damage=0.9, name="Tactical withdraw Attack"),
 Tactic(attacker_damage=0.85, defender_damage=0.95, name="Pursuit"),
 Tactic(attacker_damage=0.95, defender_damage=0.90, name="Intercept",
-       BeginPhase="Default"),
+       begin_phase="Default"),
 ]
 
 ## Tactical withdraw Defend
@@ -91,7 +91,7 @@ Tactic(attacker_damage=1, defender_damage=0.95, name="Bridge Assaut"),
 Tactic(attacker_damage=1.25, defender_damage=0.9, name="Bridge Reckless Assaut"),
 Tactic(attacker_damage=1.1, defender_damage=0.95, name="Recapture Bridge",
        countered_by="Defend Bridge",
-       BeginPhase="Hold Bridge"),
+       begin_phase="Hold Bridge"),
 ]
 
 
@@ -102,7 +102,7 @@ Tactic(attacker_damage=1.1, defender_damage=1, name="Attack Bridge"),
 Tactic(attacker_damage=1.2, defender_damage=1, name="Rush Bridge"),
 Tactic(attacker_damage=1.2, defender_damage=1.05, weight=2, name="Storm Bridge",
        countered_by="Defend Bridge",
-       BeginPhase="Seize Bridge"),
+       begin_phase="Seize Bridge"),
 ]
 
 ## Hold Bridge Defend

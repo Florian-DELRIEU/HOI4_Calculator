@@ -40,7 +40,7 @@ def choose_tactic(Battle):
     Battle.attacker_tactic = attacker_Tactic
     Battle.defender_tactic = defender_Tactic
     isCountered(Battle) # test if any tactics has been coutered
-    apply_Tactics(Battle) # apply bonuses
+    apply_tactics(Battle) # apply bonuses
 
 def _choose_tactic(ATK_tactic_list, DEF_tactic_list, Initiative_winner):
     """
@@ -113,22 +113,25 @@ def initiative_round(Battle):
 
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
 
-def apply_Tactics(Battle):
+def apply_tactics(Battle):
     """
     Applique tout les bonus multiplicateurs aux stats de chaque camps en fonctions des tactiques employés
     """
-    defender_side = Battle.defender
-    defender_tactic = Battle.defender_tactic
-    attacker_side = Battle.attacker
-    attacker_tactic = Battle.attacker_tactic
-# Bonus for defender_side
-    defender_side.sa = defender_side.sa*defender_tactic.defender_damage*attacker_tactic.defender_damage
-    defender_side.ha = defender_side.ha*defender_tactic.defender_damage*attacker_tactic.defender_damage
-    defender_side.defense = defender_side.defense*defender_tactic.defender_defense*attacker_tactic.defender_defense
-# Bonus for attacker_side
-    attacker_side.sa = attacker_side.sa*attacker_tactic.attacker_damage*attacker_tactic.attacker_damage
-    attacker_side.ha = attacker_side.ha*attacker_tactic.attacker_damage*attacker_tactic.attacker_damage
-    attacker_side.defense = attacker_side.defense*attacker_tactic.attacker_defense*attacker_tactic.attacker_defense
+    # Assignations des variables
+    DEF = Battle.defender
+    DEF_tactic = Battle.defender_tactic
+    ATK_side = Battle.attacker
+    ATK_tactic = Battle.attacker_tactic
+
+    # Bonus for defender side
+    DEF.sa = DEF.sa*DEF_tactic.defender_damage*ATK_tactic.defender_damage
+    DEF.ha = DEF.ha*DEF_tactic.defender_damage*ATK_tactic.defender_damage
+    DEF.defense = DEF.defense*DEF_tactic.defender_defense*ATK_tactic.defender_defense
+
+    # Bonus for attacker side
+    ATK_side.sa = ATK_side.sa*ATK_tactic.attacker_damage*ATK_tactic.attacker_damage
+    ATK_side.ha = ATK_side.ha*ATK_tactic.attacker_damage*ATK_tactic.attacker_damage
+    ATK_side.defense = ATK_side.defense*ATK_tactic.attacker_defense*ATK_tactic.attacker_defense
 
 def change_weight(Battle):
     """Change tactics weight with regards to Generals skills and abilities and terrain"""
