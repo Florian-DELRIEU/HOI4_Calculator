@@ -108,8 +108,8 @@ class Battle:
         self.defender = defender
         self.attacker_tactic = None
         self.defender_tactic = None
-        self.attacker_leader = None
-        self.defender_tactic = None
+        self.AttackerLeader = None
+        self.DefenderLeader = None
         self.round_counter = 0
         self.Phase = "Default"
     def is_finnish(self):

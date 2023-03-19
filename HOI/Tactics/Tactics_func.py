@@ -106,9 +106,9 @@ def initiative_round(Battle):
     """
     ATK_weight = int()
     DEF_weight = int()
-    if Battle.attacker_leader is None:   ATK_weight = 1
+    if Battle.AttackerLeader is None:   ATK_weight = 1
     else:   pass  # Need Leader upgrade
-    if Battle.defender_tactic is None:   DEF_weight = 1
+    if Battle.DefenderLeader is None:   DEF_weight = 1
     else:   pass  # Need Leader upgrade
 
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
