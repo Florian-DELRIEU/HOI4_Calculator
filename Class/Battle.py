@@ -1,4 +1,5 @@
 from Class.Division import *
+from Func.Tactics_func import *
 
 class Battle:
     """

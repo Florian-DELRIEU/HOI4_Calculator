@@ -1,4 +1,5 @@
 from Class.Tactics import *
+# Tactic(  attacker_damage,  defender_damage,  weight,  counterred_by,  begin_phase,  name )
 
 ## ATTACKS
 ATK_TACTICS = [
