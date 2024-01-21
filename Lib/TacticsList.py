@@ -1,4 +1,4 @@
-from HOI.Tactics.Tactics import Tactic
+from Class.Tactics import *
 
 ## ATTACKS
 ATK_TACTICS = [

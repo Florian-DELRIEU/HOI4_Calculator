@@ -1,5 +1,15 @@
-# HOI4_Calculator
+# Description
 L'objectif de ce calculateur est de pouvoir, en se basant sur les règles du jeu Warhammer 40k et le profils des différentes unités de la V7.1, faire des bataille de dans les différentes échelles tactiques et stratégiques. 
+
+## Composition du programme
+### Dossier Class
+Comporte toutes les classes utilisé dans le programme tels que les divisions, les tactiques, etc
+### Dossier Func
+Comporte les différentes fonctions 
+### Dossier Lib
+Regroupe les lists des Divisions, Tactics et Bataillon utilisé avec leurs caractéristiques.
+
+
 ## Échelles tactiques et stratégiques 
 Elles sont au nombre de 4:
 - Échelle tactique basse: C'est l'échelle de jeu la plus basse, celle du jeu de figurines Warhammer 40k. On peut distinguer chaques personnages, chaques figurines et les micro-gerer. On retrouve cette échelle dans les RTS tels que Company of Heroes ou Men of War. 
@@ -8,12 +18,3 @@ Elles sont au nombre de 4:
 - Échelle stratégique haute: C'est l'échelle la plus haute. La plus petite unité opérationnelle est la division (voire brigade) c'est l'échelle de jeu de Hearts of Iron. Les batailles entre division peuvent durer plusieurs jours voire des semaines. 
 
 Il est intéressant de noter que l'on descends dans cet arbre lorsque l'on rentre dans le détails des batailles. Par exemple dans le jeu HOI les batailles se joue sur des territoire de quelques 50km voire 100km de long. Ce qui correspond fidèlement à l'échelle d'une campagne de Steel Division. La encore les combats entre bataillon de steel division correspondent aux batailles tactiques du même jeu. L'échelle tactique basse se retrouve tant qu'à elle si on fait un zoom lorsque quelques escouades ou véhicules s'affrontent dans les bois ou la ville
-
-
-The repository is divide in two part:
-- Heart of iron IV directory: **HOI IV**
-- Warhammer 40k directory: **W40K**
-
-## Heart of Iron IV
-
-## Warhammer 40000 

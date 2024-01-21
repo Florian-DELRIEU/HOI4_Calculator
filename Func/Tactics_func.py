@@ -1,10 +1,7 @@
-from HOI.Tactics.Tactics_list import Tactic
 import random as rd
-import numpy as np
-from MyPack.Utilities import truncDecimal
-from  HOI.Tactics.Tactics_list import ATK_TACTICS, ATK_HB_TACTICS, ATK_CQ_TACTICS, ATK_SB_TACTICS, ATK_TW_TACTICS
-from  HOI.Tactics.Tactics_list import DEF_TACTICS, DEF_HB_TACTICS, DEF_CQ_TACTICS, DEF_SB_TACTICS, DEF_TW_TACTICS
-
+from  Lib.TacticsList import ATK_TACTICS, ATK_HB_TACTICS, ATK_CQ_TACTICS, ATK_SB_TACTICS, ATK_TW_TACTICS
+from  Lib.TacticsList import DEF_TACTICS, DEF_HB_TACTICS, DEF_CQ_TACTICS, DEF_SB_TACTICS, DEF_TW_TACTICS
+from Class.Tactics import *
 
 ########################################################################################################################
 

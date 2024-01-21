@@ -1,5 +1,3 @@
-
-
 class Tactic:
     def __init__(self, attacker_damage=1, defender_damage=1, weight=4,
                  countered_by=None, begin_phase=None, name=""):
