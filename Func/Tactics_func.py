@@ -7,8 +7,8 @@ from Class.Tactics import *
 
 def choose_tactic(Battle):
     """
-    Choisi une tactique selon une sélection pondéré
-        - run change-weight
+    Choisi une tactique selon une sélection pondérée
+        - run "change-weight"
         - run SELF
         - run _choose_tactic
         - run apply_tactics
@@ -47,28 +47,25 @@ def _choose_tactic(ATK_tactic_list, DEF_tactic_list, Initiative_winner):
     ATK_Tactic = Tactic()
     DEF_Tactic = Tactic()
     if Initiative_winner == "ATK":
-        # DEF choice first
-        DEF_tactic_weight = [el.weight for el in DEF_tactic_list]
-        DEF_Tactic = rd.choices(DEF_tactic_list, DEF_tactic_weight)[0]
+        # DEF tactics weighted choice first
+        DEF_Tactic = rd.choices(DEF_tactic_list, [el.weight for el in DEF_tactic_list])[0]
         # Change weight for try counter DEF tactic
         try: # Increase weight if counter tactic exist
             Counter_tactic = [el for el in ATK_tactic_list if el.name == DEF_Tactic.countered_by][0]
             Counter_tactic.weight *= 1.35
         except: pass # if counter tactic doesn't exist
-        # ATK choice finnaly
-        ATK_tactic_weight = [el.weight for el in ATK_tactic_list]
-        ATK_Tactic = rd.choices(ATK_tactic_list, ATK_tactic_weight)[0]
+        # ATK tactics weighted choice finnaly
+        ATK_Tactic = rd.choices(ATK_tactic_list, [el.weight for el in ATK_tactic_list] )[0]
+
     if Initiative_winner == "DEF":
         # ATK choice first
-        ATK_tactic_weight = [el.weight for el in ATK_tactic_list]  # Tout les poids de la listes de tactiques
-        ATK_Tactic = rd.choices(ATK_tactic_list, ATK_tactic_weight)[0]
+        ATK_Tactic = rd.choices(ATK_tactic_list, [el.weight for el in ATK_tactic_list] )[0]
         try: # Change weight for try counter ATK tactic
             Counter_tactic = [el for el in DEF_tactic_list if el.name == ATK_Tactic.countered_by][0]  # Quel est la tactique de contre ?
             Counter_tactic.weight *= 1.35
         except: pass
     # DEF choice
-        DEF_tactic_weight = [el.weight for el in DEF_tactic_list]
-        DEF_Tactic = rd.choices(DEF_tactic_list, DEF_tactic_weight)[0]
+        DEF_Tactic = rd.choices(DEF_tactic_list, [el.weight for el in DEF_tactic_list] )[0]
     return ATK_Tactic , DEF_Tactic
 
 def is_countered(Battle):
