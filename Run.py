@@ -1,9 +1,9 @@
 from Class.Battle import *
-from DivisionList import DIVISION_DICT
+from Lib.DivisionList import *
 
-DivA = DIVISION_DICT["Infantry_72"]
+DivA = DivInfanterie36
 DivA.is_defending = False
-DivB = DIVISION_DICT["Armored_432"]
+DivB = DivLightArmored36
 DivB.is_defending = True
 
 BATTLE = Battle(DivA,DivB)
