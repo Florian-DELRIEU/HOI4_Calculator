@@ -15,7 +15,8 @@ def choose_tactic(Battle):
         - run set_CAC_limit
     """
     change_weight(Battle)
-# Which tactics lists is used according the battle phase
+
+    # Which tactics lists is used according the battle phase
     if Battle.Phase == "Default":
         attacker_tactic_list = ATK_TACTICS
         defender_tactic_list = DEF_TACTICS
@@ -32,10 +33,15 @@ def choose_tactic(Battle):
         attacker_tactic_list = ATK_TW_TACTICS
         defender_tactic_list = DEF_TW_TACTICS
     else: return NameError , "Wrong phase name"
+
+    # Initiative round
     intiative_winner = initiative_round(Battle) # wich side has initiative
     attacker_Tactic, defender_Tactic = _choose_tactic(attacker_tactic_list, defender_tactic_list, intiative_winner) # choose tactics
+
+    # Apply tactic in battle
     Battle.attacker_tactic = attacker_Tactic
     Battle.defender_tactic = defender_Tactic
+
     is_countered(Battle) # test if any tactics has been coutered
     apply_tactics(Battle) # apply bonuses
 
