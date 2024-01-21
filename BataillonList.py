@@ -1,4 +1,4 @@
-from HOI.Class import Bataillon
+from Class.Bataillon import *
 
 ## INFANTERIE
 INF_36 = Bataillon(pv=25, org=60, sa=6, ha=1, defense=23.1, attack=3.15, armor=0, prc=4, hard=0, width=2, supply_use=0.07,

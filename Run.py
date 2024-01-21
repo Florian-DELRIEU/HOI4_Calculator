@@ -1,4 +1,4 @@
-from Class import *
+from Class.Battle import *
 from DivisionList import DIVISION_DICT
 
 DivA = DIVISION_DICT["Infantry_72"]

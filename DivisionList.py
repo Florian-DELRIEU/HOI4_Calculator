@@ -1,7 +1,7 @@
 """
 Fichier regroupant les différents types de divisions
 """
-from Class import *
+from Class.Division import *
 
 DIVISION_DICT = {
 "Infantry_72" : Division(176.2, 46.667, 97, 11, 181.7, 34.1, 4.5, 0, 0, 0, name="Div. Infanterie 36"),
