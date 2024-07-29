@@ -4,7 +4,6 @@ import json
 import os
 from tkinter import messagebox
 
-
 class BattleWindow(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -43,28 +42,26 @@ class BattleWindow(tk.Tk):
         frame_camp_a.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10)
 
         tk.Label(frame_camp_a, text="Camp A").pack()
-        self.camp_a_divisions = tk.Listbox(frame_camp_a)
+        self.camp_a_divisions = tk.Frame(frame_camp_a)
         self.camp_a_divisions.pack(fill=tk.BOTH, expand=True, pady=5)
 
         self.add_division_a = tk.StringVar()
         dropdown_a = ttk.Combobox(frame_camp_a, textvariable=self.add_division_a, values=self.get_division_names())
         dropdown_a.pack(pady=5)
-        tk.Button(frame_camp_a, text="Ajouter Division",
-                  command=lambda: self.add_division(self.camp_a_divisions, self.add_division_a)).pack()
+        tk.Button(frame_camp_a, text="Ajouter Division", command=lambda: self.add_division(self.camp_a_divisions, self.add_division_a)).pack()
 
         # Camp B
         frame_camp_b = tk.Frame(frame_battle)
         frame_camp_b.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10)
 
         tk.Label(frame_camp_b, text="Camp B").pack()
-        self.camp_b_divisions = tk.Listbox(frame_camp_b)
+        self.camp_b_divisions = tk.Frame(frame_camp_b)
         self.camp_b_divisions.pack(fill=tk.BOTH, expand=True, pady=5)
 
         self.add_division_b = tk.StringVar()
         dropdown_b = ttk.Combobox(frame_camp_b, textvariable=self.add_division_b, values=self.get_division_names())
         dropdown_b.pack(pady=5)
-        tk.Button(frame_camp_b, text="Ajouter Division",
-                  command=lambda: self.add_division(self.camp_b_divisions, self.add_division_b)).pack()
+        tk.Button(frame_camp_b, text="Ajouter Division", command=lambda: self.add_division(self.camp_b_divisions, self.add_division_b)).pack()
 
         # Bouton pour lancer un round de la bataille
         tk.Button(self, text="Lancer un Round", command=self.run_battle_round).pack(pady=10)
@@ -85,17 +82,22 @@ class BattleWindow(tk.Tk):
     def get_division_names(self):
         return [division["Nom de la division"] for division in self.divisions]
 
-    def add_division(self, listbox, selected_division_var):
+    def add_division(self, frame, selected_division_var):
         selected_name = selected_division_var.get()
-        if selected_name and selected_name not in listbox.get(0, tk.END):
-            listbox.insert(tk.END, selected_name)
+        if selected_name:
+            for division in self.divisions:
+                if division["Nom de la division"] == selected_name:
+                    frame_division = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
+                    frame_division.pack(fill=tk.X, pady=2)
+                    for stat, value in division.items():
+                        tk.Label(frame_division, text=f"{stat}: {value}").pack(anchor=tk.W)
+                    break
 
     def run_battle_round(self):
         # Ici tu ajoutes le code pour lancer le calcul de la bataille
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
         self.log_text.see(tk.END)
-
 
 app = BattleWindow()
 app.mainloop()
