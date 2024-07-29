@@ -10,6 +10,7 @@ class DivisionEditor(tk.Tk):
         super().__init__()
         self.title("Éditeur de Division")
         self.geometry("600x400")
+        self.dropdown = None
 
         # Définition des statistiques de la division
         self.stats = {
@@ -26,6 +27,17 @@ class DivisionEditor(tk.Tk):
             "Entrenchment": tk.DoubleVar(),
             "Width": tk.IntVar()
         }
+
+        # Charger les divisions existantes pour le menu déroulant
+        self.divisions = self.load_divisions()
+        self.division_names = [division["Nom de la division"] for division in self.divisions]
+
+        # Menu déroulant pour sélectionner une division
+        self.selected_division = tk.StringVar()
+        self.selected_division.set("Sélectionner une division")
+        self.dropdown = ttk.Combobox(self, textvariable=self.selected_division, values=self.division_names)
+        self.dropdown.pack(pady=10)
+        self.dropdown.bind("<<ComboboxSelected>>", self.load_division)
 
         # Conteneur pour le nom de la division
         frame_name = tk.Frame(self)
@@ -56,32 +68,46 @@ class DivisionEditor(tk.Tk):
         # Bouton de sauvegarde
         tk.Button(self, text="Sauvegarder", command=self.save_division).pack(pady=10)
 
+    def load_divisions(self):
+        if os.path.exists("divisions.json"):
+            with open("divisions.json", "r") as file:
+                try:
+                    return json.load(file)
+                except json.JSONDecodeError:
+                    return []
+        return []
+
+    def load_division(self, event):
+        selected_name = self.selected_division.get()
+        for division in self.divisions:
+            if division["Nom de la division"] == selected_name:
+                for stat, var in self.stats.items():
+                    var.set(division[stat])
+                break
+
     def save_division(self):
         division_data = {stat: var.get() for stat, var in self.stats.items()}
         division_data["Nom de la division"] = self.stats["Nom de la division"].get()
 
-        # Charger les divisions existantes ou créer une nouvelle liste
-        if os.path.exists("divisions.json"):
-            with open("divisions.json", "r") as file:
-                try:
-                    divisions = json.load(file)
-                except json.JSONDecodeError:
-                    divisions = []
-        else:
-            divisions = []
-
         # Vérifier si une division avec le même nom existe déjà
-        for division in divisions:
+        for division in self.divisions:
             if division["Nom de la division"] == division_data["Nom de la division"]:
                 messagebox.showerror("Erreur", "Une division avec ce nom existe déjà.")
                 return
 
         # Ajouter la nouvelle division
-        divisions.append(division_data)
+        self.divisions.append(division_data)
 
         # Sauvegarder toutes les divisions dans le fichier JSON
         with open("divisions.json", "w") as file:
-            json.dump(divisions, file, indent=4)
+            json.dump(self.divisions, file, indent=4)
+
+        # Mettre à jour le menu déroulant
+        self.division_names.append(division_data["Nom de la division"])
+        self.selected_division.set("Sélectionner une division")
+        self.selected_division.set("")
+        self.selected_division.set("Sélectionner une division")
+        self.dropdown['values'] = self.division_names
 
         print("Division sauvegardée:", division_data)
 
