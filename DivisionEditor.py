@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import json
 import os
+from tkinter import messagebox
 
 
 class DivisionEditor(tk.Tk):
@@ -68,6 +69,12 @@ class DivisionEditor(tk.Tk):
                     divisions = []
         else:
             divisions = []
+
+        # Vérifier si une division avec le même nom existe déjà
+        for division in divisions:
+            if division["Nom de la division"] == division_data["Nom de la division"]:
+                messagebox.showerror("Erreur", "Une division avec ce nom existe déjà.")
+                return
 
         # Ajouter la nouvelle division
         divisions.append(division_data)
