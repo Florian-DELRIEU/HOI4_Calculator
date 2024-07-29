@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+import json
+import os
 
 
 class DivisionEditor(tk.Tk):
@@ -24,32 +26,57 @@ class DivisionEditor(tk.Tk):
             "Width": tk.IntVar()
         }
 
+        # Conteneur pour le nom de la division
+        frame_name = tk.Frame(self)
+        frame_name.pack(fill=tk.X, pady=10)
+
+        tk.Label(frame_name, text="Nom de la division").pack(side=tk.LEFT, padx=10)
+        tk.Entry(frame_name, textvariable=self.stats["Nom de la division"]).pack(side=tk.LEFT, fill=tk.X, expand=True,
+                                                                                 padx=10)
+
+        # Conteneur pour les autres statistiques
+        frame_stats = tk.Frame(self)
+        frame_stats.pack(fill=tk.BOTH, expand=True)
+
         # Création des champs de saisie
         row = 0
         col = 0
         for i, (stat, var) in enumerate(self.stats.items()):
-            if i == 0:  # Nom de la division sur une ligne à part
-                tk.Label(self, text=stat).grid(row=row, columnspan=2, pady=5, sticky=tk.W)
-                tk.Entry(self, textvariable=var).grid(row=row + 1, columnspan=2, pady=5)
-                row += 2
-                continue
+            if stat != "Nom de la division":
+                tk.Label(frame_stats, text=stat).grid(row=row, column=col, padx=5, pady=5, sticky=tk.W)
+                tk.Entry(frame_stats, textvariable=var).grid(row=row, column=col + 1, padx=5, pady=5)
 
-            tk.Label(self, text=stat).grid(row=row, column=col, padx=5, pady=5, sticky=tk.W)
-            tk.Entry(self, textvariable=var).grid(row=row, column=col + 1, padx=5, pady=5)
-
-            if col == 0:
-                col = 2
-            else:
-                col = 0
-                row += 1
+                if col == 0:
+                    col = 2
+                else:
+                    col = 0
+                    row += 1
 
         # Bouton de sauvegarde
-        tk.Button(self, text="Sauvegarder", command=self.save_division).grid(row=row + 1, columnspan=4, pady=10)
+        tk.Button(self, text="Sauvegarder", command=self.save_division).pack(pady=10)
 
     def save_division(self):
         division_data = {stat: var.get() for stat, var in self.stats.items()}
+        division_data["Nom de la division"] = self.stats["Nom de la division"].get()
+
+        # Charger les divisions existantes ou créer une nouvelle liste
+        if os.path.exists("divisions.json"):
+            with open("divisions.json", "r") as file:
+                try:
+                    divisions = json.load(file)
+                except json.JSONDecodeError:
+                    divisions = []
+        else:
+            divisions = []
+
+        # Ajouter la nouvelle division
+        divisions.append(division_data)
+
+        # Sauvegarder toutes les divisions dans le fichier JSON
+        with open("divisions.json", "w") as file:
+            json.dump(divisions, file, indent=4)
+
         print("Division sauvegardée:", division_data)
-        # Code pour sauvegarder les données, par exemple dans un fichier ou une base de données
 
 
 app = DivisionEditor()
