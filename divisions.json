@@ -1,0 +1,30 @@
+[
+    {
+        "Nom de la division": "TEST01",
+        "PV": 0,
+        "Organisation": 0,
+        "Soft Attack": 0,
+        "Hard Attack": 0,
+        "Defense": 0,
+        "Attaque": 0,
+        "Piercing": 0,
+        "Armor": 0,
+        "Hardness": 0.0,
+        "Entrenchment": 0.0,
+        "Width": 0
+    },
+    {
+        "Nom de la division": "TEST02",
+        "PV": 100,
+        "Organisation": 0,
+        "Soft Attack": 0,
+        "Hard Attack": 0,
+        "Defense": 0,
+        "Attaque": 0,
+        "Piercing": 0,
+        "Armor": 0,
+        "Hardness": 0.0,
+        "Entrenchment": 0.0,
+        "Width": 0
+    }
+]
