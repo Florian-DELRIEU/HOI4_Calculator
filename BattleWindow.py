@@ -89,8 +89,28 @@ class BattleWindow(tk.Tk):
                 if division["Nom de la division"] == selected_name:
                     frame_division = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
                     frame_division.pack(fill=tk.X, pady=2)
-                    for stat, value in division.items():
-                        tk.Label(frame_division, text=f"{stat}: {value}").pack(anchor=tk.W)
+
+                    # Créer une grille pour afficher les statistiques de manière compacte
+                    stats_frame = tk.Frame(frame_division)
+                    stats_frame.pack(fill=tk.X)
+
+                    # Afficher les statistiques abrégées en colonnes
+                    stats = ["PV", "Organisation", "Soft Attack", "Hard Attack", "Defense", "Attaque", "Piercing",
+                             "Armor", "Hardness", "Entrenchment", "Width"]
+                    abbr_stats = ["PV", "Org", "SA", "HA", "Def", "Atk", "Prc", "Arm", "Hard", "Entr", "Wdth"]
+
+                    for i, stat in enumerate(stats):
+                        row = i // 6  # Divise par 6 pour créer 2 lignes
+                        col = i % 6  # Prend le reste pour obtenir la colonne
+                        if stat in ["PV", "Organisation"]:
+                            tk.Label(stats_frame, text=f"{abbr_stats[i]}:").grid(row=row * 2, column=col)
+                            value = division[stat]
+                            progress = ttk.Progressbar(stats_frame, maximum=value, value=value, length=80)
+                            progress.grid(row=row * 2 + 1, column=col)
+                        else:
+                            tk.Label(stats_frame, text=f"{abbr_stats[i]}: {division[stat]}").grid(row=row * 2,
+                                                                                                  column=col)
+
                     break
 
     def run_battle_round(self):
