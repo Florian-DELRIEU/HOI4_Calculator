@@ -15,14 +15,14 @@ class DivisionEditor(tk.Tk):
         # Définition des statistiques de la division
         self.stats = {
             "Nom de la division": tk.StringVar(),
-            "PV": tk.IntVar(),
-            "Organisation": tk.IntVar(),
-            "Soft Attack": tk.IntVar(),
-            "Hard Attack": tk.IntVar(),
-            "Defense": tk.IntVar(),
-            "Attaque": tk.IntVar(),
-            "Piercing": tk.IntVar(),
-            "Armor": tk.IntVar(),
+            "PV": tk.DoubleVar(),
+            "Organisation": tk.DoubleVar(),
+            "Soft Attack": tk.DoubleVar(),
+            "Hard Attack": tk.DoubleVar(),
+            "Defense": tk.DoubleVar(),
+            "Attaque": tk.DoubleVar(),
+            "Piercing": tk.DoubleVar(),
+            "Armor": tk.DoubleVar(),
             "Hardness": tk.DoubleVar(),
             "Entrenchment": tk.DoubleVar(),
             "Width": tk.IntVar()
