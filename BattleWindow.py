@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import json
 import os
+from DivisionClass import Division
 from tkinter import messagebox
 
 class BattleWindow(tk.Tk):
@@ -71,49 +72,98 @@ class BattleWindow(tk.Tk):
         self.log_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
     def load_divisions(self):
+        """
+           Charge les divisions sauvegardées à partir d'un fichier JSON.
+           Cette méthode vérifie l'existence du fichier "divisions.json" et tente de charger les données JSON à partir de ce fichier.
+           Les données sont ensuite converties en instances de la classe Division.
+           Retour:
+               List[Division]: Une liste d'instances de la classe Division représentant les divisions sauvegardées.
+           """
         if os.path.exists("divisions.json"):
             with open("divisions.json", "r") as file:
                 try:
-                    return json.load(file)
+                    data = json.load(file)
+                    return [Division.from_dict(division) for division in data]
                 except json.JSONDecodeError:
                     return []
         return []
 
     def get_division_names(self):
+        """
+           Récupère les noms de toutes les divisions sauvegardées.
+           Cette méthode parcourt la liste des divisions chargées et extrait le nom de chaque division.
+           Retour:
+               List[str]: Une liste contenant les noms de toutes les divisions sauvegardées.
+           """
         return [division["Nom de la division"] for division in self.divisions]
 
     def add_division(self, frame, selected_division_var):
-        selected_name = selected_division_var.get()
-        if selected_name:
-            for division in self.divisions:
-                if division["Nom de la division"] == selected_name:
-                    frame_division = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
-                    frame_division.pack(fill=tk.X, pady=2)
+        """
+           Ajoute une division au camp spécifié et affiche ses statistiques de manière compacte.
 
-                    # Créer une grille pour afficher les statistiques de manière compacte
-                    stats_frame = tk.Frame(frame_division)
-                    stats_frame.pack(fill=tk.X)
+           Cette méthode recherche la division correspondant au nom sélectionné, crée un cadre pour la division,
+           et affiche ses statistiques sous forme abrégée en colonnes, avec des barres de progression pour les PV et l'organisation.
 
-                    # Afficher les statistiques abrégées en colonnes
-                    stats = ["PV", "Organisation", "Soft Attack", "Hard Attack", "Defense", "Attaque", "Piercing",
-                             "Armor", "Hardness", "Entrenchment", "Width"]
-                    abbr_stats = ["PV", "Org", "SA", "HA", "Def", "Atk", "Prc", "Arm", "Hard", "Entr", "Wdth"]
+           Args:
+               frame (tk.Frame): Le cadre dans lequel ajouter la division (camp A ou camp B).
+               selected_name (str): Le nom de la division sélectionnée à ajouter.
+           """
+        if not (selected_name := selected_division_var.get()):
+            return
+        for division in self.divisions:
+            if division.nom == selected_name:
+                frame_division = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
+                frame_division.pack(fill=tk.X, pady=2)
 
-                    for i, stat in enumerate(stats):
-                        row = i // 6  # Divise par 6 pour créer 2 lignes
-                        col = i % 6  # Prend le reste pour obtenir la colonne
-                        if stat in ["PV", "Organisation"]:
-                            tk.Label(stats_frame, text=f"{abbr_stats[i]}:").grid(row=row * 2, column=col)
-                            value = division[stat]
-                            progress = ttk.Progressbar(stats_frame, maximum=value, value=value, length=80)
-                            progress.grid(row=row * 2 + 1, column=col)
-                        else:
-                            tk.Label(stats_frame, text=f"{abbr_stats[i]}: {division[stat]}").grid(row=row * 2,
-                                                                                                  column=col)
+                stats_frame = tk.Frame(frame_division)
+                stats_frame.pack(fill=tk.X)
 
-                    break
+                stats = ["PV", "Organisation", "Soft Attack", "Hard Attack", "Defense", "Attaque", "Piercing",
+                         "Armor", "Hardness", "Entrenchment", "Width"]
+                abbr_stats = ["PV", "Org", "SA", "HA", "Def", "Atk", "Prc", "Arm", "Hard", "Entr", "Wdth"]
+
+                for i, stat in enumerate(stats):
+                    row = i // 6
+                    col = i % 6
+                    if stat in ["PV", "Organisation"]:
+                        tk.Label(stats_frame, text=f"{abbr_stats[i]}:").grid(row=row * 2, column=col)
+                        value = getattr(division, stat.lower())
+                        progress = ttk.Progressbar(stats_frame, maximum=value, value=value, length=80)
+                        progress.grid(row=row * 2 + 1, column=col)
+                    else:
+                        tk.Label(stats_frame, text=f"{abbr_stats[i]}: {getattr(division, stat.lower())}").grid(
+                            row=row * 2, column=col)
+
+                break
+
+    def get_divisions_from_frame(self, frame):
+        """
+           Récupère les divisions à partir d'un cadre spécifié.
+           Cette méthode extrait les noms des divisions à partir des enfants du cadre donné,
+           puis recherche et retourne les instances de Division correspondantes.
+           Args:
+               frame (tk.Frame): Le cadre contenant les divisions.
+           Retour:
+               List[Division]: Une liste d'instances de la classe Division correspondant aux noms dans le cadre.
+           """
+        division_names = [child.winfo_children()[0].cget("text").split(":")[1].strip() for child in
+                          frame.winfo_children()]
+        return [
+            next(
+                (division for division in self.divisions if division.nom == name),
+                None,
+            )
+            for name in division_names
+        ]
 
     def run_battle_round(self):
+        """
+            Exécute un round de bataille en utilisant les divisions de chaque camp.
+            Cette méthode récupère les divisions de chaque camp, lance le calcul de la bataille,
+            et affiche les résultats sous forme de log dans la zone de texte.
+            Retour:
+                None
+            """
         # Ici tu ajoutes le code pour lancer le calcul de la bataille
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
