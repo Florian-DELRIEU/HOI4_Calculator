@@ -1,6 +1,13 @@
 import string
 import random
 
+class Camp:
+    def __init__(self):
+        self.leader = None
+        self.division_list = []
+        self.entrenchment = 0.0
+        self.frame = None
+
 class Division:
     def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor, hardness, width):
         self.nom = ""
