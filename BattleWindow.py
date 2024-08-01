@@ -95,7 +95,7 @@ class BattleWindow(tk.Tk):
            Retour:
                List[str]: Une liste contenant les noms de toutes les divisions sauvegardées.
            """
-        return [division["Nom de Template"] for division in self.divisions]
+        return [division.template for division in self.divisions]
 
     def add_division(self, frame, selected_division_var):
         """

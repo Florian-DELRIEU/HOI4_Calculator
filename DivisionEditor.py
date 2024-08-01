@@ -34,7 +34,7 @@ class DivisionEditor(tk.Tk):
 
         # Menu déroulant pour sélectionner une division
         self.selected_division = tk.StringVar()
-        self.selected_division.set("Sélectionner une division")
+        self.selected_division.set("Sélectionner une template")
         self.dropdown = ttk.Combobox(self, textvariable=self.selected_division, values=self.division_templates)
         self.dropdown.pack(pady=10)
         self.dropdown.bind("<<ComboboxSelected>>", self.load_division)

@@ -2,8 +2,8 @@ import string
 import random
 
 class Division:
-    def __init__(self, nom, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor, hardness, entrenchment, width,division_id):
-        self.nom = nom
+    def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor, hardness, entrenchment, width):
+        self.nom = ""
         self.template = template
         self.pv = pv
         self.organisation = organisation
