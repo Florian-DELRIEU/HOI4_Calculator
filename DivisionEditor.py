@@ -14,7 +14,7 @@ class DivisionEditor(tk.Tk):
 
         # Définition des statistiques de la division
         self.stats = {
-            "Nom de la division": tk.StringVar(),
+            "Nom de Template": tk.StringVar(),
             "PV": tk.DoubleVar(),
             "Organisation": tk.DoubleVar(),
             "Soft Attack": tk.DoubleVar(),
@@ -30,21 +30,21 @@ class DivisionEditor(tk.Tk):
 
         # Charger les divisions existantes pour le menu déroulant
         self.divisions = self.load_divisions()
-        self.division_names = [division["Nom de la division"] for division in self.divisions]
+        self.division_templates = [division["Nom de Template"] for division in self.divisions]
 
         # Menu déroulant pour sélectionner une division
         self.selected_division = tk.StringVar()
         self.selected_division.set("Sélectionner une division")
-        self.dropdown = ttk.Combobox(self, textvariable=self.selected_division, values=self.division_names)
+        self.dropdown = ttk.Combobox(self, textvariable=self.selected_division, values=self.division_templates)
         self.dropdown.pack(pady=10)
         self.dropdown.bind("<<ComboboxSelected>>", self.load_division)
 
-        # Conteneur pour le nom de la division
+        # Conteneur pour le Nom de Template
         frame_name = tk.Frame(self)
         frame_name.pack(fill=tk.X, pady=10)
 
-        tk.Label(frame_name, text="Nom de la division").pack(side=tk.LEFT, padx=10)
-        tk.Entry(frame_name, textvariable=self.stats["Nom de la division"]).pack(side=tk.LEFT, fill=tk.X, expand=True,
+        tk.Label(frame_name, text="Nom de Template").pack(side=tk.LEFT, padx=10)
+        tk.Entry(frame_name, textvariable=self.stats["Nom de Template"]).pack(side=tk.LEFT, fill=tk.X, expand=True,
                                                                                  padx=10)
 
         # Conteneur pour les autres statistiques
@@ -55,7 +55,7 @@ class DivisionEditor(tk.Tk):
         row = 0
         col = 0
         for i, (stat, var) in enumerate(self.stats.items()):
-            if stat != "Nom de la division":
+            if stat != "Nom de Template":
                 tk.Label(frame_stats, text=stat).grid(row=row, column=col, padx=5, pady=5, sticky=tk.W)
                 tk.Entry(frame_stats, textvariable=var).grid(row=row, column=col + 1, padx=5, pady=5)
 
@@ -80,18 +80,18 @@ class DivisionEditor(tk.Tk):
     def load_division(self, event):
         selected_name = self.selected_division.get()
         for division in self.divisions:
-            if division["Nom de la division"] == selected_name:
+            if division["Nom de Template"] == selected_name:
                 for stat, var in self.stats.items():
                     var.set(division[stat])
                 break
 
     def save_division(self):
         division_data = {stat: var.get() for stat, var in self.stats.items()}
-        division_data["Nom de la division"] = self.stats["Nom de la division"].get()
+        division_data["Nom de Template"] = self.stats["Nom de Template"].get()
 
         # Vérifier si une division avec le même nom existe déjà
         for division in self.divisions:
-            if division["Nom de la division"] == division_data["Nom de la division"]:
+            if division["Nom de Template"] == division_data["Nom de Template"]:
                 messagebox.showerror("Erreur", "Une division avec ce nom existe déjà.")
                 return
 
@@ -103,11 +103,11 @@ class DivisionEditor(tk.Tk):
             json.dump(self.divisions, file, indent=4)
 
         # Mettre à jour le menu déroulant
-        self.division_names.append(division_data["Nom de la division"])
+        self.division_templates.append(division_data["Nom de Template"])
         self.selected_division.set("Sélectionner une division")
         self.selected_division.set("")
         self.selected_division.set("Sélectionner une division")
-        self.dropdown['values'] = self.division_names
+        self.dropdown['values'] = self.division_templates
 
         print("Division sauvegardée:", division_data)
 

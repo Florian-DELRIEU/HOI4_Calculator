@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import json
 import os
-from DivisionClass import Division
+from Class import Division
 from tkinter import messagebox
 
 class BattleWindow(tk.Tk):
@@ -83,7 +83,7 @@ class BattleWindow(tk.Tk):
             with open("divisions.json", "r") as file:
                 try:
                     data = json.load(file)
-                    return [Division.from_dict(division) for division in data]
+                    return [Division.load(division) for division in data]
                 except json.JSONDecodeError:
                     return []
         return []
@@ -95,7 +95,7 @@ class BattleWindow(tk.Tk):
            Retour:
                List[str]: Une liste contenant les noms de toutes les divisions sauvegardées.
            """
-        return [division["Nom de la division"] for division in self.divisions]
+        return [division["Nom de Template"] for division in self.divisions]
 
     def add_division(self, frame, selected_division_var):
         """
@@ -106,7 +106,7 @@ class BattleWindow(tk.Tk):
 
            Args:
                frame (tk.Frame): Le cadre dans lequel ajouter la division (camp A ou camp B).
-               selected_name (str): Le nom de la division sélectionnée à ajouter.
+               selected_name (str): Le Nom de Template sélectionnée à ajouter.
            """
         if not (selected_name := selected_division_var.get()):
             return
