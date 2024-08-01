@@ -111,27 +111,27 @@ class BattleWindow(tk.Tk):
         if not (selected_name := selected_division_var.get()):
             return
         for division in self.divisions:
-            if division.nom == selected_name:
+            if division.template == selected_name:
                 frame_division = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
                 frame_division.pack(fill=tk.X, pady=2)
 
                 stats_frame = tk.Frame(frame_division)
                 stats_frame.pack(fill=tk.X)
 
-                stats = ["PV", "Organisation", "Soft Attack", "Hard Attack", "Defense", "Attaque", "Piercing",
-                         "Armor", "Hardness", "Entrenchment", "Width"]
-                abbr_stats = ["PV", "Org", "SA", "HA", "Def", "Atk", "Prc", "Arm", "Hard", "Entr", "Wdth"]
+                stats = [division.pv,division.organisation,division.soft_attack,division.hard_attack,division.defense,
+                division.attaque,division.piercing,division.armor,division.hardness,division.width]
+                abbr_stats = ["PV", "Org", "SA", "HA", "Def", "Atk", "Prc", "Arm", "Hard", "Wdth"]
 
                 for i, stat in enumerate(stats):
                     row = i // 6
                     col = i % 6
-                    if stat in ["PV", "Organisation"]:
+                    if stat in [division.pv,division.organisation]:
                         tk.Label(stats_frame, text=f"{abbr_stats[i]}:").grid(row=row * 2, column=col)
-                        value = getattr(division, stat.lower())
+                        value = stat
                         progress = ttk.Progressbar(stats_frame, maximum=value, value=value, length=80)
                         progress.grid(row=row * 2 + 1, column=col)
                     else:
-                        tk.Label(stats_frame, text=f"{abbr_stats[i]}: {getattr(division, stat.lower())}").grid(
+                        tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(
                             row=row * 2, column=col)
 
                 break
