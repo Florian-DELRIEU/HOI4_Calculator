@@ -10,7 +10,6 @@
         "Piercing": 4.5,
         "Armor": 0,
         "Hardness": 0.0,
-        "Entrenchment": 0.0,
         "Width": 12
     },
     {
@@ -24,7 +23,6 @@
         "Piercing": 19.7,
         "Armor": 8,
         "Hardness": 0.3,
-        "Entrenchment": 0.0,
         "Width": 5
     }
 ]

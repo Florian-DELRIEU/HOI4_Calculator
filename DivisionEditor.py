@@ -24,7 +24,6 @@ class DivisionEditor(tk.Tk):
             "Piercing": tk.DoubleVar(),
             "Armor": tk.DoubleVar(),
             "Hardness": tk.DoubleVar(),
-            "Entrenchment": tk.DoubleVar(),
             "Width": tk.IntVar()
         }
 

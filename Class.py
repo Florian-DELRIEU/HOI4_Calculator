@@ -2,7 +2,7 @@ import string
 import random
 
 class Division:
-    def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor, hardness, entrenchment, width):
+    def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor, hardness, width):
         self.nom = ""
         self.template = template
         self._pv = pv
@@ -16,7 +16,6 @@ class Division:
         self.piercing = piercing
         self.armor = armor
         self.hardness = hardness
-        self.entrenchment = entrenchment
         self.width = width
         self.id = self.generate_id()
 
@@ -36,7 +35,6 @@ class Division:
             "Piercing": self.piercing,
             "Armor": self.armor,
             "Hardness": self.hardness,
-            "Entrenchment": self.entrenchment,
             "Width": self.width,
         }
 
@@ -44,5 +42,5 @@ class Division:
     def load(data):
         return Division(
             data["Nom de Template"], data["PV"], data["Organisation"], data["Soft Attack"], data["Hard Attack"],
-            data["Defense"], data["Attaque"], data["Piercing"], data["Armor"], data["Hardness"], data["Entrenchment"], data["Width"]
+            data["Defense"], data["Attaque"], data["Piercing"], data["Armor"], data["Hardness"], data["Width"]
         )
