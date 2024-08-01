@@ -5,8 +5,10 @@ class Division:
     def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor, hardness, entrenchment, width):
         self.nom = ""
         self.template = template
-        self.pv = pv
-        self.organisation = organisation
+        self._pv = pv
+        self._organisation = organisation
+        self.pv = self._pv
+        self.organisation = self._organisation
         self.soft_attack = soft_attack
         self.hard_attack = hard_attack
         self.defense = defense
