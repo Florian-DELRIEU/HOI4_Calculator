@@ -104,6 +104,7 @@ class BattleWindow(tk.Tk):
         return [division.template for division in self.divisions]
 
     def add_division(self, selected_division_var, camp=Camp()):
+        # sourcery skip: assign-if-exp
         """
            Ajoute une division au camp spécifié et affiche ses statistiques de manière compacte.
 
@@ -114,7 +115,7 @@ class BattleWindow(tk.Tk):
                frame (tk.Frame): Le cadre dans lequel ajouter la division (camp A ou camp B).
                selected_name (str): Le Nom de Template sélectionnée à ajouter.
            """
-        frame = Camp.frame
+        frame = camp.frame
         if not (selected_name := selected_division_var.get()):
             return
         for division in self.divisions:
@@ -135,8 +136,9 @@ class BattleWindow(tk.Tk):
                     if stat in [division.pv,division.organisation]:
                         tk.Label(stats_frame, text=f"{abbr_stats[i]}:").grid(row=row * 2, column=col)
                         value = stat
-                        if stat == division.pv: max_value = division._pv
-                        if stat == division.organisation: max_value = division._organisation
+                        if stat == division.pv:             max_value = division._pv
+                        if stat == division.organisation:   max_value = division._organisation
+                        else:                               max_value = None
                         progress = ttk.Progressbar(stats_frame, maximum=max_value, value=value, length=80)
                         progress.grid(row=row * 2 + 1, column=col)
                     else:
@@ -144,7 +146,7 @@ class BattleWindow(tk.Tk):
                             row=row * 2, column=col)
 
                 break
-            Camp.division_list.append(division)
+            camp.division_list.append(division)
 
 
     def get_divisions_from_frame(self, frame):
