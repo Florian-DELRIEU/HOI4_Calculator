@@ -167,11 +167,12 @@ class BattleWindow(tk.Tk):
         listbox.pack(fill=tk.BOTH, expand=True)
 
         for division in self.divisions:
-            listbox.insert(tk.END, division["Nom de la division"])
+            listbox.insert(tk.END, division.template)
 
         def on_select():
-            selected_name = listbox.get(listbox.curselection())
-            self.add_division(camp, frame, selected_name)
+            selected_name = tk.StringVar()
+            selected_name.set(listbox.get(listbox.curselection()))
+            self.add_division( frame, selected_name)
             selection_window.destroy()
 
         tk.Button(selection_window, text="Ajouter", command=on_select).pack(pady=10)
