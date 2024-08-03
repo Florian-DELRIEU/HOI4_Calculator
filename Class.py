@@ -8,6 +8,7 @@ class Camp:
         self.divisions = []
         self.leader = ""
         self.entrenchment = 0.0
+        self.is_defending = False
 
     def get_data(self):
         return {
@@ -68,3 +69,8 @@ class Division:
             data["Nom de Template"], data["PV"], data["Organisation"], data["Soft Attack"], data["Hard Attack"],
             data["Defense"], data["Attaque"], data["Piercing"], data["Armor"], data["Hardness"], data["Width"]
         )
+
+class Terrain:
+    def __init__(self, name, width):
+        self.name = name
+        self.width = width

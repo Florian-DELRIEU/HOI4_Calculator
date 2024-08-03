@@ -3,6 +3,8 @@ from tkinter import ttk
 import json
 import os
 from Class import Division, Camp
+from TerrainList import terrain_list
+
 from tkinter import messagebox
 
 class BattleWindow(tk.Tk):
@@ -27,8 +29,17 @@ class BattleWindow(tk.Tk):
         tk.Entry(frame_params, textvariable=self.weather).grid(row=0, column=1, padx=5)
 
         tk.Label(frame_params, text="Terrain").grid(row=0, column=2, padx=5)
-        self.terrain = tk.StringVar()
-        tk.Entry(frame_params, textvariable=self.terrain).grid(row=0, column=3, padx=5)
+        self.selected_terrain = tk.StringVar()
+        self.selected_terrain.set(terrain_list[0].name)  # Set default terrain
+        terrain_names = [terrain.name for terrain in terrain_list]
+        self.terrain_dropdown = ttk.Combobox(frame_params, textvariable=self.selected_terrain, values=terrain_names)
+        self.terrain_dropdown.grid(row=0, column=3, padx=5)
+        self.terrain_dropdown.bind("<<ComboboxSelected>>", self.update_combat_width)
+
+        tk.Label(frame_params, text="Aire de combat").grid(row=2, column=0, padx=5)
+        self.combat_width = tk.StringVar()
+        self.combat_width.set(str(terrain_list[0].width))  # Set default width
+        tk.Label(frame_params, textvariable=self.combat_width).grid(row=2, column=1, padx=5)
 
         tk.Label(frame_params, text="Leader Camp A").grid(row=1, column=0, padx=5)
         self.leader_a = tk.StringVar()
@@ -181,7 +192,7 @@ class BattleWindow(tk.Tk):
     def save_battle_data(self):
         battle_data = {
             "weather": self.weather.get(),
-            "terrain": self.terrain.get(),
+            "terrain": terrain_list.get(),
             "leader_a": self.leader_a.get(),
             "leader_b": self.leader_b.get(),
             "camp_a": self.camp_a.get_data(),
@@ -191,6 +202,13 @@ class BattleWindow(tk.Tk):
 
         with open("battle_data.json", "w") as file:
             json.dump(battle_data, file, indent=4)
+
+    def update_combat_width(self, event):
+        selected_terrain_name = self.selected_terrain.get()
+        for terrain in terrain_list:
+            if terrain.name == selected_terrain_name:
+                self.combat_width.set(str(terrain.width))
+                break
 
     def run_battle_round(self):
         """
