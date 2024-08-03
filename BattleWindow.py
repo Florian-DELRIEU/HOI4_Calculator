@@ -64,6 +64,7 @@ class BattleWindow(tk.Tk):
 
         # Bouton pour lancer un round de la bataille
         tk.Button(self, text="Lancer un Round", command=self.run_battle_round).pack(pady=10)
+        tk.Button(self, text="Sauvegarder Bataille", command=self.save_battle_data).pack(pady=10)
 
         # Zone de logs pour les résultats
         self.log_text = tk.Text(self, height=10)
@@ -173,9 +174,23 @@ class BattleWindow(tk.Tk):
             selected_name = tk.StringVar()
             selected_name.set(listbox.get(listbox.curselection()))
             self.add_division( frame, selected_name)
-            selection_window.destroy()
+            #selection_window.destroy()
 
         tk.Button(selection_window, text="Ajouter", command=on_select).pack(pady=10)
+
+    def save_battle_data(self):
+        battle_data = {
+            "weather": self.weather.get(),
+            "terrain": self.terrain.get(),
+            "leader_a": self.leader_a.get(),
+            "leader_b": self.leader_b.get(),
+            "camp_a": self.camp_a.get_data(),
+            "camp_b": self.camp_b.get_data(),
+            "log_text": self.log_text.get("1.0", tk.END).strip()
+        }
+
+        with open("battle_data.json", "w") as file:
+            json.dump(battle_data, file, indent=4)
 
     def run_battle_round(self):
         """

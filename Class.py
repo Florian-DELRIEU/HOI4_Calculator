@@ -9,6 +9,13 @@ class Camp:
         self.leader = ""
         self.entrenchment = 0.0
 
+    def get_data(self):
+        return {
+            "divisions": [division.__dict__ for division in self.divisions],
+            "leader": self.leader,
+            "entrenchment": self.entrenchment,
+        }
+
     def add_division(self, division):
         self.divisions.append(division)
 
