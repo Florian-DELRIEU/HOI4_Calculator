@@ -1,6 +1,23 @@
 import string
 import random
 
+
+
+class Camp:
+    def __init__(self):
+        self.divisions = []
+        self.leader = ""
+        self.entrenchment = 0.0
+
+    def add_division(self, division):
+        self.divisions.append(division)
+
+    def remove_division(self, division_name):
+        self.divisions = [d for d in self.divisions if d.template != division_name]
+    def get_divisions(self):
+        return self.divisions
+
+
 class Division:
     def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor, hardness, width):
         self.nom = ""

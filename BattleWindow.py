@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import json
 import os
-from Class import Division
+from Class import Division, Camp
 from tkinter import messagebox
 
 class BattleWindow(tk.Tk):
@@ -10,6 +10,10 @@ class BattleWindow(tk.Tk):
         super().__init__()
         self.title("Fenêtre de Bataille")
         self.geometry("800x600")
+
+        # Initialiser les camps
+        self.camp_a = Camp()
+        self.camp_b = Camp()
 
         # Charger les divisions sauvegardées
         self.divisions = self.load_divisions()
@@ -43,26 +47,20 @@ class BattleWindow(tk.Tk):
         frame_camp_a.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10)
 
         tk.Label(frame_camp_a, text="Camp A").pack()
-        self.camp_a_divisions = tk.Frame(frame_camp_a)
-        self.camp_a_divisions.pack(fill=tk.BOTH, expand=True, pady=5)
+        self.camp_a_divisions_frame = tk.Frame(frame_camp_a)
+        self.camp_a_divisions_frame.pack(fill=tk.BOTH, expand=True, pady=5)
 
-        self.add_division_a = tk.StringVar()
-        dropdown_a = ttk.Combobox(frame_camp_a, textvariable=self.add_division_a, values=self.get_division_names())
-        dropdown_a.pack(pady=5)
-        tk.Button(frame_camp_a, text="Ajouter Division", command=lambda: self.add_division(self.camp_a_divisions, self.add_division_a)).pack()
+        tk.Button(frame_camp_a, text="Ajouter Division", command=lambda: self.open_division_selection(self.camp_a, self.camp_a_divisions_frame)).pack()
 
         # Camp B
         frame_camp_b = tk.Frame(frame_battle)
         frame_camp_b.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10)
 
         tk.Label(frame_camp_b, text="Camp B").pack()
-        self.camp_b_divisions = tk.Frame(frame_camp_b)
-        self.camp_b_divisions.pack(fill=tk.BOTH, expand=True, pady=5)
+        self.camp_b_divisions_frame = tk.Frame(frame_camp_b)
+        self.camp_b_divisions_frame.pack(fill=tk.BOTH, expand=True, pady=5)
 
-        self.add_division_b = tk.StringVar()
-        dropdown_b = ttk.Combobox(frame_camp_b, textvariable=self.add_division_b, values=self.get_division_names())
-        dropdown_b.pack(pady=5)
-        tk.Button(frame_camp_b, text="Ajouter Division", command=lambda: self.add_division(self.camp_b_divisions, self.add_division_b)).pack()
+        tk.Button(frame_camp_b, text="Ajouter Division", command=lambda: self.open_division_selection(self.camp_b, self.camp_b_divisions_frame)).pack()
 
         # Bouton pour lancer un round de la bataille
         tk.Button(self, text="Lancer un Round", command=self.run_battle_round).pack(pady=10)
@@ -112,6 +110,8 @@ class BattleWindow(tk.Tk):
             return
         for division in self.divisions:
             if division.template == selected_name:
+                if frame == self.camp_a_divisions_frame: self.camp_a.add_division(division)
+                if frame == self.camp_b_divisions_frame: self.camp_b.add_division(division)
                 frame_division = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
                 frame_division.pack(fill=tk.X, pady=2)
 
@@ -157,6 +157,24 @@ class BattleWindow(tk.Tk):
             )
             for name in division_names
         ]
+
+    def open_division_selection(self, camp, frame):
+        selection_window = tk.Toplevel(self)
+        selection_window.title("Sélectionner une Division")
+        selection_window.geometry("400x300")
+
+        listbox = tk.Listbox(selection_window)
+        listbox.pack(fill=tk.BOTH, expand=True)
+
+        for division in self.divisions:
+            listbox.insert(tk.END, division["Nom de la division"])
+
+        def on_select():
+            selected_name = listbox.get(listbox.curselection())
+            self.add_division(camp, frame, selected_name)
+            selection_window.destroy()
+
+        tk.Button(selection_window, text="Ajouter", command=on_select).pack(pady=10)
 
     def run_battle_round(self):
         """
