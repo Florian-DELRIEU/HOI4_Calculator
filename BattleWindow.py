@@ -4,6 +4,7 @@ import json
 import os
 from Class import Division, Camp
 from TerrainList import terrain_list
+import random
 
 from tkinter import messagebox
 
@@ -28,13 +29,14 @@ class BattleWindow(tk.Tk):
         self.weather = tk.StringVar()
         tk.Entry(frame_params, textvariable=self.weather).grid(row=0, column=1, padx=5)
 
+        self.terrain = None
         tk.Label(frame_params, text="Terrain").grid(row=0, column=2, padx=5)
         self.selected_terrain = tk.StringVar()
         self.selected_terrain.set(terrain_list[0].name)  # Set default terrain
         terrain_names = [terrain.name for terrain in terrain_list]
         self.terrain_dropdown = ttk.Combobox(frame_params, textvariable=self.selected_terrain, values=terrain_names)
         self.terrain_dropdown.grid(row=0, column=3, padx=5)
-        self.terrain_dropdown.bind("<<ComboboxSelected>>", self.update_combat_width)
+        self.terrain_dropdown.bind("<<ComboboxSelected>>", self.update_terrain())
 
         tk.Label(frame_params, text="Aire de combat").grid(row=2, column=0, padx=5)
         self.combat_width = tk.StringVar()
@@ -80,6 +82,8 @@ class BattleWindow(tk.Tk):
         # Zone de logs pour les résultats
         self.log_text = tk.Text(self, height=10)
         self.log_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        self.nb_round = 0
 
     def load_divisions(self):
         """
@@ -192,7 +196,7 @@ class BattleWindow(tk.Tk):
     def save_battle_data(self):
         battle_data = {
             "weather": self.weather.get(),
-            "terrain": terrain_list.get(),
+            "terrain": self.terrain.get(),
             "leader_a": self.leader_a.get(),
             "leader_b": self.leader_b.get(),
             "camp_a": self.camp_a.get_data(),
@@ -203,12 +207,15 @@ class BattleWindow(tk.Tk):
         with open("battle_data.json", "w") as file:
             json.dump(battle_data, file, indent=4)
 
-    def update_combat_width(self, event):
+    def update_terrain(self):
+        """
+        Recupère l'instance :terrain: a partir du choix fait dans le menu déroulant.
+        :return:
+        """
         selected_terrain_name = self.selected_terrain.get()
         for terrain in terrain_list:
             if terrain.name == selected_terrain_name:
-                self.combat_width.set(str(terrain.width))
-                break
+                self.terrain = terrain
 
     def run_battle_round(self):
         """
@@ -219,9 +226,35 @@ class BattleWindow(tk.Tk):
                 None
             """
         # Ici tu ajoutes le code pour lancer le calcul de la bataille
+        self._round()
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
         self.log_text.see(tk.END)
+
+    def _round(self):
+        """
+        Mecanique des rounds
+        :return:
+        """
+        if self.nb_round == 0:
+            self.frontline_engagement()
+
+    def frontline_engagement(self):
+        """
+            Sélectionne les divisions des camps pour l'engagement en frontline en fonction de l'aire de combat
+        :return:
+        """
+        for camp in [self.camp_a,self.camp_b]:
+            total_camp_width = 0
+            while total_camp_width <= self.terrain.width:
+                #todo Verifier que les width ne dépasse pas la limite avant d'ajouter une nouvelle division.
+                self.move_division_to_frontline(camp)
+                total_camp_width = sum(division.width for division in camp.in_frontline)
+
+    def move_division_to_frontline(self,current_camp):
+        available_divisions = [division for division in current_camp.divisions if division not in current_camp.in_frontline and division not in current_camp.in_reserves]
+        try : current_camp.in_frontline.append(random.choice(current_camp.divisions))
+        except: return
 
 app = BattleWindow()
 app.mainloop()

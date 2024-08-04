@@ -10,7 +10,7 @@
         "Piercing": 4.5,
         "Armor": 0,
         "Hardness": 0.0,
-        "Width": 12
+        "Width": 45
     },
     {
         "Nom de Template": "Blindes 36",
@@ -23,6 +23,6 @@
         "Piercing": 19.7,
         "Armor": 8,
         "Hardness": 0.3,
-        "Width": 5
+        "Width": 40
     }
 ]

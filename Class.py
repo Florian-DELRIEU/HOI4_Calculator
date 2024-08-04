@@ -8,7 +8,9 @@ class Camp:
         self.divisions = []
         self.leader = ""
         self.entrenchment = 0.0
-        self.is_defending = False
+        self.is_attacking = False
+        self.in_frontline = []
+        self.in_reserves = []
 
     def get_data(self):
         return {
@@ -18,7 +20,7 @@ class Camp:
         }
 
     def add_division(self, division):
-        self.divisions.append(division)
+        self.divisions.append(division.__copy__())
 
     def remove_division(self, division_name):
         self.divisions = [d for d in self.divisions if d.template != division_name]
@@ -62,6 +64,16 @@ class Division:
             "Hardness": self.hardness,
             "Width": self.width,
         }
+
+    def __copy__(self):
+        """
+        Programme permmettant de copier un object quelconque
+          - Attention : newObject = Object_a_copier()
+        """
+        newObject = Division(0,0,0,0,0,0,0,0,0,0,0)
+        for attr in self.__dict__:
+            newObject.__setattr__(attr,self.__getattribute__(attr))
+        return newObject
 
     @staticmethod
     def load(data):
