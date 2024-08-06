@@ -237,24 +237,24 @@ class BattleWindow(tk.Tk):
         :return:
         """
         if self.nb_round == 0:
-            self.frontline_engagement()
+            self.move_in_frontline()
 
-    def frontline_engagement(self):
+    def move_in_frontline(self):
         """
             Sélectionne les divisions des camps pour l'engagement en frontline en fonction de l'aire de combat
         :return:
         """
         for camp in [self.camp_a,self.camp_b]:
-            total_camp_width = 0
-            while total_camp_width <= self.terrain.width:
-                #todo Verifier que les width ne dépasse pas la limite avant d'ajouter une nouvelle division.
-                self.move_division_to_frontline(camp)
+            # Move divisions in frontline
+            available_divisions = [division for division in camp.divisions if division not in camp.in_frontline and division not in camp.in_reserves]
+            for division in available_divisions:
                 total_camp_width = sum(division.width for division in camp.in_frontline)
-
-    def move_division_to_frontline(self,current_camp):
-        available_divisions = [division for division in current_camp.divisions if division not in current_camp.in_frontline and division not in current_camp.in_reserves]
-        try : current_camp.in_frontline.append(random.choice(current_camp.divisions))
-        except: return
+                if total_camp_width + division.width <= self.terrain.width:
+                    camp.in_frontline.append(division)
+            # Move divisions in reserves
+            for division in camp.divisions:
+                if division not in camp.in_frontline:
+                    camp.in_reserves.append(division)
 
 app = BattleWindow()
 app.mainloop()
