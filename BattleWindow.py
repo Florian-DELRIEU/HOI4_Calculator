@@ -134,18 +134,18 @@ class BattleWindow(tk.Tk):
                 stats_frame = tk.Frame(frame_division)
                 stats_frame.pack(fill=tk.X)
 
-                stats = [division.pv,division.organisation,division.soft_attack,division.hard_attack,division.defense,
-                division.attaque,division.piercing,division.armor,division.hardness,division.width]
+                stats = [division._PV, division._ORGANISATION, division._SOFT_ATTACK, division._HARD_ATTACK, division._DEFENSE,
+                         division._ATTAQUE, division.piercing, division.armor, division.hardness, division.width]
                 abbr_stats = ["PV", "Org", "SA", "HA", "Def", "Atk", "Prc", "Arm", "Hard", "Wdth"]
 
                 for i, stat in enumerate(stats):
                     row = i // 6
                     col = i % 6
-                    if stat in [division.pv,division.organisation]:
+                    if stat in [division._PV, division._ORGANISATION]:
                         tk.Label(stats_frame, text=f"{abbr_stats[i]}:").grid(row=row * 2, column=col)
                         value = stat
-                        if stat == division.pv: max_value = division._pv
-                        if stat == division.organisation: max_value = division._organisation
+                        if stat == division._PV: max_value = division._PV
+                        if stat == division._ORGANISATION: max_value = division._ORGANISATION
                         progress = ttk.Progressbar(stats_frame, maximum=max_value, value=value, length=80)
                         progress.grid(row=row * 2 + 1, column=col)
                     else:

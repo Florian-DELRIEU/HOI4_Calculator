@@ -32,14 +32,18 @@ class Division:
     def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor, hardness, width):
         self.nom = ""
         self.template = template
-        self._pv = pv
-        self._organisation = organisation
-        self.pv = self._pv
-        self.organisation = self._organisation
+        self._PV = pv
+        self._ORGANISATION = organisation
+        self._DEFENSE = defense
+        self._ATTAQUE = attaque
+        self._SOFT_ATTACK = soft_attack
+        self._HARD_ATTACK = hard_attack
+        self.pv = pv
+        self.organisation = organisation
         self.soft_attack = soft_attack
         self.hard_attack = hard_attack
-        self.defense = defense
         self.attaque = attaque
+        self.defense = defense
         self.piercing = piercing
         self.armor = armor
         self.hardness = hardness
@@ -53,12 +57,12 @@ class Division:
     def save(self):
         return {
             "Nom de Template": self.template,
-            "PV": self.pv,
-            "Organisation": self.organisation,
-            "Soft Attack": self.soft_attack,
-            "Hard Attack": self.hard_attack,
-            "Defense": self.defense,
-            "Attaque": self.attaque,
+            "PV": self._PV,
+            "Organisation": self._ORGANISATION,
+            "Soft Attack": self._SOFT_ATTACK,
+            "Hard Attack": self._HARD_ATTACK,
+            "Defense": self._DEFENSE,
+            "Attaque": self._ATTAQUE,
             "Piercing": self.piercing,
             "Armor": self.armor,
             "Hardness": self.hardness,
