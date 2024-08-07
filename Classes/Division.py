@@ -22,6 +22,7 @@ class Division:
         self.hardness = hardness
         self.width = width
         self.id = self.generate_id()
+        self.target_list = []
 
     def generate_id(self,length=10):
         characters = string.ascii_letters + string.digits

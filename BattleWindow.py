@@ -4,6 +4,7 @@ import json
 import os
 from Classes import Division,Camp
 from TerrainList import terrain_list
+import random
 
 Division = Division.Division # shortcut
 Camp = Camp.Camp # shortcut
@@ -16,7 +17,9 @@ class BattleWindow(tk.Tk):
 
         # Initialiser les camps
         self.camp_a = Camp()
+        self.camp_a.is_attacking = True
         self.camp_b = Camp()
+        self.camp_b.is_attacking = False
 
         # Charger les divisions sauvegardées
         self.divisions = self.load_divisions()
@@ -226,6 +229,7 @@ class BattleWindow(tk.Tk):
                 None
             """
         # Ici tu ajoutes le code pour lancer le calcul de la bataille
+        if self.round_counter == 0: self.move_in_frontline()
         self._round()
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
@@ -236,8 +240,29 @@ class BattleWindow(tk.Tk):
         Mecanique des rounds
         :return:
         """
-        if self.round_counter == 0:
-            self.move_in_frontline()
+        camp_attacker = [camp for camp in [self.camp_a, self.camp_b] if camp.is_attacking][0]
+        camp_defender = [camp for camp in [self.camp_a, self.camp_b] if not camp.is_attacking][0]
+        for attacking_division in camp_attacker.divisions:
+            self.targetting(attacking_division,camp_defender)
+
+    def targetting(self,attacking_division,enemy_divisions):
+        engagement_width = attacking_division.width * 2
+        target_list = []
+        random.shuffle(enemy_divisions)
+
+        total_width = 0
+        for enemy in enemy_divisions:
+            if total_width + enemy.width <= engagement_width:
+                target_list.append(enemy)
+                total_width = sum(division.width for division in target_list)
+            elif total_width == 0:
+                target_list.append(enemy)
+                break
+            if not any(enemy_divisions.divisions.width << engagement_width):
+                target_list.append(random.choice(enemy_divisions.divisions))
+
+
+
 
     def move_in_frontline(self):
         """
