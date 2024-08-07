@@ -1,4 +1,6 @@
-from Class import Terrain
+from Classes import Terrain
+
+Terrain = Terrain.Terrain
 
 terrain_list = [
     Terrain("Plaine", 80),

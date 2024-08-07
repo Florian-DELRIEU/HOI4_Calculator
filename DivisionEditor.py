@@ -68,8 +68,8 @@ class DivisionEditor(tk.Tk):
         tk.Button(self, text="Sauvegarder", command=self.save_division).pack(pady=10)
 
     def load_divisions(self):
-        if os.path.exists("divisions.json"):
-            with open("divisions.json", "r") as file:
+        if os.path.exists("Saves/divisions.json"):
+            with open("Saves/divisions.json", "r") as file:
                 try:
                     return json.load(file)
                 except json.JSONDecodeError:
@@ -99,7 +99,7 @@ class DivisionEditor(tk.Tk):
             self.division_templates.append(division_data["Nom de Template"])
 
         # Sauvegarder toutes les divisions dans le fichier JSON
-        with open("divisions.json", "w") as file:
+        with open("Saves/divisions.json", "w") as file:
             json.dump(self.divisions, file, indent=4)
 
         # Mettre à jour le menu déroulant

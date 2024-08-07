@@ -2,11 +2,11 @@ import tkinter as tk
 from tkinter import ttk
 import json
 import os
-from Class import Division, Camp
+from Classes import Division,Camp
 from TerrainList import terrain_list
-import random
 
-from tkinter import messagebox
+Division = Division.Division # shortcut
+Camp = Camp.Camp # shortcut
 
 class BattleWindow(tk.Tk):
     def __init__(self):
@@ -83,7 +83,7 @@ class BattleWindow(tk.Tk):
         self.log_text = tk.Text(self, height=10)
         self.log_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        self.nb_round = 0
+        self.round_counter = 0
 
     def load_divisions(self):
         """
@@ -93,8 +93,8 @@ class BattleWindow(tk.Tk):
            Retour:
                List[Division]: Une liste d'instances de la classe Division représentant les divisions sauvegardées.
            """
-        if os.path.exists("divisions.json"):
-            with open("divisions.json", "r") as file:
+        if os.path.exists("Saves/divisions.json"):
+            with open("Saves/divisions.json", "r") as file:
                 try:
                     data = json.load(file)
                     return [Division.load(division) for division in data]
@@ -204,7 +204,7 @@ class BattleWindow(tk.Tk):
             "log_text": self.log_text.get("1.0", tk.END).strip()
         }
 
-        with open("battle_data.json", "w") as file:
+        with open("Saves/battle_data.json", "w") as file:
             json.dump(battle_data, file, indent=4)
 
     def update_terrain(self):
@@ -236,7 +236,7 @@ class BattleWindow(tk.Tk):
         Mecanique des rounds
         :return:
         """
-        if self.nb_round == 0:
+        if self.round_counter == 0:
             self.move_in_frontline()
 
     def move_in_frontline(self):
