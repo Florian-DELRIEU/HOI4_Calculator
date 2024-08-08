@@ -245,9 +245,9 @@ class BattleWindow(tk.Tk):
         """
         # Tour Attaquant
         for attacking_division in camp_attacker.in_frontline:
-            self.targetting(attacking_division,camp_defender,camp_attacker.coordination)
+            self.targetting(attacking_division,camp_defender)
 
-    def targetting(self,attacking_division,enemy_camp,coordination):
+    def targetting(self,attacking_division,enemy_camp):
         engagement_width = attacking_division.width * 2
         enemy_divisions = enemy_camp.in_frontline
         target_list = []
@@ -262,50 +262,9 @@ class BattleWindow(tk.Tk):
             elif total_width == 0:
                 target_list.append(enemy)
                 break
-            if not any(enemy_divisions.divisions.width << engagement_width):
+            if not any(div.width < engagement_width for div in enemy_divisions):
                 target_list.append(random.choice(enemy_divisions.divisions))
-
-        # Répartition des attaques
-        total_attacks = attacking_division.attaque if attacking_division.is_attacking else attacking_division.defense
-        coordinated_share = 0.35 + coordination * (1 + attacking_division.initiative)
-        coordinated_attacks = int(total_attacks * coordinated_share)
-        uncoordinated_attacks = total_attacks - coordinated_attacks
-
-
-        # Selection cible prioritaire
-        primary_target = self.choose_priority_target(attacking_division, target_list)
-        attacks_per_target = uncoordinated_attacks // len(target_list)
-
-        # Calcul des attaques subies pour chaques cibles
-        total_hits = {}
-        for target in target_list:
-            if target == primary_target:
-                total_hits[target] = attacks_per_target + coordinated_attacks
-            else:
-                total_hits[target] = attacks_per_target
-
-        return total_hits
-
-    def choose_priority_target(self, attacking_division, target_list,):
-        """
-        Définie la cible prioritaire en fonction des paramètres
-        :param attacking_division:
-        :param target_list:
-        :return:
-        """
-        def target_priority(target):
-            """
-            Calcul le score de priorisation des cibles
-            :param target:
-            :return: La cible avec le plus grand score devient la cible prioritaire
-            """
-            effective_attacks = attacking_division.hard_attack if target.hardness > 0.5 else attacking_division.soft_attack
-            if target.armor > attacking_division.piercing:
-                effective_attacks /= 2
-            priority_score = effective_attacks * (1 - target.organisation / 400)
-            return priority_score
-
-        return max(target_list, key=target_priority)
+        attacking_division.choose_priority_target()
 
     def move_in_frontline(self):
         """

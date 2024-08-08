@@ -20,5 +20,6 @@ class Camp:
 
     def remove_division(self, division_name):
         self.divisions = [d for d in self.divisions if d.template != division_name]
+
     def get_divisions(self):
         return self.divisions

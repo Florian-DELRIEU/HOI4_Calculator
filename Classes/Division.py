@@ -25,6 +25,7 @@ class Division:
         self.initiative = initiative
         self.id = self.generate_id()
         self.target_list = []
+        self.primary_target = None
 
     def generate_id(self,length=10):
         characters = string.ascii_letters + string.digits
@@ -63,4 +64,30 @@ class Division:
             data["Defense"], data["Attaque"], data["Piercing"], data["Armor"], data["Hardness"], data["Width"],
             data["Initiative"]
         )
+
+    def choose_priority_target(self):
+        """
+        Définie la cible prioritaire en fonction des paramètres
+        :param attacking_division:
+        :param target_list:
+        :return:
+        """
+        def target_priority(target):
+            """
+            Calcul le score de priorisation des cibles
+            :param target:
+            :return: La cible avec le plus grand score devient la cible prioritaire
+            """
+            effective_attacks = self.hard_attack if target.hardness > 0.5 else self.soft_attack
+            if target.armor > self.piercing:
+                effective_attacks /= 2
+            priority_score = effective_attacks * (1 - target.organisation / 400)
+            return priority_score
+
+        priority_scores_dict = {}
+        for division in self.target_list:
+            priority_scores_dict[division] = target_priority(division)
+
+        self.primary_target = max(priority_scores_dict, key=priority_scores_dict.get)
+
 
