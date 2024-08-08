@@ -24,7 +24,8 @@ class DivisionEditor(tk.Tk):
             "Piercing": tk.DoubleVar(),
             "Armor": tk.DoubleVar(),
             "Hardness": tk.DoubleVar(),
-            "Width": tk.IntVar()
+            "Width": tk.IntVar(),
+            "Initiative": tk.DoubleVar()
         }
 
         # Charger les divisions existantes pour le menu déroulant

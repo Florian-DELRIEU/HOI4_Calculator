@@ -2,7 +2,8 @@ import string
 import random
 
 class Division:
-    def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor, hardness, width):
+    def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor,
+                 hardness, width, initiative):
         self.nom = ""
         self.template = template
         self._PV = pv
@@ -21,6 +22,7 @@ class Division:
         self.armor = armor
         self.hardness = hardness
         self.width = width
+        self.initiative = initiative
         self.id = self.generate_id()
         self.target_list = []
 
@@ -41,6 +43,7 @@ class Division:
             "Armor": self.armor,
             "Hardness": self.hardness,
             "Width": self.width,
+            "Initiative": self.initiative,
         }
 
     def __copy__(self):
@@ -48,7 +51,7 @@ class Division:
         Programme permmettant de copier un object quelconque
           - Attention : newObject = Object_a_copier()
         """
-        newObject = Division(0,0,0,0,0,0,0,0,0,0,0)
+        newObject = Division(0,0,0,0,0,0,0,0,0,0,0,0)
         for attr in self.__dict__:
             newObject.__setattr__(attr,self.__getattribute__(attr))
         return newObject
@@ -57,6 +60,7 @@ class Division:
     def load(data):
         return Division(
             data["Nom de Template"], data["PV"], data["Organisation"], data["Soft Attack"], data["Hard Attack"],
-            data["Defense"], data["Attaque"], data["Piercing"], data["Armor"], data["Hardness"], data["Width"]
+            data["Defense"], data["Attaque"], data["Piercing"], data["Armor"], data["Hardness"], data["Width"],
+            data["Initiative"]
         )
 

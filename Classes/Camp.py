@@ -3,6 +3,7 @@ class Camp:
         self.divisions = []
         self.leader = ""
         self.entrenchment = 0.0
+        self.coordination = 0
         self.is_attacking = False
         self.in_frontline = []
         self.in_reserves = []

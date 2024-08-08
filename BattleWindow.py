@@ -230,26 +230,30 @@ class BattleWindow(tk.Tk):
             """
         # Ici tu ajoutes le code pour lancer le calcul de la bataille
         if self.round_counter == 0: self.move_in_frontline()
-        self._round()
+        camp_attacker = [camp for camp in [self.camp_a, self.camp_b] if camp.is_attacking][0]
+        camp_defender = [camp for camp in [self.camp_a, self.camp_b] if not camp.is_attacking][0]
+        self._round(camp_attacker,camp_defender)
+        # Ecriture des logs
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
         self.log_text.see(tk.END)
 
-    def _round(self):
+    def _round(self,camp_attacker,camp_defender):
         """
         Mecanique des rounds
         :return:
         """
-        camp_attacker = [camp for camp in [self.camp_a, self.camp_b] if camp.is_attacking][0]
-        camp_defender = [camp for camp in [self.camp_a, self.camp_b] if not camp.is_attacking][0]
-        for attacking_division in camp_attacker.divisions:
-            self.targetting(attacking_division,camp_defender)
+        # Tour Attaquant
+        for attacking_division in camp_attacker.in_frontline:
+            self.targetting(attacking_division,camp_defender,camp_attacker.coordination)
 
-    def targetting(self,attacking_division,enemy_divisions):
+    def targetting(self,attacking_division,enemy_camp,coordination):
         engagement_width = attacking_division.width * 2
+        enemy_divisions = enemy_camp.in_frontline
         target_list = []
         random.shuffle(enemy_divisions)
 
+        # Creer la liste des divisions prise pour cible par :attacking_division:
         total_width = 0
         for enemy in enemy_divisions:
             if total_width + enemy.width <= engagement_width:
@@ -261,8 +265,47 @@ class BattleWindow(tk.Tk):
             if not any(enemy_divisions.divisions.width << engagement_width):
                 target_list.append(random.choice(enemy_divisions.divisions))
 
+        # Répartition des attaques
+        total_attacks = attacking_division.attaque if attacking_division.is_attacking else attacking_division.defense
+        coordinated_share = 0.35 + coordination * (1 + attacking_division.initiative)
+        coordinated_attacks = int(total_attacks * coordinated_share)
+        uncoordinated_attacks = total_attacks - coordinated_attacks
 
 
+        # Selection cible prioritaire
+        primary_target = self.choose_priority_target(attacking_division, target_list)
+        attacks_per_target = uncoordinated_attacks // len(target_list)
+
+        # Calcul des attaques subies pour chaques cibles
+        total_hits = {}
+        for target in target_list:
+            if target == primary_target:
+                total_hits[target] = attacks_per_target + coordinated_attacks
+            else:
+                total_hits[target] = attacks_per_target
+
+        return total_hits
+
+    def choose_priority_target(self, attacking_division, target_list,):
+        """
+        Définie la cible prioritaire en fonction des paramètres
+        :param attacking_division:
+        :param target_list:
+        :return:
+        """
+        def target_priority(target):
+            """
+            Calcul le score de priorisation des cibles
+            :param target:
+            :return: La cible avec le plus grand score devient la cible prioritaire
+            """
+            effective_attacks = attacking_division.hard_attack if target.hardness > 0.5 else attacking_division.soft_attack
+            if target.armor > attacking_division.piercing:
+                effective_attacks /= 2
+            priority_score = effective_attacks * (1 - target.organisation / 400)
+            return priority_score
+
+        return max(target_list, key=target_priority)
 
     def move_in_frontline(self):
         """
