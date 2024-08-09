@@ -264,6 +264,7 @@ class BattleWindow(tk.Tk):
                 break
             if not any(div.width < engagement_width for div in enemy_divisions):
                 target_list.append(random.choice(enemy_divisions.divisions))
+        attacking_division.target_list = target_list.copy()
         attacking_division.choose_priority_target()
 
     def move_in_frontline(self):
