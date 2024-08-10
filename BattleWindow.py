@@ -248,6 +248,36 @@ class BattleWindow(tk.Tk):
             self.targetting(attacking_division,camp_defender)
 
     def targetting(self,attacking_division,enemy_camp):
+        """
+            Cette fonction détermine les cibles prioritaires pour une division attaquante lors d'un engagement.
+
+            Paramètres:
+            ----------
+            attacking_division : object
+                La division qui mène l'attaque. Ses caractéristiques, telles que la largeur d'engagement,
+                sont utilisées pour déterminer combien de divisions ennemies peuvent être ciblées.
+
+            enemy_camp : object
+                Le camp ennemi qui défend. Ce camp contient une liste des divisions qui sont en première ligne
+                et qui sont donc susceptibles d'être attaquées.
+
+            Description:
+            ------------
+            1. La fonction commence par calculer la largeur d'engagement, qui est déterminée par la largeur
+               de la division attaquante multipliée par 2.
+
+            2. Elle crée une liste des divisions ennemies susceptibles d'être prises pour cibles, en les
+               mélangeant aléatoirement pour simuler l'incertitude du champ de bataille.
+
+            3. La fonction sélectionne ensuite les divisions ennemies dont la largeur totale n'excède pas
+               la largeur d'engagement de la division attaquante, et les ajoute à une liste de cibles.
+
+            4. Si aucune division ne peut être complètement ciblée, la fonction en choisit une au hasard
+               parmi les divisions disponibles pour s'assurer qu'une cible est toujours assignée.
+
+            5. Enfin, la fonction met à jour la liste des cibles de la division attaquante et appelle une méthode
+               pour choisir la cible prioritaire parmi les cibles sélectionnées.
+            """
         engagement_width = attacking_division.width * 2
         enemy_divisions = enemy_camp.in_frontline
         target_list = []
@@ -269,9 +299,24 @@ class BattleWindow(tk.Tk):
 
     def move_in_frontline(self):
         """
-            Sélectionne les divisions des camps pour l'engagement en frontline en fonction de l'aire de combat
-        :return:
-        """
+    Cette fonction gère le positionnement des divisions dans la première ligne (frontline) de chaque camp,
+    en fonction de la largeur du terrain de combat.
+
+    Description:
+    ------------
+    1. Pour chaque camp (camp_a et camp_b), la fonction identifie les divisions disponibles pour se déplacer
+       en première ligne, c'est-à-dire celles qui ne sont ni en première ligne ni en réserve.
+
+    2. Elle ajoute ensuite ces divisions en première ligne tant que leur addition n'excède pas la largeur
+       totale du terrain.
+
+    3. Une fois que toutes les divisions possibles sont positionnées en première ligne, les divisions restantes
+       sont placées en réserve pour un déploiement ultérieur si nécessaire.
+
+    :return:
+    -------
+    Aucun retour. Cette fonction modifie directement les attributs `in_frontline` et `in_reserves` des camps.
+    """
         for camp in [self.camp_a,self.camp_b]:
             # Move divisions in frontline
             available_divisions = [division for division in camp.divisions if division not in camp.in_frontline and division not in camp.in_reserves]
