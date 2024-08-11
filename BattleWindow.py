@@ -16,10 +16,10 @@ class BattleWindow(tk.Tk):
         self.geometry("800x600")
 
         # Initialiser les camps
-        self.camp_a = Camp()
-        self.camp_a.is_attacking = True
-        self.camp_b = Camp()
-        self.camp_b.is_attacking = False
+        self.camp_attacker = Camp_object()
+        self.camp_attacker.is_attacking = True
+        self.camp_defender = Camp_object()
+        self.camp_defender.is_attacking = False
 
         # Charger les divisions sauvegardées
         self.divisions = self.load_divisions()
@@ -47,36 +47,36 @@ class BattleWindow(tk.Tk):
         tk.Label(frame_params, textvariable=self.combat_width).grid(row=2, column=1, padx=5)
 
         tk.Label(frame_params, text="Leader Camp A").grid(row=1, column=0, padx=5)
-        self.leader_a = tk.StringVar()
-        tk.Entry(frame_params, textvariable=self.leader_a).grid(row=1, column=1, padx=5)
+        self.leader_attacker = tk.StringVar()
+        tk.Entry(frame_params, textvariable=self.leader_attacker).grid(row=1, column=1, padx=5)
 
         tk.Label(frame_params, text="Leader Camp B").grid(row=1, column=2, padx=5)
-        self.leader_b = tk.StringVar()
-        tk.Entry(frame_params, textvariable=self.leader_b).grid(row=1, column=3, padx=5)
+        self.leader_defender = tk.StringVar()
+        tk.Entry(frame_params, textvariable=self.leader_defender).grid(row=1, column=3, padx=5)
 
         # Cadre pour les camps
         frame_battle = tk.Frame(self)
         frame_battle.pack(fill=tk.BOTH, expand=True, pady=10)
 
         # Camp A
-        frame_camp_a = tk.Frame(frame_battle)
-        frame_camp_a.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10)
+        frame_camp_attacker = tk.Frame(frame_battle)
+        frame_camp_attacker.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10)
 
-        tk.Label(frame_camp_a, text="Camp A").pack()
-        self.camp_a_divisions_frame = tk.Frame(frame_camp_a)
-        self.camp_a_divisions_frame.pack(fill=tk.BOTH, expand=True, pady=5)
+        tk.Label(frame_camp_attacker, text="Camp Attacker").pack()
+        self.camp_attacker_divisions_frame = tk.Frame(frame_camp_attacker)
+        self.camp_attacker_divisions_frame.pack(fill=tk.BOTH, expand=True, pady=5)
 
-        tk.Button(frame_camp_a, text="Ajouter Division", command=lambda: self.open_division_selection(self.camp_a, self.camp_a_divisions_frame)).pack()
+        tk.Button(frame_camp_attacker, text="Ajouter Division", command=lambda: self.open_division_selection(self.camp_attacker, self.camp_attacker_divisions_frame)).pack()
 
         # Camp B
-        frame_camp_b = tk.Frame(frame_battle)
-        frame_camp_b.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10)
+        frame_camp_defender = tk.Frame(frame_battle)
+        frame_camp_defender.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10)
 
-        tk.Label(frame_camp_b, text="Camp B").pack()
-        self.camp_b_divisions_frame = tk.Frame(frame_camp_b)
-        self.camp_b_divisions_frame.pack(fill=tk.BOTH, expand=True, pady=5)
+        tk.Label(frame_camp_defender, text="Camp Defender").pack()
+        self.camp_defender_divisions_frame = tk.Frame(frame_camp_defender)
+        self.camp_defender_divisions_frame.pack(fill=tk.BOTH, expand=True, pady=5)
 
-        tk.Button(frame_camp_b, text="Ajouter Division", command=lambda: self.open_division_selection(self.camp_b, self.camp_b_divisions_frame)).pack()
+        tk.Button(frame_camp_defender, text="Ajouter Division", command=lambda: self.open_division_selection(self.camp_defender, self.camp_defender_divisions_frame)).pack()
 
         # Bouton pour lancer un round de la bataille
         tk.Button(self, text="Lancer un Round", command=self.run_battle_round).pack(pady=10)
@@ -87,6 +87,47 @@ class BattleWindow(tk.Tk):
         self.log_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
         self.round_counter = 0
+
+    ############# ROUNDS ####################
+
+    def run_battle_round(self):
+        """
+            Exécute un round de bataille en utilisant les divisions de chaque camp.
+            Cette méthode récupère les divisions de chaque camp, lance le calcul de la bataille,
+            et affiche les résultats sous forme de log dans la zone de texte.
+            Retour:
+                None
+            """
+        # Ici tu ajoutes le code pour lancer le calcul de la bataille
+        if self.round_counter == 0:
+            for camp in [self.camp_attacker,self.camp_defender]:
+                camp.move_in_frontline()
+        self._round(self.camp_attacker,self.camp_defender)
+        # Ecriture des logs
+        log_entry = "Résultats du round de bataille...\n"
+        self.log_text.insert(tk.END, log_entry)
+        self.log_text.see(tk.END)
+
+    def _round(self,camp_attacker,camp_defender):
+        """
+        Mecanique des rounds
+        :return:
+        """
+        # Tour Attaquant
+        for division in camp_attacker.in_frontline:
+            division.targetting(camp_defender)
+
+    def update_terrain(self):
+        """
+        Recupère l'instance :terrain: a partir du choix fait dans le menu déroulant.
+        :return:
+        """
+        selected_terrain_name = self.selected_terrain.get()
+        for terrain in terrain_list:
+            if terrain.name == selected_terrain_name:
+                self.terrain = terrain
+
+    ############# BOUTONS ####################
 
     def load_divisions(self):
         """
@@ -100,7 +141,7 @@ class BattleWindow(tk.Tk):
             with open("Saves/divisions.json", "r") as file:
                 try:
                     data = json.load(file)
-                    return [Division.load(division) for division in data]
+                    return [Division_object.load(division) for division in data]
                 except json.JSONDecodeError:
                     return []
         return []
@@ -129,8 +170,8 @@ class BattleWindow(tk.Tk):
             return
         for division in self.divisions:
             if division.template == selected_name:
-                if frame == self.camp_a_divisions_frame: self.camp_a.add_division(division)
-                if frame == self.camp_b_divisions_frame: self.camp_b.add_division(division)
+                if frame == self.camp_attacker_divisions_frame: self.camp_attacker.add_division(division)
+                if frame == self.camp_defender_divisions_frame: self.camp_defender.add_division(division)
                 frame_division = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
                 frame_division.pack(fill=tk.X, pady=2)
 
@@ -200,134 +241,15 @@ class BattleWindow(tk.Tk):
         battle_data = {
             "weather": self.weather.get(),
             "terrain": self.terrain.get(),
-            "leader_a": self.leader_a.get(),
-            "leader_b": self.leader_b.get(),
-            "camp_a": self.camp_a.get_data(),
-            "camp_b": self.camp_b.get_data(),
+            "leader_a": self.leader_attacker.get(),
+            "leader_b": self.leader_defender.get(),
+            "camp_a": self.camp_attacker.get_data(),
+            "camp_b": self.camp_defender.get_data(),
             "log_text": self.log_text.get("1.0", tk.END).strip()
         }
 
         with open("Saves/battle_data.json", "w") as file:
             json.dump(battle_data, file, indent=4)
-
-    def update_terrain(self):
-        """
-        Recupère l'instance :terrain: a partir du choix fait dans le menu déroulant.
-        :return:
-        """
-        selected_terrain_name = self.selected_terrain.get()
-        for terrain in terrain_list:
-            if terrain.name == selected_terrain_name:
-                self.terrain = terrain
-
-    def run_battle_round(self):
-        """
-            Exécute un round de bataille en utilisant les divisions de chaque camp.
-            Cette méthode récupère les divisions de chaque camp, lance le calcul de la bataille,
-            et affiche les résultats sous forme de log dans la zone de texte.
-            Retour:
-                None
-            """
-        # Ici tu ajoutes le code pour lancer le calcul de la bataille
-        if self.round_counter == 0: self.move_in_frontline()
-        camp_attacker = [camp for camp in [self.camp_a, self.camp_b] if camp.is_attacking][0]
-        camp_defender = [camp for camp in [self.camp_a, self.camp_b] if not camp.is_attacking][0]
-        self._round(camp_attacker,camp_defender)
-        # Ecriture des logs
-        log_entry = "Résultats du round de bataille...\n"
-        self.log_text.insert(tk.END, log_entry)
-        self.log_text.see(tk.END)
-
-    def _round(self,camp_attacker,camp_defender):
-        """
-        Mecanique des rounds
-        :return:
-        """
-        # Tour Attaquant
-        for attacking_division in camp_attacker.in_frontline:
-            self.targetting(attacking_division,camp_defender)
-
-    def targetting(self,attacking_division,enemy_camp):
-        """
-            Cette fonction détermine les cibles prioritaires pour une division attaquante lors d'un engagement.
-
-            Paramètres:
-            ----------
-            attacking_division : object
-                La division qui mène l'attaque. Ses caractéristiques, telles que la largeur d'engagement,
-                sont utilisées pour déterminer combien de divisions ennemies peuvent être ciblées.
-
-            enemy_camp : object
-                Le camp ennemi qui défend. Ce camp contient une liste des divisions qui sont en première ligne
-                et qui sont donc susceptibles d'être attaquées.
-
-            Description:
-            ------------
-            1. La fonction commence par calculer la largeur d'engagement, qui est déterminée par la largeur
-               de la division attaquante multipliée par 2.
-
-            2. Elle crée une liste des divisions ennemies susceptibles d'être prises pour cibles, en les
-               mélangeant aléatoirement pour simuler l'incertitude du champ de bataille.
-
-            3. La fonction sélectionne ensuite les divisions ennemies dont la largeur totale n'excède pas
-               la largeur d'engagement de la division attaquante, et les ajoute à une liste de cibles.
-
-            4. Si aucune division ne peut être complètement ciblée, la fonction en choisit une au hasard
-               parmi les divisions disponibles pour s'assurer qu'une cible est toujours assignée.
-
-            5. Enfin, la fonction met à jour la liste des cibles de la division attaquante et appelle une méthode
-               pour choisir la cible prioritaire parmi les cibles sélectionnées.
-            """
-        engagement_width = attacking_division.width * 2
-        enemy_divisions = enemy_camp.in_frontline
-        target_list = []
-        random.shuffle(enemy_divisions)
-
-        # Creer la liste des divisions prise pour cible par :attacking_division:
-        total_width = 0
-        for enemy in enemy_divisions:
-            if total_width + enemy.width <= engagement_width:
-                target_list.append(enemy)
-                total_width = sum(division.width for division in target_list)
-            elif total_width == 0:
-                target_list.append(enemy)
-                break
-            if not any(div.width < engagement_width for div in enemy_divisions):
-                target_list.append(random.choice(enemy_divisions.divisions))
-        attacking_division.target_list = target_list.copy()
-        attacking_division.choose_priority_target()
-
-    def move_in_frontline(self):
-        """
-    Cette fonction gère le positionnement des divisions dans la première ligne (frontline) de chaque camp,
-    en fonction de la largeur du terrain de combat.
-
-    Description:
-    ------------
-    1. Pour chaque camp (camp_a et camp_b), la fonction identifie les divisions disponibles pour se déplacer
-       en première ligne, c'est-à-dire celles qui ne sont ni en première ligne ni en réserve.
-
-    2. Elle ajoute ensuite ces divisions en première ligne tant que leur addition n'excède pas la largeur
-       totale du terrain.
-
-    3. Une fois que toutes les divisions possibles sont positionnées en première ligne, les divisions restantes
-       sont placées en réserve pour un déploiement ultérieur si nécessaire.
-
-    :return:
-    -------
-    Aucun retour. Cette fonction modifie directement les attributs `in_frontline` et `in_reserves` des camps.
-    """
-        for camp in [self.camp_a,self.camp_b]:
-            # Move divisions in frontline
-            available_divisions = [division for division in camp.divisions if division not in camp.in_frontline and division not in camp.in_reserves]
-            for division in available_divisions:
-                total_camp_width = sum(division.width for division in camp.in_frontline)
-                if total_camp_width + division.width <= self.terrain.width:
-                    camp.in_frontline.append(division)
-            # Move divisions in reserves
-            for division in camp.divisions:
-                if division not in camp.in_frontline:
-                    camp.in_reserves.append(division)
 
 app = BattleWindow()
 app.mainloop()

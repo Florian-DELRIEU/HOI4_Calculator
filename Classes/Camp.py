@@ -8,6 +8,23 @@ class Camp:
         self.in_frontline = []
         self.in_reserves = []
 
+    ############# ROUNDS ####################
+
+    def move_in_frontline(self):
+        # Move divisions in frontline
+        available_divisions = [division for division in self.divisions if
+                                division not in self.in_frontline and division not in self.in_reserves]
+        for division in available_divisions:
+            total_camp_width = sum(division.width for division in self.in_frontline)
+            if total_camp_width + division.width <= terrain.width:
+                self.in_frontline.append(division)
+        # Move divisions in reserves
+        for division in self.divisions:
+            if division not in self.in_frontline:
+                self.in_reserves.append(division)
+
+    ############# GESTION ####################
+
     def get_data(self):
         return {
             "divisions": [division.__dict__ for division in self.divisions],
