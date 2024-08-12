@@ -16,9 +16,9 @@ class BattleWindow(tk.Tk):
         self.geometry("800x600")
 
         # Initialiser les camps
-        self.camp_attacker = Camp_object()
+        self.camp_attacker = Camp()
         self.camp_attacker.is_attacking = True
-        self.camp_defender = Camp_object()
+        self.camp_defender = Camp()
         self.camp_defender.is_attacking = False
 
         # Charger les divisions sauvegardées
@@ -88,6 +88,9 @@ class BattleWindow(tk.Tk):
 
         self.round_counter = 0
 
+        self.camp_defender.get_battle_info(self)
+        self.camp_attacker.get_battle_info(self)
+
     ############# ROUNDS ####################
 
     def run_battle_round(self):
@@ -141,7 +144,7 @@ class BattleWindow(tk.Tk):
             with open("Saves/divisions.json", "r") as file:
                 try:
                     data = json.load(file)
-                    return [Division_object.load(division) for division in data]
+                    return [Division.load(division) for division in data]
                 except json.JSONDecodeError:
                     return []
         return []
@@ -170,8 +173,14 @@ class BattleWindow(tk.Tk):
             return
         for division in self.divisions:
             if division.template == selected_name:
-                if frame == self.camp_attacker_divisions_frame: self.camp_attacker.add_division(division)
-                if frame == self.camp_defender_divisions_frame: self.camp_defender.add_division(division)
+                camp = None
+                if frame == self.camp_attacker_divisions_frame:
+                    self.camp_attacker.add_division(division)
+                    camp = self.camp_attacker
+                if frame == self.camp_defender_divisions_frame:
+                    self.camp_defender.add_division(division)
+                    camp = self.camp_defender
+                assert camp is not None , "camp is not assigned"
                 frame_division = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
                 frame_division.pack(fill=tk.X, pady=2)
 
@@ -195,6 +204,7 @@ class BattleWindow(tk.Tk):
                     else:
                         tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(
                             row=row * 2, column=col)
+                division.get_camp_info(camp)
 
                 break
 

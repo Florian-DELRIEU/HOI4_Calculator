@@ -27,6 +27,11 @@ class Division:
         self.target_list = []
         self.primary_target = None
 
+        self.camp_info = {}
+        
+    def __repr__(self):
+        return self.nom if self.nom is not None else self.template
+
     ############# COMBAT ####################
 
     def targetting(self,enemy_camp):
@@ -74,6 +79,26 @@ class Division:
 
         self.primary_target = max(priority_scores_dict, key=priority_scores_dict.get)
 
+    def do_attack(self):
+        #todo Ajouter rafraichissement des valeurs de SA et HA en fonction de la strenght
+        #   - Déplacer cette fonction vers les divisions ?
+        #     pour avoir division.do_attack(target) ?
+        coordinated_share = 0.35 + self.camp_info["Coordination"] * (1 + self.initiative)
+        sa_per_division = (self.soft_attack * (1 - coordinated_share)) // len(self.target_list)
+        ha_per_division = (self.hard_attack * (1 - coordinated_share)) // len(self.target_list)
+        sa_for_primary  = self.soft_attack * coordinated_share
+        ha_for_primary  = self.hard_attack * coordinated_share
+        for target in self.target_list:
+            if target == self.primary_target:
+                total_sa = (sa_per_division + sa_for_primary) * (1 - target.hardness)
+                total_ha = (ha_per_division + ha_for_primary) * target.hardness
+            else:
+                total_sa = sa_per_division * (1 - target.hardness)
+                total_ha = ha_per_division * target.hardness
+            total_attack = total_sa + total_ha
+            total_attack = total_attack if self.piercing >= target.armor else total_attack/2
+            total_attack /= 10
+
     ############# GESTION ####################
 
     def generate_id(self,length=10):
@@ -101,7 +126,7 @@ class Division:
         Programme permmettant de copier un object quelconque
           - Attention : newObject = Object_a_copier()
         """
-        newObject = Division(0,0,0,0,0,0,0,0,0,0,0,0)
+        newObject = Division(self.template,0,0,0,0,0,0,0,0,0,0,0)
         for attr in self.__dict__:
             newObject.__setattr__(attr,self.__getattribute__(attr))
         return newObject
@@ -114,6 +139,9 @@ class Division:
             data["Initiative"]
         )
 
-
-
-
+    def get_camp_info(self,camp):
+        #todo fix function
+        if camp.contains_division(self):
+            return {
+                "coordination": camp.coordination
+            }
