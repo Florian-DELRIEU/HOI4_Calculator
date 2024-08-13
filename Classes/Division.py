@@ -30,7 +30,7 @@ class Division:
         self.camp_info = {}
         
     def __repr__(self):
-        return self.nom if self.nom is not None else self.template
+        return self.nom if self.nom != "" else self.template
 
     ############# COMBAT ####################
 
@@ -127,6 +127,7 @@ class Division:
           - Attention : newObject = Object_a_copier()
         """
         newObject = Division(self.template,0,0,0,0,0,0,0,0,0,0,0)
+        newObject.generate_id()
         for attr in self.__dict__:
             newObject.__setattr__(attr,self.__getattribute__(attr))
         return newObject
@@ -142,6 +143,6 @@ class Division:
     def get_camp_info(self,camp):
         #todo fix function
         if camp.contains_division(self):
-            return {
+            self.camp_info = {
                 "coordination": camp.coordination
             }

@@ -50,7 +50,8 @@ class Camp:
         """
         Vérifie si une division donnée appartient à ce camp.
         """
-        return division in self.divisions
+        return any(division_in_camp.id == division.id for division_in_camp in self.divisions)
+
 
     def get_battle_info(self,battle_window):
         self.battle_info["Width"] = battle_window.terrain.width
