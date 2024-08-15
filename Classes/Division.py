@@ -1,5 +1,6 @@
 import string
 import random
+from MyPack2.Utilities import truncDecimal
 
 class Division:
     def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor,
@@ -26,7 +27,7 @@ class Division:
         self.id = self.generate_id()
         self.target_list = []
         self.primary_target = None
-
+        self.strength = 1
         self.camp_info = {}
         
     def __repr__(self):
@@ -98,6 +99,33 @@ class Division:
             total_attack = total_sa + total_ha
             total_attack = total_attack if self.piercing >= target.armor else total_attack/2
             total_attack /= 10
+            target.take_damage(self,total_attack)
+
+    def take_damage(self,striker,total_attack):
+        # Hits calculation
+        is_attacking = self.camp_info["is_attacking"]
+        total_defense = self.attaque if is_attacking else self.defense
+        if total_defense > total_attack:    total_attack *= 0.1
+        else:                               total_attack  = total_defense*0.1 + (total_attack - total_defense)*0.4
+
+        # HP Damage calculation
+        self.pv -= 1.5*total_attack
+        self.pv = truncDecimal(self.pv,1)
+        self.pv = max(self.pv,0)
+
+        # ORG Damage Calulation
+        self.organisation -= 3.5 * total_attack if striker.piercing > self.hardness else 2.5 * total_attack
+        self.organisation = truncDecimal(self.organisation, 1)
+        self.organisation = max(self.organisation, 0)
+
+        self.set_strength()
+
+    def set_strength(self):
+        self.strength = self.pv / self._PV
+        self.soft_attack = self._SOFT_ATTACK * self.strength
+        self.hard_attack = self._HARD_ATTACK * self.strength
+        self.defense = self._DEFENSE * self.strength
+        self.attaque = self._ATTAQUE * self.strength
 
     ############# GESTION ####################
 
@@ -144,5 +172,6 @@ class Division:
         #todo fix function
         if camp.contains_division(self):
             self.camp_info = {
+                "is_attacking": camp.is_attacking,
                 "coordination": camp.coordination
             }

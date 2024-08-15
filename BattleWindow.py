@@ -119,6 +119,9 @@ class BattleWindow(tk.Tk):
         # Tour Attaquant
         for division in camp_attacker.in_frontline:
             division.targetting(camp_defender)
+            division.do_attack()
+
+        # Tour Defenseur
 
     def update_terrain(self):
         """
