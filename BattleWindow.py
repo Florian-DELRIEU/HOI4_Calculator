@@ -265,4 +265,9 @@ class BattleWindow(tk.Tk):
             json.dump(battle_data, file, indent=4)
 
 app = BattleWindow()
+app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
+app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Blindes 36"))
+
 app.mainloop()
