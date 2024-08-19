@@ -6,6 +6,9 @@ from Classes import Division,Camp
 from TerrainList import terrain_list
 import random
 
+#TODO
+#   - Rafraichir les stats dans la fenetre aprés des dégats
+
 Division = Division.Division # shortcut
 Camp = Camp.Camp # shortcut
 
@@ -265,7 +268,7 @@ class BattleWindow(tk.Tk):
 
 app = BattleWindow()
 app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
-app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+#app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
 app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
 app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Blindes 36"))
 app.mainloop()
