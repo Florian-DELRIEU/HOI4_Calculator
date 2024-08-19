@@ -1,18 +1,21 @@
 import unittest
-from Class import Camp
+from BattleWindow import BattleWindow
+import tkinter as tk
 
 
-class TestAddDivision(unittest.TestCase):
-    def test_add_division(self):
-        # Créer un objet Camp fictif pour les besoins du test
-        camp = Camp()
+class add_adivision(unittest.TestCase):
+    app = BattleWindow()
+    app.add_division(app.camp_attacker_divisions_frame, tk.StringVar(value="Infanterie 36"))
+    division_1 = app.camp_attacker.divisions[0]
+    app.mainloop()
 
-        # Appeler la fonction add_division avec des valeurs spécifiques
-        camp.add_division("Division A")
-
-        # Vérifier si la division a été ajoutée à la liste camp.divisions
-        self.assertIn("Division A", camp.divisions)
-
+class battle_2v2(unittest.TestCase):
+    app = BattleWindow()
+    app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Blindes 36"))
+    app.mainloop()
 
 if __name__ == '__main__':
     unittest.main()

@@ -38,7 +38,13 @@ class Camp:
         }
 
     def add_division(self, division):
-        self.divisions.append(division.__copy__())
+        added_division = division.__copy__()
+        added_division.camp_info = {
+            "is_attacking": self.is_attacking,
+            "coordination": self.coordination
+        }
+        self.divisions.append(added_division)
+
 
     def remove_division(self, division_name):
         self.divisions = [d for d in self.divisions if d.template != division_name]

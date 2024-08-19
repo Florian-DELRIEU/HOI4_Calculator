@@ -207,7 +207,6 @@ class BattleWindow(tk.Tk):
                     else:
                         tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(
                             row=row * 2, column=col)
-                division.get_camp_info(camp)
 
                 break
 
@@ -269,5 +268,4 @@ app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanteri
 app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
 app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
 app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Blindes 36"))
-
 app.mainloop()

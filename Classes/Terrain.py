@@ -8,3 +8,6 @@ class Terrain:
             "name": self.name,
             "width": self.width
         }
+
+    def __repr__(self):
+        return self.name

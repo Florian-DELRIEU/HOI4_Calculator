@@ -84,7 +84,7 @@ class Division:
         #todo Ajouter rafraichissement des valeurs de SA et HA en fonction de la strenght
         #   - Déplacer cette fonction vers les divisions ?
         #     pour avoir division.do_attack(target) ?
-        coordinated_share = 0.35 + self.camp_info["Coordination"] * (1 + self.initiative)
+        coordinated_share = 0.35 + self.camp_info["coordination"] * (1 + self.initiative)
         sa_per_division = (self.soft_attack * (1 - coordinated_share)) // len(self.target_list)
         ha_per_division = (self.hard_attack * (1 - coordinated_share)) // len(self.target_list)
         sa_for_primary  = self.soft_attack * coordinated_share
@@ -109,11 +109,13 @@ class Division:
         else:                               total_attack  = total_defense*0.1 + (total_attack - total_defense)*0.4
 
         # HP Damage calculation
+        #todo remplacer par des jets de dés
         self.pv -= 1.5*total_attack
         self.pv = truncDecimal(self.pv,1)
         self.pv = max(self.pv,0)
 
         # ORG Damage Calulation
+        #todo remplacer par des jets de dés
         self.organisation -= 3.5 * total_attack if striker.piercing > self.hardness else 2.5 * total_attack
         self.organisation = truncDecimal(self.organisation, 1)
         self.organisation = max(self.organisation, 0)
@@ -167,11 +169,3 @@ class Division:
             data["Defense"], data["Attaque"], data["Piercing"], data["Armor"], data["Hardness"], data["Width"],
             data["Initiative"]
         )
-
-    def get_camp_info(self,camp):
-        #todo fix function
-        if camp.contains_division(self):
-            self.camp_info = {
-                "is_attacking": camp.is_attacking,
-                "coordination": camp.coordination
-            }
