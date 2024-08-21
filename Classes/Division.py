@@ -35,7 +35,7 @@ class Division:
 
     ############# COMBAT ####################
 
-    def targetting(self,enemy_camp):
+    def targeting(self, enemy_camp):
         engagement_width = self.width * 2
         enemy_divisions = enemy_camp.in_frontline
         target_list = []

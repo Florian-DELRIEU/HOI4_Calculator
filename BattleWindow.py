@@ -121,7 +121,7 @@ class BattleWindow(tk.Tk):
         """
         # Tour Attaquant
         for division in camp_attacker.in_frontline:
-            division.targetting(camp_defender)
+            division.targeting(camp_defender)
             division.do_attack()
 
         # Tour Defenseur
@@ -141,7 +141,8 @@ class BattleWindow(tk.Tk):
     def load_divisions(self):
         """
            Charge les divisions sauvegardées à partir d'un fichier JSON.
-           Cette méthode vérifie l'existence du fichier "divisions.json" et tente de charger les données JSON à partir de ce fichier.
+           Cette méthode vérifie l'existence du fichier "divisions.json" et tente de charger les données JSON à partir
+           de ce fichier.
            Les données sont ensuite converties en instances de la classe Division.
            Retour:
                List[Division]: Une liste d'instances de la classe Division représentant les divisions sauvegardées.
@@ -201,15 +202,14 @@ class BattleWindow(tk.Tk):
                     row = i // 6
                     col = i % 6
                     if stat in [division._PV, division._ORGANISATION]:
-                        tk.Label(stats_frame, text=f"{abbr_stats[i]}:").grid(row=row * 2, column=col)
+                        tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(row=row * 2, column=col)
                         value = stat
                         if stat == division._PV: max_value = division._PV
                         if stat == division._ORGANISATION: max_value = division._ORGANISATION
                         progress = ttk.Progressbar(stats_frame, maximum=max_value, value=value, length=80)
                         progress.grid(row=row * 2 + 1, column=col)
                     else:
-                        tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(
-                            row=row * 2, column=col)
+                        tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(row=row * 2, column=col)
 
                 break
 
@@ -270,5 +270,5 @@ app = BattleWindow()
 app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
 #app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
 app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
-app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Blindes 36"))
+#app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Blindes 36"))
 app.mainloop()
