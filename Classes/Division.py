@@ -81,9 +81,6 @@ class Division:
         self.primary_target = max(priority_scores_dict, key=priority_scores_dict.get)
 
     def do_attack(self):
-        #todo Ajouter rafraichissement des valeurs de SA et HA en fonction de la strenght
-        #   - Déplacer cette fonction vers les divisions ?
-        #     pour avoir division.do_attack(target) ?
         coordinated_share = 0.35 + self.camp_info["coordination"] * (1 + self.initiative)
         sa_per_division = (self.soft_attack * (1 - coordinated_share)) // len(self.target_list)
         ha_per_division = (self.hard_attack * (1 - coordinated_share)) // len(self.target_list)
@@ -123,11 +120,11 @@ class Division:
         self.set_strength()
 
     def set_strength(self):
-        self.strength = self.pv / self._PV
-        self.soft_attack = self._SOFT_ATTACK * self.strength
-        self.hard_attack = self._HARD_ATTACK * self.strength
-        self.defense = self._DEFENSE * self.strength
-        self.attaque = self._ATTAQUE * self.strength
+        self.strength = round(self.pv / self._PV,2)
+        self.soft_attack = round(self._SOFT_ATTACK * self.strength)
+        self.hard_attack = round(self._HARD_ATTACK * self.strength)
+        self.defense = round(self._DEFENSE * self.strength)
+        self.attaque = round(self._ATTAQUE * self.strength)
 
     ############# GESTION ####################
 

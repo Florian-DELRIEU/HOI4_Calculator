@@ -113,6 +113,7 @@ class BattleWindow(tk.Tk):
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
         self.log_text.see(tk.END)
+        self.refresh_display()
 
     def _round(self,camp_attacker,camp_defender):
         """
@@ -194,24 +195,7 @@ class BattleWindow(tk.Tk):
                 stats_frame = tk.Frame(frame_division)
                 stats_frame.pack(fill=tk.X)
 
-                stats = [division._PV, division._ORGANISATION, division._SOFT_ATTACK, division._HARD_ATTACK, division._DEFENSE,
-                         division._ATTAQUE, division.piercing, division.armor, division.hardness, division.width]
-                abbr_stats = ["PV", "Org", "SA", "HA", "Def", "Atk", "Prc", "Arm", "Hard", "Wdth"]
-
-                for i, stat in enumerate(stats):
-                    row = i // 6
-                    col = i % 6
-                    if stat in [division._PV, division._ORGANISATION]:
-                        tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(row=row * 2, column=col)
-                        value = stat
-                        if stat == division._PV: max_value = division._PV
-                        if stat == division._ORGANISATION: max_value = division._ORGANISATION
-                        progress = ttk.Progressbar(stats_frame, maximum=max_value, value=value, length=80)
-                        progress.grid(row=row * 2 + 1, column=col)
-                    else:
-                        tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(row=row * 2, column=col)
-
-                break
+                self.display_division_stats(stats_frame,division)
 
     def get_divisions_from_frame(self, frame):
         """
@@ -265,6 +249,38 @@ class BattleWindow(tk.Tk):
 
         with open("Saves/battle_data.json", "w") as file:
             json.dump(battle_data, file, indent=4)
+
+    def display_division_stats(self,stats_frame,division):
+        stats = [division.pv, division.organisation, division.soft_attack, division.hard_attack, division.defense,
+                 division.attaque, division.piercing, division.armor, division.hardness, division.width]
+        abbr_stats = ["PV", "Org", "SA", "HA", "Def", "Atk", "Prc", "Arm", "Hard", "Wdth"]
+
+        for i, stat in enumerate(stats):
+            row = i // 6
+            col = i % 6
+            if stat in [division.pv, division.organisation]:
+                #FIXME -  TRUE lorsque :stat: à la meme valeur que :pv: ou :org:
+                tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(row=row * 2, column=col)
+                value = stat
+                if stat == division.pv: max_value = division._PV
+                if stat == division.organisation: max_value = division._ORGANISATION
+                progress = ttk.Progressbar(stats_frame, maximum=max_value, value=value, length=80)
+                progress.grid(row=row * 2 + 1, column=col)
+            else:
+                tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(row=row * 2, column=col)
+
+    def refresh_display(self):
+        for frame, camp in [(self.camp_attacker_divisions_frame, self.camp_attacker),
+                            (self.camp_defender_divisions_frame, self.camp_defender)]:
+            for widget in frame.winfo_children():
+                widget.destroy()  # Effacer les anciennes stats
+
+            for division in camp.get_divisions():
+                division_frame = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
+                division_frame.pack(fill=tk.X, pady=2)
+                stats_frame = tk.Frame(division_frame)
+                stats_frame.pack(fill=tk.X)
+                self.display_division_stats(stats_frame, division)
 
 app = BattleWindow()
 app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
