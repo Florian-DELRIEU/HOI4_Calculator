@@ -284,7 +284,11 @@ class BattleWindow(tk.Tk):
 
 app = BattleWindow()
 app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
-#app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+app.camp_attacker.get_divisions()[-1].nom = "Div. A1"
+app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+app.camp_attacker.get_divisions()[-1].nom = "Div. A2"
 app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
-#app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Blindes 36"))
+app.camp_defender.get_divisions()[-1].nom = "Div. B1"
+app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
+app.camp_defender.get_divisions()[-1].nom = "Div. B2"
 app.mainloop()

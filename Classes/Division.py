@@ -2,6 +2,12 @@ import string
 import random
 from MyPack2.Utilities import truncDecimal
 
+
+def generate_id(length=10):
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for _ in range(length))
+
+
 class Division:
     def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor,
                  hardness, width, initiative):
@@ -24,7 +30,7 @@ class Division:
         self.hardness = hardness
         self.width = width
         self.initiative = initiative
-        self.id = self.generate_id()
+        self.id = generate_id()
         self.target_list = []
         self.primary_target = None
         self.strength = 1
@@ -32,6 +38,17 @@ class Division:
         
     def __repr__(self):
         return self.nom if self.nom != "" else self.template
+
+    def __copy__(self):
+        """
+        Programme permmettant de copier un object quelconque
+          - Attention : newObject = Object_a_copier()
+        """
+        newObject = Division(self.template,0,0,0,0,0,0,0,0,0,0,0)
+        for attr in self.__dict__:
+            newObject.__setattr__(attr,self.__getattribute__(attr))
+        newObject.id = generate_id()
+        return newObject
 
     ############# COMBAT ####################
 
@@ -128,10 +145,6 @@ class Division:
 
     ############# GESTION ####################
 
-    def generate_id(self,length=10):
-        characters = string.ascii_letters + string.digits
-        return ''.join(random.choice(characters) for _ in range(length))
-
     def save(self):
         return {
             "Nom de Template": self.template,
@@ -147,17 +160,6 @@ class Division:
             "Width": self.width,
             "Initiative": self.initiative,
         }
-
-    def __copy__(self):
-        """
-        Programme permmettant de copier un object quelconque
-          - Attention : newObject = Object_a_copier()
-        """
-        newObject = Division(self.template,0,0,0,0,0,0,0,0,0,0,0)
-        newObject.generate_id()
-        for attr in self.__dict__:
-            newObject.__setattr__(attr,self.__getattribute__(attr))
-        return newObject
 
     @staticmethod
     def load(data):
