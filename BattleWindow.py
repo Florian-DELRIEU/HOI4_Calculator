@@ -121,9 +121,21 @@ class BattleWindow(tk.Tk):
         :return:
         """
         # Tour Attaquant
-        for division in camp_attacker.in_frontline:
+        for division in camp_attacker.frontline:
             division.targeting(camp_defender)
             division.do_attack()
+        # Tour Defenseur
+        # Todo Verifier si la riposte est fait correctement selon les mécaniques du jeu
+        for division in camp_defender.frontline:
+            division.targeting(camp_attacker)
+            division.do_attack()
+        # Vérification états de chaques division
+        for camp in [camp_attacker,camp_defender]:
+            for division in camp.divisions:
+                if division.pv <= 0 or division.organisation <= 0:
+                    camp.frontline.remove(division)
+
+
 
         # Tour Defenseur
 

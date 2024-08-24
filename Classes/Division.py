@@ -1,12 +1,6 @@
-import string
+from Functions import generate_id
 import random
 from MyPack2.Utilities import truncDecimal
-
-
-def generate_id(length=10):
-    characters = string.ascii_letters + string.digits
-    return ''.join(random.choice(characters) for _ in range(length))
-
 
 class Division:
     def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor,
@@ -54,7 +48,7 @@ class Division:
 
     def targeting(self, enemy_camp):
         engagement_width = self.width * 2
-        enemy_divisions = enemy_camp.in_frontline
+        enemy_divisions = enemy_camp.frontline
         target_list = []
         random.shuffle(enemy_divisions)
 
