@@ -32,7 +32,8 @@ class Camp:
     def from_reserve_to_frontline(self):
         total_camp_width = sum(division.width for division in self.frontline)
         for division in self.reserves:
-            if random.randint(0,100) <= 2 and total_camp_width + division.width <= self.battle_info["Width"]:
+            if ((random.randint(0,100) <= 2 and total_camp_width + division.width <= self.battle_info["Width"])
+                or len(self.frontline) == 0):
                 self.frontline.append(self.reserves.pop(self.reserves.index(division)))
 
 
