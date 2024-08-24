@@ -1,3 +1,4 @@
+import random
 
 class Camp:
     def __init__(self):
@@ -28,8 +29,13 @@ class Camp:
             if division not in self.frontline:
                 self.reserves.append(division)
 
-    ############# GESTION ####################
+    def from_reserve_to_frontline(self):
+        for division in self.reserves:
+            if random.randint(0,100) <= 2:
+                self.frontline.append(self.reserves.pop(self.reserves.index(division)))
 
+
+    ############# GESTION ####################
     def get_data(self):
         return {
             "divisions": [division.__dict__ for division in self.divisions],

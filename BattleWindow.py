@@ -104,7 +104,7 @@ class BattleWindow(tk.Tk):
             Retour:
                 None
             """
-        # Ici tu ajoutes le code pour lancer le calcul de la bataille
+        # Round initial
         if self.round_counter == 0:
             for camp in [self.camp_attacker,self.camp_defender]:
                 camp.move_in_frontline()
@@ -114,23 +114,33 @@ class BattleWindow(tk.Tk):
         self.log_text.insert(tk.END, log_entry)
         self.log_text.see(tk.END)
         self.refresh_display()
+        self.round_counter += 1
 
     def _round(self,camp_attacker,camp_defender):
         """
         Mecanique des rounds
         :return:
         """
+        # Todo
+        #  - Verifier si la riposte du défenseur est fait correctement selon les mécaniques du jeu
+
         # Tour Attaquant
         for division in camp_attacker.frontline:
             division.targeting(camp_defender)
             division.do_attack()
         # Tour Defenseur
-        # Todo Verifier si la riposte est fait correctement selon les mécaniques du jeu
         for division in camp_defender.frontline:
             division.targeting(camp_attacker)
-#            division.do_attack()
+            division.do_attack()
         # Vérification états de chaques division
         self.check_state_of_division()
+        self.renfort_round()
+
+    def renfort_round(self):
+        # todo faire des test
+        for camp in [self.camp_attacker,self.camp_defender]:
+            camp.from_reserve_to_frontline()
+
 
 
     def check_state_of_division(self):
@@ -218,6 +228,7 @@ class BattleWindow(tk.Tk):
                frame (tk.Frame): Le cadre dans lequel ajouter la division (camp A ou camp B).
                selected_name (str): Le Nom de Template sélectionnée à ajouter.
            """
+        #todo Ajouter les division directement dans la réserves via les bouttons
         if not (selected_name := selected_division_var.get()):
             return
         for division in self.divisions:
@@ -236,7 +247,7 @@ class BattleWindow(tk.Tk):
                 stats_frame = tk.Frame(frame_division)
                 stats_frame.pack(fill=tk.X)
 
-                self.display_division_stats(stats_frame,division)
+                self.display_division_stats(stats_frame,division,camp)
 
     def get_divisions_from_frame(self, frame):
         """
@@ -291,7 +302,18 @@ class BattleWindow(tk.Tk):
         with open("Saves/battle_data.json", "w") as file:
             json.dump(battle_data, file, indent=4)
 
-    def display_division_stats(self,stats_frame,division):
+    def display_division_stats(self,stats_frame,division,camp):
+        # Déterminer la couleur en fonction de la position de la division
+        if division in camp.frontline:
+            bg_color = "lightblue"  # Couleur pour les divisions en frontline
+        elif division in camp.reserves:
+            bg_color = "lightgray"  # Couleur pour les divisions en réserves
+        else:
+            bg_color = "white"  # Couleur par défaut si la division n'est ni en frontline ni en réserves
+
+        # Appliquer la couleur de fond
+        stats_frame.configure(bg=bg_color)
+
         stats = [division.pv, division.organisation, division.soft_attack, division.hard_attack, division.defense,
                  division.attaque, division.piercing, division.armor, division.hardness, division.width]
         abbr_stats = ["PV", "Org", "SA", "HA", "Def", "Atk", "Prc", "Arm", "Hard", "Wdth"]
@@ -311,25 +333,29 @@ class BattleWindow(tk.Tk):
                 tk.Label(stats_frame, text=f"{abbr_stats[i]}: {stat}").grid(row=row * 2, column=col)
 
     def refresh_display(self):
-        for frame, camp in [(self.camp_attacker_divisions_frame, self.camp_attacker),
+        for frame, current_camp in [(self.camp_attacker_divisions_frame, self.camp_attacker),
                             (self.camp_defender_divisions_frame, self.camp_defender)]:
             for widget in frame.winfo_children():
                 widget.destroy()  # Effacer les anciennes stats
 
-            for division in camp.get_divisions():
+            for division in current_camp.get_divisions():
                 division_frame = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
                 division_frame.pack(fill=tk.X, pady=2)
                 stats_frame = tk.Frame(division_frame)
                 stats_frame.pack(fill=tk.X)
-                self.display_division_stats(stats_frame, division)
+                self.display_division_stats(stats_frame, division, current_camp)
 
 app = BattleWindow()
 app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
 app.camp_attacker.get_divisions()[-1].nom = "Div. A1"
 app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
 app.camp_attacker.get_divisions()[-1].nom = "Div. A2"
+app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+app.camp_attacker.get_divisions()[-1].nom = "Div. A3"
 app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
 app.camp_defender.get_divisions()[-1].nom = "Div. B1"
 app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
 app.camp_defender.get_divisions()[-1].nom = "Div. B2"
+app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
+app.camp_defender.get_divisions()[-1].nom = "Div. B3"
 app.mainloop()
