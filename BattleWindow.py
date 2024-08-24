@@ -128,16 +128,45 @@ class BattleWindow(tk.Tk):
         # Todo Verifier si la riposte est fait correctement selon les mécaniques du jeu
         for division in camp_defender.frontline:
             division.targeting(camp_attacker)
-            division.do_attack()
+#            division.do_attack()
         # Vérification états de chaques division
-        for camp in [camp_attacker,camp_defender]:
+        self.check_state_of_division()
+
+
+    def check_state_of_division(self):
+        """
+        Vérifie si une division n'as plus de PV ou ORG
+        :return: Si oui alors fait appel à la méthode self.retreat_division()
+        """
+        for camp in [self.camp_attacker,self.camp_defender]:
             for division in camp.divisions:
                 if division.pv <= 0 or division.organisation <= 0:
-                    camp.frontline.remove(division)
+                    self.retreat_division(division)
 
+    def retreat_division(self,division_to_retreat):
+        """
+        Retire la division de toute les listes de la bataille. Pour représenté que la division s'est replié du champ de
+        bataille.
+        :param division_to_retreat: Division qui doit se replier par manque d'organisation ou de PV
+        """
+        for camp in [self.camp_attacker,self.camp_defender]:
+            if division_to_retreat in camp.frontline:   camp.frontline.remove(division_to_retreat)
+            if division_to_retreat in camp.reserves:    camp.reserves.remove(division_to_retreat)
+            if division_to_retreat in camp.divisions:   camp.divisions.remove(division_to_retreat)
+            for division in camp.divisions:
+                if division_to_retreat in division.target_list:     division.target_list.remove(division_to_retreat)
+                if division_to_retreat == division.primary_target:  division.primary_target = None
 
-
-        # Tour Defenseur
+        # Supprime l'affichage de la division
+        for frame in [self.camp_attacker_divisions_frame, self.camp_defender_divisions_frame]:
+            for widget in frame.winfo_children():
+                # Comparer les widgets avec la division
+                if isinstance(widget, tk.Frame) and widget.winfo_children():
+                    stats_label = widget.winfo_children()[0]  # Le premier enfant est souvent le label des stats
+                    if isinstance(stats_label, tk.Label) and stats_label.cget("text").startswith(
+                            division_to_retreat.template):
+                        widget.destroy()  # Détruire le cadre correspondant à la division retirée
+                        break
 
     def update_terrain(self):
         """

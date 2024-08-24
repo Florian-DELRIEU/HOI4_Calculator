@@ -47,6 +47,7 @@ class Division:
     ############# COMBAT ####################
 
     def targeting(self, enemy_camp):
+        # todo Vérifie quand une division refait un targeting dans le jeu
         engagement_width = self.width * 2
         enemy_divisions = enemy_camp.frontline
         target_list = []
