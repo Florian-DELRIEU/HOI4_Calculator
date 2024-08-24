@@ -90,9 +90,14 @@ class Division:
         for division in self.target_list:
             priority_scores_dict[division] = target_priority(division)
 
-        self.primary_target = max(priority_scores_dict, key=priority_scores_dict.get)
+        if len(self.target_list) == 0:
+            self.primary_target = None
+        else:
+            self.primary_target = max(priority_scores_dict, key=priority_scores_dict.get)
 
     def do_attack(self):
+        if len(self.target_list) == 0:
+            return
         coordinated_share = 0.35 + self.camp_info["coordination"] * (1 + self.initiative)
         sa_per_division = (self.soft_attack * (1 - coordinated_share)) // len(self.target_list)
         ha_per_division = (self.hard_attack * (1 - coordinated_share)) // len(self.target_list)
