@@ -334,28 +334,25 @@ class BattleWindow(tk.Tk):
 
     def refresh_display(self):
         for frame, current_camp in [(self.camp_attacker_divisions_frame, self.camp_attacker),
-                            (self.camp_defender_divisions_frame, self.camp_defender)]:
-            for widget in frame.winfo_children():
-                widget.destroy()  # Effacer les anciennes stats
-
-            for division in current_camp.get_divisions():
-                division_frame = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
-                division_frame.pack(fill=tk.X, pady=2)
-                stats_frame = tk.Frame(division_frame)
-                stats_frame.pack(fill=tk.X)
-                self.display_division_stats(stats_frame, division, current_camp)
+                                    (self.camp_defender_divisions_frame, self.camp_defender)]:
+            for widget, value in self.get_updated_values(current_camp):
+                widget.config(text=value)
 
 app = BattleWindow()
-app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
-app.camp_attacker.get_divisions()[-1].nom = "Div. A1"
-app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
-app.camp_attacker.get_divisions()[-1].nom = "Div. A2"
-app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
-app.camp_attacker.get_divisions()[-1].nom = "Div. A3"
-app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
-app.camp_defender.get_divisions()[-1].nom = "Div. B1"
-app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
-app.camp_defender.get_divisions()[-1].nom = "Div. B2"
-app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
-app.camp_defender.get_divisions()[-1].nom = "Div. B3"
+
+test_case = "Case 1"
+if __name__ == "__main__" and test_case == "Case 1":
+    app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.camp_attacker.get_divisions()[-1].nom = "Div. A1"
+    app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.camp_attacker.get_divisions()[-1].nom = "Div. A2"
+    app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.camp_attacker.get_divisions()[-1].nom = "Div. A3"
+    app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.camp_defender.get_divisions()[-1].nom = "Div. B1"
+    app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.camp_defender.get_divisions()[-1].nom = "Div. B2"
+    app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.camp_defender.get_divisions()[-1].nom = "Div. B3"
+
 app.mainloop()
