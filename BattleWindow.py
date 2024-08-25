@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import json
 import os
-from Class import Division,Camp
+from Class import Division
 from tkinter import messagebox
 
 class BattleWindow(tk.Tk):
@@ -13,10 +13,6 @@ class BattleWindow(tk.Tk):
 
         # Charger les divisions sauvegardées
         self.divisions = self.load_divisions()
-
-        # Instance des camps
-        self.Camp_A = Camp
-        self.Camp_B = Camp
 
         # Cadre pour les paramètres de la bataille
         frame_params = tk.Frame(self)
@@ -31,12 +27,12 @@ class BattleWindow(tk.Tk):
         tk.Entry(frame_params, textvariable=self.terrain).grid(row=0, column=3, padx=5)
 
         tk.Label(frame_params, text="Leader Camp A").grid(row=1, column=0, padx=5)
-        self.Camp_A.leader = tk.StringVar()
-        tk.Entry(frame_params, textvariable=self.Camp_A.leader).grid(row=1, column=1, padx=5)
+        self.leader_a = tk.StringVar()
+        tk.Entry(frame_params, textvariable=self.leader_a).grid(row=1, column=1, padx=5)
 
         tk.Label(frame_params, text="Leader Camp B").grid(row=1, column=2, padx=5)
-        self.Camp_B.leader = tk.StringVar()
-        tk.Entry(frame_params, textvariable=self.Camp_B.leader).grid(row=1, column=3, padx=5)
+        self.leader_b = tk.StringVar()
+        tk.Entry(frame_params, textvariable=self.leader_b).grid(row=1, column=3, padx=5)
 
         # Cadre pour les camps
         frame_battle = tk.Frame(self)
@@ -45,7 +41,6 @@ class BattleWindow(tk.Tk):
         # Camp A
         frame_camp_a = tk.Frame(frame_battle)
         frame_camp_a.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10)
-        self.Camp_A.frame = frame_camp_a
 
         tk.Label(frame_camp_a, text="Camp A").pack()
         self.camp_a_divisions = tk.Frame(frame_camp_a)
@@ -54,12 +49,11 @@ class BattleWindow(tk.Tk):
         self.add_division_a = tk.StringVar()
         dropdown_a = ttk.Combobox(frame_camp_a, textvariable=self.add_division_a, values=self.get_division_names())
         dropdown_a.pack(pady=5)
-        tk.Button(frame_camp_a, text="Ajouter Division", command=lambda: self.add_division(self.add_division_a, self.Camp_A)).pack()
+        tk.Button(frame_camp_a, text="Ajouter Division", command=lambda: self.add_division(self.camp_a_divisions, self.add_division_a)).pack()
 
         # Camp B
         frame_camp_b = tk.Frame(frame_battle)
         frame_camp_b.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10)
-        self.Camp_B.frame = frame_camp_b
 
         tk.Label(frame_camp_b, text="Camp B").pack()
         self.camp_b_divisions = tk.Frame(frame_camp_b)
@@ -68,7 +62,7 @@ class BattleWindow(tk.Tk):
         self.add_division_b = tk.StringVar()
         dropdown_b = ttk.Combobox(frame_camp_b, textvariable=self.add_division_b, values=self.get_division_names())
         dropdown_b.pack(pady=5)
-        tk.Button(frame_camp_b, text="Ajouter Division", command=lambda: self.add_division(self.add_division_b, self.Camp_B)).pack()
+        tk.Button(frame_camp_b, text="Ajouter Division", command=lambda: self.add_division(self.camp_b_divisions, self.add_division_b)).pack()
 
         # Bouton pour lancer un round de la bataille
         tk.Button(self, text="Lancer un Round", command=self.run_battle_round).pack(pady=10)
@@ -103,7 +97,7 @@ class BattleWindow(tk.Tk):
            """
         return [division.template for division in self.divisions]
 
-    def add_division(self, selected_division_var, camp=Camp()):
+    def add_division(self, frame, selected_division_var):
         """
            Ajoute une division au camp spécifié et affiche ses statistiques de manière compacte.
 
@@ -114,7 +108,6 @@ class BattleWindow(tk.Tk):
                frame (tk.Frame): Le cadre dans lequel ajouter la division (camp A ou camp B).
                selected_name (str): Le Nom de Template sélectionnée à ajouter.
            """
-        frame = Camp.frame
         if not (selected_name := selected_division_var.get()):
             return
         for division in self.divisions:
@@ -144,8 +137,6 @@ class BattleWindow(tk.Tk):
                             row=row * 2, column=col)
 
                 break
-            Camp.division_list.append(division)
-
 
     def get_divisions_from_frame(self, frame):
         """
