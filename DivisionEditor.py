@@ -24,7 +24,8 @@ class DivisionEditor(tk.Tk):
             "Piercing": tk.DoubleVar(),
             "Armor": tk.DoubleVar(),
             "Hardness": tk.DoubleVar(),
-            "Width": tk.IntVar()
+            "Width": tk.IntVar(),
+            "Initiative": tk.DoubleVar()
         }
 
         # Charger les divisions existantes pour le menu déroulant
@@ -68,8 +69,8 @@ class DivisionEditor(tk.Tk):
         tk.Button(self, text="Sauvegarder", command=self.save_division).pack(pady=10)
 
     def load_divisions(self):
-        if os.path.exists("divisions.json"):
-            with open("divisions.json", "r") as file:
+        if os.path.exists("Saves/divisions.json"):
+            with open("Saves/divisions.json", "r") as file:
                 try:
                     return json.load(file)
                 except json.JSONDecodeError:
@@ -89,22 +90,20 @@ class DivisionEditor(tk.Tk):
         division_data["Nom de Template"] = self.stats["Nom de Template"].get()
 
         # Vérifier si une division avec le même nom existe déjà
-        for division in self.divisions:
+        for i, division in enumerate(self.divisions):
             if division["Nom de Template"] == division_data["Nom de Template"]:
-                messagebox.showerror("Erreur", "Une division avec ce nom existe déjà.")
-                return
-
-        # Ajouter la nouvelle division
-        self.divisions.append(division_data)
+                self.divisions[i] = division_data
+                break
+        else:
+            # Ajouter la nouvelle division si elle n'existe pas déjà
+            self.divisions.append(division_data)
+            self.division_templates.append(division_data["Nom de Template"])
 
         # Sauvegarder toutes les divisions dans le fichier JSON
-        with open("divisions.json", "w") as file:
+        with open("Saves/divisions.json", "w") as file:
             json.dump(self.divisions, file, indent=4)
 
         # Mettre à jour le menu déroulant
-        self.division_templates.append(division_data["Nom de Template"])
-        self.selected_division.set("Sélectionner une division")
-        self.selected_division.set("")
         self.selected_division.set("Sélectionner une division")
         self.dropdown['values'] = self.division_templates
 
