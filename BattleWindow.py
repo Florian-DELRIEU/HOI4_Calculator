@@ -3,8 +3,7 @@ from tkinter import ttk
 import json
 import os
 from Classes import Division,Camp
-from TerrainList import terrain_list
-import random
+from Library.TerrainList import terrain_list
 
 #TODO
 #   - Rafraichir les stats dans la fenetre aprés des dégats

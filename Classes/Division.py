@@ -1,4 +1,4 @@
-from Functions import generate_id
+from Functions.GlobalFunctions import generate_id
 import random
 from MyPack2.Utilities import truncDecimal
 
