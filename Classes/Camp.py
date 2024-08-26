@@ -3,12 +3,13 @@ import random
 class Camp:
     def __init__(self):
         self.divisions = []
-        self.leader = ""
+        self.leader = None
         self.entrenchment = 0.0
         self.coordination = 0
         self.is_attacking = False
         self.frontline = []
         self.reserves = []
+        self.tactic = None
 
         self.battle_info = {}
 

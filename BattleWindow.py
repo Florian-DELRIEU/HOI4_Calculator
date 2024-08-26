@@ -3,6 +3,7 @@ from tkinter import ttk
 import json
 import os
 from Classes import Division,Camp
+from Functions.TacticsFunctions import choose_tactic, change_weight
 from Library.TerrainList import terrain_list
 
 #TODO
@@ -16,6 +17,8 @@ class BattleWindow(tk.Tk):
         super().__init__()
         self.title("Fenêtre de Bataille")
         self.geometry("800x600")
+
+        self.battle_phase = "Default"
 
         # Initialiser les camps
         self.camp_attacker = Camp()
@@ -122,6 +125,8 @@ class BattleWindow(tk.Tk):
         """
         # Todo
         #  - Verifier si la riposte du défenseur est fait correctement selon les mécaniques du jeu
+        if self.round_counter % 12 == 0:
+            self.tactic_round()
 
         # Tour Attaquant
         for division in camp_attacker.frontline:
@@ -140,7 +145,9 @@ class BattleWindow(tk.Tk):
         for camp in [self.camp_attacker,self.camp_defender]:
             camp.from_reserve_to_frontline()
 
-
+    def tactic_round(self):
+        change_weight(self) #No effect for now
+        choose_tactic(self)
 
     def check_state_of_division(self):
         """
@@ -152,6 +159,7 @@ class BattleWindow(tk.Tk):
                 if division.pv <= 0 or division.organisation <= 0:
                     self.retreat_division(division)
 
+###################################################
     def retreat_division(self,division_to_retreat):
         """
         Retire la division de toute les listes de la bataille. Pour représenté que la division s'est replié du champ de
