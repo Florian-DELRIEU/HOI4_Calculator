@@ -2,9 +2,7 @@ import random as rd
 from  Library.TacticList import ATK_TACTICS, ATK_HB_TACTICS, ATK_CQ_TACTICS, ATK_SB_TACTICS, ATK_TW_TACTICS
 from  Library.TacticList import DEF_TACTICS, DEF_HB_TACTICS, DEF_CQ_TACTICS, DEF_SB_TACTICS, DEF_TW_TACTICS
 from Classes.Tactics import *
-import BattleWindow
 
-Battle = BattleWindow
 ########################################################################################################################
 
 
@@ -41,8 +39,8 @@ def choose_tactic(Battle):
     attacker_Tactic, defender_Tactic = _choose_tactic(attacker_tactic_list, defender_tactic_list, intiative_winner) # choose tactics
 
     # Apply tactic in battle
-    Battle.attacker_tactic = attacker_Tactic
-    Battle.defender_tactic = defender_Tactic
+    Battle.camp_attacker.tactic = attacker_Tactic
+    Battle.camp_defender.tactic = defender_Tactic
 
     is_countered(Battle) # test if any tactics has been coutered
     apply_tactics(Battle) # apply bonuses
@@ -80,11 +78,11 @@ def is_countered(Battle):
     """
     Check if a tactic has been countered. Cancel countered ones
     """
-    if Battle.defender_tactic.name == Battle.attacker_tactic.countered_by:
-        cancel_tactic(Battle.attacker_tactic)
+    if Battle.camp_defender.tactic == Battle.camp_attacker.tactic.countered_by:
+        cancel_tactic(Battle.camp_defender.tactic)
         # todo add log print("ATK tactic COUNTERED !!")
-    if Battle.attacker_tactic.name == Battle.defender_tactic.countered_by:
-        cancel_tactic(Battle.defender_tactic)
+    if Battle.camp_attacker.tactic == Battle.camp_defender.tactic.countered_by:
+        cancel_tactic(Battle.camp_attacker.tactic)
         # todo add log print("DEF tactic COUNTERED !!")
 
 def cancel_tactic(Tactic_to_cancel):
@@ -118,20 +116,16 @@ def apply_tactics(Battle):
     Applique tous les bonus multiplicateurs aux stats de chaque camp en fonctions des tactiques employés
     """
     # Assignations des variables
-    DEF = Battle.defender
-    DEF_tactic = Battle.defender_tactic
-    ATK = Battle.attacker
-    ATK_tactic = Battle.attacker_tactic
+    DEF_tactic = Battle.camp_defender.tactic
+    ATK_tactic = Battle.camp_attacker.tactic
 
-    # Bonus for defender side
-    DEF.sa = DEF.sa*DEF_tactic.defender_damage*ATK_tactic.defender_damage
-    DEF.ha = DEF.ha*DEF_tactic.defender_damage*ATK_tactic.defender_damage
-    DEF.defense = DEF.defense*DEF_tactic.defender_defense*ATK_tactic.defender_defense
+    for division in Battle.camp_defender.divisions:
+        #todo augmenter les dégats causé par les attaques
+        division.tactic_damage_bonus = DEF_tactic.defender_bonus
 
-    # Bonus for attacker side
-    ATK.sa = ATK.sa*ATK_tactic.attacker_damage*ATK_tactic.attacker_damage
-    ATK.ha = ATK.ha*ATK_tactic.attacker_damage*ATK_tactic.attacker_damage
-    ATK.defense = ATK.defense*ATK_tactic.attacker_defense*ATK_tactic.attacker_defense
+    for division in Battle.camp_attacker.divisions:
+        division.tactic_damage_bonus = ATK_tactic.attacker_bonus
+
 
 def change_weight(Battle):
     """

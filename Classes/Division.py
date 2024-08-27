@@ -2,6 +2,7 @@ from Functions.GlobalFunctions import generate_id
 import random
 from MyPack2.Utilities import truncDecimal
 
+
 class Division:
     def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor,
                  hardness, width, initiative):
@@ -24,12 +25,13 @@ class Division:
         self.hardness = hardness
         self.width = width
         self.initiative = initiative
+        self.tactic_damage_bonus = 1
         self.id = generate_id()
         self.target_list = []
         self.primary_target = None
         self.strength = 1
         self.camp_info = {}
-        
+
     def __repr__(self):
         return self.nom if self.nom != "" else self.template
 
@@ -38,9 +40,9 @@ class Division:
         Programme permmettant de copier un object quelconque
           - Attention : newObject = Object_a_copier()
         """
-        newObject = Division(self.template,0,0,0,0,0,0,0,0,0,0,0)
+        newObject = Division(self.template, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         for attr in self.__dict__:
-            newObject.__setattr__(attr,self.__getattribute__(attr))
+            newObject.__setattr__(attr, self.__getattribute__(attr))
         newObject.id = generate_id()
         return newObject
 
@@ -74,6 +76,7 @@ class Division:
         :param target_list:
         :return:
         """
+
         def target_priority(target):
             """
             Calcul le score de priorisation des cibles
@@ -101,8 +104,8 @@ class Division:
         coordinated_share = 0.35 + self.camp_info["coordination"] * (1 + self.initiative)
         sa_per_division = (self.soft_attack * (1 - coordinated_share)) // len(self.target_list)
         ha_per_division = (self.hard_attack * (1 - coordinated_share)) // len(self.target_list)
-        sa_for_primary  = self.soft_attack * coordinated_share
-        ha_for_primary  = self.hard_attack * coordinated_share
+        sa_for_primary = self.soft_attack * coordinated_share
+        ha_for_primary = self.hard_attack * coordinated_share
         for target in self.target_list:
             if target == self.primary_target:
                 total_sa = (sa_per_division + sa_for_primary) * (1 - target.hardness)
@@ -111,33 +114,38 @@ class Division:
                 total_sa = sa_per_division * (1 - target.hardness)
                 total_ha = ha_per_division * target.hardness
             total_attack = total_sa + total_ha
-            total_attack = total_attack if self.piercing >= target.armor else total_attack/2
+            total_attack = total_attack if self.piercing >= target.armor else total_attack / 2
             total_attack /= 10
-            target.take_damage(self,total_attack)
+            target.take_damage(self, total_attack)
 
-    def take_damage(self,striker,total_attack):
+    def take_damage(self, striker, total_attack):
         # Hits calculation
         is_attacking = self.camp_info["is_attacking"]
         total_defense = self.attaque if is_attacking else self.defense
-        if total_defense > total_attack:    total_attack *= 0.1
-        else:                               total_attack  = total_defense*0.1 + (total_attack - total_defense)*0.4
+        if total_defense > total_attack:
+            total_attack *= 0.1
+        else:
+            total_attack = total_defense * 0.1 + (total_attack - total_defense) * 0.4
 
         # HP Damage calculation
-        #todo remplacer par des jets de dés
-        self.pv -= 1.5*total_attack
-        self.pv = truncDecimal(self.pv,1)
-        self.pv = max(self.pv,0)
+        # todo remplacer par des jets de dés
+        self.pv -= 1.5 * total_attack * striker.tactic_damage_bonus
+        self.pv = truncDecimal(self.pv, 1)
+        self.pv = max(self.pv, 0)
 
         # ORG Damage Calulation
-        #todo remplacer par des jets de dés
-        self.organisation -= 3.5 * total_attack if striker.piercing > self.hardness else 2.5 * total_attack
+        # todo remplacer par des jets de dés
+        if striker.piercing > self.hardness:
+            self.organisation -= 3.5 * total_attack * striker.tactic_damage_bonus
+        else:
+            self.organisation -= 2.5 * total_attack * striker.tactic_damage_bonus
         self.organisation = truncDecimal(self.organisation, 1)
         self.organisation = max(self.organisation, 0)
 
         self.set_strength()
 
     def set_strength(self):
-        self.strength = round(self.pv / self._PV,2)
+        self.strength = round(self.pv / self._PV, 2)
         self.soft_attack = round(self._SOFT_ATTACK * self.strength)
         self.hard_attack = round(self._HARD_ATTACK * self.strength)
         self.defense = round(self._DEFENSE * self.strength)
