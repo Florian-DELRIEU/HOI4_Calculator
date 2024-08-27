@@ -41,6 +41,10 @@ def choose_tactic(Battle):
     # Apply tactic in battle
     Battle.camp_attacker.tactic = attacker_Tactic
     Battle.camp_defender.tactic = defender_Tactic
+    if intiative_winner == "DEF" and Battle.camp_defender.tactic.begin_battle_phase is not None:
+        Battle.battle_phase = Battle.camp_defender.tactic.begin_battle_phase
+    if intiative_winner == "ATK" and Battle.camp_attacker.tactic.begin_battle_phase is not None:
+        Battle.battle_phase = Battle.camp_attacker.tactic.begin_battle_phase
 
     is_countered(Battle) # test if any tactics has been coutered
     apply_tactics(Battle) # apply bonuses
