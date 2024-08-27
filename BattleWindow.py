@@ -33,6 +33,24 @@ class BattleWindow(tk.Tk):
         frame_params = tk.Frame(self)
         frame_params.pack(fill=tk.X, pady=10)
 
+        # Ajout des labels pour les tactiques et la phase de bataille
+        self.battle_phase_label = tk.Label(self, text="Phase de Bataille : Aucune", font=("Arial", 12, "bold"))
+        self.battle_phase_label.pack(side=tk.TOP, pady=5)
+
+        # Créer un cadre pour les labels de tactiques
+        frame_tactics = tk.Frame(self)
+        frame_tactics.pack(fill=tk.X, pady=10)
+
+        # Label pour la tactique du camp attaquant (à gauche)
+        self.attacker_tactic_label = tk.Label(frame_tactics, text="Tactique Attaquant : Aucune",
+                                                                                            font=("Arial", 12, "bold"))
+        self.attacker_tactic_label.pack(side=tk.LEFT, padx=20)
+
+        # Label pour la tactique du camp défenseur (à droite)
+        self.defender_tactic_label = tk.Label(frame_tactics, text="Tactique Défenseur : Aucune",
+                                                                                            font=("Arial", 12, "bold"))
+        self.defender_tactic_label.pack(side=tk.RIGHT, padx=20)
+
         tk.Label(frame_params, text="Météo").grid(row=0, column=0, padx=5)
         self.weather = tk.StringVar()
         tk.Entry(frame_params, textvariable=self.weather).grid(row=0, column=1, padx=5)
@@ -148,6 +166,7 @@ class BattleWindow(tk.Tk):
     def tactic_round(self):
         change_weight(self) #No effect for now
         choose_tactic(self)
+        self.update_battle_info_display()
 
     def check_state_of_division(self):
         """
@@ -194,6 +213,15 @@ class BattleWindow(tk.Tk):
         for terrain in terrain_list:
             if terrain.name == selected_terrain_name:
                 self.terrain = terrain
+
+    def update_battle_info_display(self):
+        """
+        Met à jour l'affichage des tactiques pour chaque camp et la phase de bataille en cours.
+        """
+        self.attacker_tactic_label.config(text=f"Tactique Attaquant : {self.camp_attacker.tactic.name}")
+        self.defender_tactic_label.config(text=f"Tactique Défenseur : {self.camp_defender.tactic.name}")
+        self.battle_phase_label.config(text=f"Phase de Bataille : {self.battle_phase}")
+
 
     ############# BOUTONS ####################
 
