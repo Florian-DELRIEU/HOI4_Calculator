@@ -125,20 +125,27 @@ class BattleWindow(tk.Tk):
             Retour:
                 None
             """
+        # Mets a jour battle infos
+        self.camp_defender.get_battle_info(self)
+        self.camp_attacker.get_battle_info(self)
+
         # Round initial
         if self.round_counter == 0:
             for camp in [self.camp_attacker,self.camp_defender]:
                 camp.move_in_frontline()
         self._round(self.camp_attacker,self.camp_defender)
+
         # Ecriture des logs
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
         self.log_text.see(tk.END)
         self.round_counter += 1
+
         # Mets a jour affichage
         self.refresh_display()
         self.update_battle_info_display()
         self.update_combat_width()
+
 
     def _round(self,camp_attacker,camp_defender):
         """
@@ -158,7 +165,7 @@ class BattleWindow(tk.Tk):
         for division in camp_defender.frontline:
             division.targeting(camp_attacker)
             division.do_attack()
-        # Vérification états de chaques division et renforts ?
+        # Vérification états de chaque division et renforts ?
         self.check_state_of_division()
         self.renfort_round()
 

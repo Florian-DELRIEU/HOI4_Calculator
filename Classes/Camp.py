@@ -69,4 +69,4 @@ class Camp:
 
 
     def get_battle_info(self,battle_window):
-        self.battle_info["Width"] = battle_window.terrain.width
+        self.battle_info["Width"] = battle_window.combat_width
