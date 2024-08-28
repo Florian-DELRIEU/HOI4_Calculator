@@ -55,14 +55,14 @@ class BattleWindow(tk.Tk):
         self.weather = tk.StringVar()
         tk.Entry(frame_params, textvariable=self.weather).grid(row=0, column=1, padx=5)
 
-        self.terrain = None
+        self.terrain = terrain_list[0]
         tk.Label(frame_params, text="Terrain").grid(row=0, column=2, padx=5)
         self.selected_terrain = tk.StringVar()
         self.selected_terrain.set(terrain_list[0].name)  # Set default terrain
         terrain_names = [terrain.name for terrain in terrain_list]
         self.terrain_dropdown = ttk.Combobox(frame_params, textvariable=self.selected_terrain, values=terrain_names)
         self.terrain_dropdown.grid(row=0, column=3, padx=5)
-        self.terrain_dropdown.bind("<<ComboboxSelected>>", self.update_terrain())
+        self.terrain_dropdown.bind("<<ComboboxSelected>>", self.update_terrain)
 
         self.combat_width = terrain_list[0].width
         tk.Label(frame_params, text="Aire de combat").grid(row=2, column=0, padx=5)
@@ -138,6 +138,7 @@ class BattleWindow(tk.Tk):
         # Mets a jour affichage
         self.refresh_display()
         self.update_battle_info_display()
+        self.update_combat_width()
 
     def _round(self,camp_attacker,camp_defender):
         """
@@ -206,7 +207,7 @@ class BattleWindow(tk.Tk):
                         widget.destroy()  # Détruire le cadre correspondant à la division retirée
                         break
 
-    def update_terrain(self):
+    def update_terrain(self,event=None):
         """
         Recupère l'instance :terrain: a partir du choix fait dans le menu déroulant.
         :return:
@@ -215,7 +216,19 @@ class BattleWindow(tk.Tk):
         for terrain in terrain_list:
             if terrain.name == selected_terrain_name:
                 self.terrain = terrain
-        self.update_battle_info_display()
+                break
+        self.update_combat_width()
+
+    def update_combat_width(self):
+        """
+        Mets à jour l'affichage du combat_width
+        """
+        self.combat_width = self.terrain.width
+        try:
+            self.combat_width *= self.camp_attacker.tactic.width_bonus * self.camp_defender.tactic.width_bonus
+        except:
+            pass
+        self.combat_width_display.set(str(self.combat_width))
 
     def update_battle_info_display(self):
         """

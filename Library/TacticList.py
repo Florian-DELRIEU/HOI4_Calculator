@@ -18,7 +18,7 @@ Tactic(attacker_bonus=1.20, defender_bonus=1.05, name="Relentless Assault"),
 Tactic(attacker_bonus=1.15, defender_bonus=1, name="Unexpected Thrust"),
 Tactic(attacker_bonus=1.10, defender_bonus=0.8, name="Suppressive Barrage"),
 # Need requirements
-Tactic(defender_bonus=1.05, attacker_bonus=1.25,weight=1000, width_bonus=1.5, name="Encirclement",
+Tactic(defender_bonus=1.05, attacker_bonus=1.25,weight=1, width_bonus=1.5, name="Encirclement",
        countered_by="Tactical Withdrawal"),
 Tactic(defender_bonus=0.85, attacker_bonus=1.25, name="Breakthrough",
        countered_by="Backhand Blow"),

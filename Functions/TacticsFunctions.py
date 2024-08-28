@@ -123,8 +123,6 @@ def apply_tactics(Battle):
     DEF_tactic = Battle.camp_defender.tactic
     ATK_tactic = Battle.camp_attacker.tactic
 
-    Battle.combat_width *= DEF_tactic.width_bonus * ATK_tactic.width_bonus
-
     for division in Battle.camp_defender.frontline:
         #todo augmenter les dégats causé par les attaques
         division.tactic_damage_bonus = DEF_tactic.defender_bonus
