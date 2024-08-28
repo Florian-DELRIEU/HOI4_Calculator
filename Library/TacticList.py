@@ -1,8 +1,4 @@
 from Classes.Tactics import *
-#todo
-#      - add Masterful blitz
-#      - add Banzai Charge
-
 ## ATTACKS
 ATK_TACTICS = [
 Tactic(attacker_bonus=1.05, name="Attaque",
@@ -18,11 +14,15 @@ Tactic(attacker_bonus=1.20, defender_bonus=1.05, name="Relentless Assault"),
 Tactic(attacker_bonus=1.15, defender_bonus=1, name="Unexpected Thrust"),
 Tactic(attacker_bonus=1.10, defender_bonus=0.8, name="Suppressive Barrage"),
 # Need requirements
+Tactic(defender_bonus=1.1, attacker_bonus=1.25, name="Banzai Charge",
+       countered_by="Overwhelming Fire"),
 Tactic(defender_bonus=1.05, attacker_bonus=1.25,weight=1, width_bonus=1.5, name="Encirclement",
        countered_by="Tactical Withdrawal"),
 Tactic(defender_bonus=0.85, attacker_bonus=1.25, name="Breakthrough",
        countered_by="Backhand Blow"),
 Tactic(defender_bonus=0.85, attacker_bonus=1.15, name="Blitz",
+       countered_by="Elastic Defense"),
+Tactic(defender_bonus=0.8, attacker_bonus=1.2, width_bonus=0.9,
        countered_by="Elastic Defense"),
 Tactic(defender_bonus=0.95, attacker_bonus=1.2, weight=2, width_bonus=0.75, name="Seize Bridge",
        begin_phase="Seize Bridge"),
