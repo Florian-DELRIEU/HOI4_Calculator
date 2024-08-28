@@ -1,4 +1,7 @@
 from Classes.Tactics import *
+#todo
+#      - add Masterful blitz
+#      - add Banzai Charge
 
 ## ATTACKS
 ATK_TACTICS = [
@@ -15,22 +18,22 @@ Tactic(attacker_bonus=1.20, defender_bonus=1.05, name="Relentless Assault"),
 Tactic(attacker_bonus=1.15, defender_bonus=1, name="Unexpected Thrust"),
 Tactic(attacker_bonus=1.10, defender_bonus=0.8, name="Suppressive Barrage"),
 # Need requirements
-Tactic(defender_bonus=1.05, attacker_bonus=1.25, weight=0, name="Encirclement",
+Tactic(defender_bonus=1.05, attacker_bonus=1.25,weight=1000, width_bonus=1.5, name="Encirclement",
        countered_by="Tactical Withdrawal"),
-Tactic(defender_bonus=0.85, attacker_bonus=1.25, weight=0, name="Breakthrough",
+Tactic(defender_bonus=0.85, attacker_bonus=1.25, name="Breakthrough",
        countered_by="Backhand Blow"),
-Tactic(defender_bonus=0.85, attacker_bonus=1.15, weight=0, name="Blitz",
+Tactic(defender_bonus=0.85, attacker_bonus=1.15, name="Blitz",
        countered_by="Elastic Defense"),
-Tactic(defender_bonus=0.95, attacker_bonus=1.2, weight=0, name="Seize Bridge",
+Tactic(defender_bonus=0.95, attacker_bonus=1.2, weight=2, width_bonus=0.75, name="Seize Bridge",
        begin_phase="Seize Bridge"),
-Tactic(defender_bonus=1.1, attacker_bonus=1.1, weight=0, name="Mass Charge"),
+Tactic(defender_bonus=1.1, attacker_bonus=1.1, width_bonus=1.5, name="Mass Charge"),
 ]
 
 ## DEFENSES
 DEF_TACTICS = [
 Tactic(defender_bonus=1.05, name="Defense"),
 Tactic(defender_bonus=1.25, name="Counter Attack"),
-Tactic(attacker_bonus=0.75, defender_bonus=0.95, name="Tactic Withdrawal",
+Tactic(attacker_bonus=0.75, defender_bonus=0.95, width_bonus=0.75, name="Tactic Withdrawal",
        begin_phase="Tactic Withdraw"),
 Tactic(attacker_bonus=0.75, defender_bonus=1.15, name="Delay",
        countered_by="Shock"),
@@ -38,10 +41,10 @@ Tactic(attacker_bonus=0.75, defender_bonus=1, name="Ambush",
        countered_by="Breakthrough"),
 Tactic(attacker_bonus=0.85, defender_bonus=1.1, name="Elastic Defense"),
 Tactic(attacker_bonus=0.80, defender_bonus=1.2, name="Backhand Blow"),
-Tactic(attacker_bonus=0.3, defender_bonus=.4, name="Guerrilla"),
+Tactic(attacker_bonus=0.3, defender_bonus=.4, width_bonus=0.5, name="Guerrilla Tactics"),
 Tactic(attacker_bonus=0.9, defender_bonus=1.1, weight=2, name="Overwhelming Fire"),
 # Need Requirement
-Tactic(attacker_bonus=1.2, defender_bonus=.95, weight=0, name="Hold Bridge",
+Tactic(attacker_bonus=1.2, defender_bonus=.95, weight=2, width_bonus=0.75, name="Hold Bridge",
        begin_phase="Hold Bridge"),
 ]
 
@@ -65,31 +68,31 @@ Tactic(attacker_bonus=0.8, defender_bonus=1, weight=2, name="Close Quarter Local
 ########################################################################################################################
 ## Tactical withdraw Attack
 ATK_TW_TACTICS = [
-Tactic(attacker_bonus=0.75, defender_bonus=0.9, name="Tactical withdraw Attack"),
-Tactic(attacker_bonus=0.85, defender_bonus=0.95, name="Pursuit"),
+Tactic(attacker_bonus=0.75, defender_bonus=0.9, width_bonus=0.75, name="Tactical withdraw Attack"),
+Tactic(attacker_bonus=0.85, defender_bonus=0.95, width_bonus=0.75, name="Pursuit"),
 Tactic(attacker_bonus=0.95, defender_bonus=0.90, name="Intercept",
        begin_phase="Default"),
 ]
 
 ## Tactical withdraw Defend
 DEF_TW_TACTICS = [
-Tactic(attacker_bonus=0.7, defender_bonus=0.95, name="Withdrawal"),
-Tactic(attacker_bonus=0.6, defender_bonus=0.9, name="Evade"),
+Tactic(attacker_bonus=0.7, defender_bonus=0.95, width_bonus=0.75, name="Withdrawal"),
+Tactic(attacker_bonus=0.6, defender_bonus=0.9, width_bonus=0.75, name="Evade"),
 ]
 
 
 ########################################################################################################################
 ## Seize Bridge Attacks
 ATK_SB_TACTICS = [
-Tactic(attacker_bonus=1.2, defender_bonus=1, name="Hold Bridge"),
-Tactic(attacker_bonus=1.2, defender_bonus=0.9, name="Defend Bridge"),
+Tactic(attacker_bonus=1.2, defender_bonus=1, width_bonus=0.75, name="Hold Bridge"),
+Tactic(attacker_bonus=1.2, defender_bonus=0.9, width_bonus=0.75, name="Defend Bridge"),
 ]
 
 ## Seize Bridge Defend
 DEF_SB_TACTICS = [
-Tactic(attacker_bonus=1, defender_bonus=0.95, name="Bridge Assaut"),
-Tactic(attacker_bonus=1.25, defender_bonus=0.9, name="Bridge Reckless Assaut"),
-Tactic(attacker_bonus=1.1, defender_bonus=0.95, name="Recapture Bridge",
+Tactic(attacker_bonus=1, defender_bonus=0.95, width_bonus=0.75, name="Bridge Assaut"),
+Tactic(attacker_bonus=1.25, defender_bonus=0.9, width_bonus=0.75, name="Bridge Reckless Assaut"),
+Tactic(attacker_bonus=1.1, defender_bonus=0.95, width_bonus=0.75, name="Recapture Bridge",
        countered_by="Defend Bridge",
        begin_phase="Hold Bridge"),
 ]
@@ -98,15 +101,15 @@ Tactic(attacker_bonus=1.1, defender_bonus=0.95, name="Recapture Bridge",
 ########################################################################################################################
 ## Hold Bridge Attacks
 ATK_HB_TACTICS = [
-Tactic(attacker_bonus=1.1, defender_bonus=1, name="Attack Bridge"),
-Tactic(attacker_bonus=1.2, defender_bonus=1, name="Rush Bridge"),
-Tactic(attacker_bonus=1.2, defender_bonus=1.05, weight=2, name="Storm Bridge",
+Tactic(attacker_bonus=1.1, defender_bonus=1, width_bonus=0.75, name="Attack Bridge"),
+Tactic(attacker_bonus=1.2, defender_bonus=1, width_bonus=0.75, name="Rush Bridge"),
+Tactic(attacker_bonus=1.2, defender_bonus=1.05, weight=2, width_bonus=0.75, name="Storm Bridge",
        countered_by="Defend Bridge",
        begin_phase="Seize Bridge"),
 ]
 
 ## Hold Bridge Defend
 DEF_HB_TACTICS = [
-Tactic(attacker_bonus=1.2, defender_bonus=0.9, name="Hold Bridge"),
-Tactic(attacker_bonus=1.1, defender_bonus=1.05, name="Defend Bridge"),
+Tactic(attacker_bonus=1.2, defender_bonus=0.9, weight=2, width_bonus=0.75, name="Hold Bridge"),
+Tactic(attacker_bonus=1.1, defender_bonus=1.05, weight=2, width_bonus=0.75, name="Defend Bridge"),
 ]

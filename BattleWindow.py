@@ -64,10 +64,11 @@ class BattleWindow(tk.Tk):
         self.terrain_dropdown.grid(row=0, column=3, padx=5)
         self.terrain_dropdown.bind("<<ComboboxSelected>>", self.update_terrain())
 
+        self.combat_width = terrain_list[0].width
         tk.Label(frame_params, text="Aire de combat").grid(row=2, column=0, padx=5)
-        self.combat_width = tk.StringVar()
-        self.combat_width.set(str(terrain_list[0].width))  # Set default width
-        tk.Label(frame_params, textvariable=self.combat_width).grid(row=2, column=1, padx=5)
+        self.combat_width_display = tk.StringVar()
+        self.combat_width_display.set(str(self.combat_width))  # Set default width
+        tk.Label(frame_params, textvariable=self.combat_width_display).grid(row=2, column=1, padx=5)
 
         tk.Label(frame_params, text="Leader Camp A").grid(row=1, column=0, padx=5)
         self.leader_attacker = tk.StringVar()
@@ -133,8 +134,10 @@ class BattleWindow(tk.Tk):
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
         self.log_text.see(tk.END)
-        self.refresh_display()
         self.round_counter += 1
+        # Mets a jour affichage
+        self.refresh_display()
+        self.update_battle_info_display()
 
     def _round(self,camp_attacker,camp_defender):
         """
@@ -154,7 +157,7 @@ class BattleWindow(tk.Tk):
         for division in camp_defender.frontline:
             division.targeting(camp_attacker)
             division.do_attack()
-        # Vérification états de chaques division
+        # Vérification états de chaques division et renforts ?
         self.check_state_of_division()
         self.renfort_round()
 
@@ -166,7 +169,6 @@ class BattleWindow(tk.Tk):
     def tactic_round(self):
         change_weight(self) #No effect for now
         choose_tactic(self)
-        self.update_battle_info_display()
 
     def check_state_of_division(self):
         """
@@ -213,6 +215,7 @@ class BattleWindow(tk.Tk):
         for terrain in terrain_list:
             if terrain.name == selected_terrain_name:
                 self.terrain = terrain
+        self.update_battle_info_display()
 
     def update_battle_info_display(self):
         """
