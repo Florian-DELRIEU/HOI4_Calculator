@@ -26,6 +26,7 @@ class Division:
         self.width = width
         self.initiative = initiative
         self.tactic_damage_bonus = 1
+        self.combat_width_malus = 1
         self.id = generate_id()
         self.target_list = []
         self.primary_target = None
@@ -129,14 +130,14 @@ class Division:
 
         # HP Damage calculation
         # todo remplacer par des jets de dés
-        self.pv -= 1.5 * total_attack * striker.tactic_damage_bonus
+        self.pv -= 1.5 * total_attack * striker.tactic_damage_bonus * striker.combat_width_malus
         self.pv = truncDecimal(self.pv, 1)
         self.pv = max(self.pv, 0)
 
         # ORG Damage Calulation
         # todo remplacer par des jets de dés
         if striker.piercing > self.hardness:
-            self.organisation -= 3.5 * total_attack * striker.tactic_damage_bonus
+            self.organisation -= 3.5 * total_attack * striker.tactic_damage_bonus * striker.combat_width_malus
         else:
             self.organisation -= 2.5 * total_attack * striker.tactic_damage_bonus
         self.organisation = truncDecimal(self.organisation, 1)

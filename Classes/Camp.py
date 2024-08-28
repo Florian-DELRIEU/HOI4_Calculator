@@ -10,7 +10,7 @@ class Camp:
         self.frontline = []
         self.reserves = []
         self.tactic = None
-
+        self.combat_width_malus = 1
         self.battle_info = {}
 
     def __repr__(self):
@@ -23,20 +23,29 @@ class Camp:
                                division not in self.frontline and division not in self.reserves]
         for division in available_divisions:
             total_camp_width = sum(division.width for division in self.frontline)
-            if total_camp_width + division.width <= self.battle_info["Width"]:
+            if total_camp_width + division.width <= 1.33 * self.battle_info["Width"]:
                 self.frontline.append(division)
         # Move divisions in reserves
         for division in self.divisions:
             if division not in self.frontline:
                 self.reserves.append(division)
+        self.combat_width_penality()
 
     def from_reserve_to_frontline(self):
         total_camp_width = sum(division.width for division in self.frontline)
         for division in self.reserves:
-            if ((random.randint(0,100) <= 2 and total_camp_width + division.width <= self.battle_info["Width"])
+            if ((random.randint(0,100) <= 2 and total_camp_width + division.width <= 1.33 * self.battle_info["Width"])
                 or len(self.frontline) == 0):
                 self.frontline.append(self.reserves.pop(self.reserves.index(division)))
+        self.combat_width_penality()
 
+    def combat_width_penality(self):
+        total_camp_width = sum(division.width for division in self.frontline)
+        if total_camp_width >= self.battle_info["Width"]:
+            self.combat_width_malus = min(total_camp_width / self.battle_info["Width"],1.33)
+            self.combat_width_malus = 1 - (self.combat_width_malus-1)
+        for division in self.frontline:
+            division.combat_width_malus = self.combat_width_malus
 
     ############# GESTION ####################
     def get_data(self):

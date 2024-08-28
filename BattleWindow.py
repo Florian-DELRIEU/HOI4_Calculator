@@ -133,8 +133,12 @@ class BattleWindow(tk.Tk):
         if self.round_counter == 0:
             for camp in [self.camp_attacker,self.camp_defender]:
                 camp.move_in_frontline()
+        if self.round_counter % 12 == 0:
+            self.tactic_round()
         self._round(self.camp_attacker,self.camp_defender)
-
+        # Vérification états de chaque division et renforts ?
+        self.check_state_of_division()
+        self.renfort_round()
         # Ecriture des logs
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
@@ -154,8 +158,6 @@ class BattleWindow(tk.Tk):
         """
         # Todo
         #  - Verifier si la riposte du défenseur est fait correctement selon les mécaniques du jeu
-        if self.round_counter % 12 == 0:
-            self.tactic_round()
 
         # Tour Attaquant
         for division in camp_attacker.frontline:
@@ -165,9 +167,6 @@ class BattleWindow(tk.Tk):
         for division in camp_defender.frontline:
             division.targeting(camp_attacker)
             division.do_attack()
-        # Vérification états de chaque division et renforts ?
-        self.check_state_of_division()
-        self.renfort_round()
 
     def renfort_round(self):
         # todo faire des test
