@@ -3,3 +3,6 @@ def has_full_width(Battle,camp):
 
 def has_reserves_available(camp):
     return len(camp.reserves) > 0
+
+def has_hardness_over(camp,hard_level):
+    return any(division.hardness > hard_level for division in camp.frontline)
