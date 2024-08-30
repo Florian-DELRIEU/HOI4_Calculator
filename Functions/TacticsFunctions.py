@@ -2,6 +2,7 @@ import random as rd
 from  Library.TacticList import ATK_TACTICS, ATK_HB_TACTICS, ATK_CQ_TACTICS, ATK_SB_TACTICS, ATK_TW_TACTICS
 from  Library.TacticList import DEF_TACTICS, DEF_HB_TACTICS, DEF_CQ_TACTICS, DEF_SB_TACTICS, DEF_TW_TACTICS
 from Classes.Tactics import *
+from Functions.TacticTriggersFunctions import *
 
 ########################################################################################################################
 
@@ -33,6 +34,8 @@ def choose_tactic(Battle):
         attacker_tactic_list = ATK_TW_TACTICS
         defender_tactic_list = DEF_TW_TACTICS
     else: return NameError , "Wrong phase name"
+
+    change_weight(Battle,attacker_tactic_list,defender_tactic_list)
 
     # Initiative round
     intiative_winner = initiative_round(Battle) # wich side has initiative
@@ -131,9 +134,15 @@ def apply_tactics(Battle):
         division.tactic_damage_bonus = ATK_tactic.attacker_bonus
 
 
-def change_weight(Battle):
+def change_weight(Battle,ATK_tactic,DEF_tactic):
     """
     Change tactics weight with regards to Generals skills and abilities and terrain
     """
-    #todo make change_weight functions
+    for tactic in ATK_tactic:
+        if tactic.name == "Encirclement":
+            if has_reserves_available(Battle.camp_attacker) and has_full_width(Battle,Battle.camp_attacker):
+                tactic.weight = 4
+        if tactic.name == "Mass Charge":
+            if has_reserves_available(Battle.camp_attacker) and has_full_width(Battle, Battle.camp_attacker):
+                tactic.weight = 4
     pass

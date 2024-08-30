@@ -174,7 +174,6 @@ class BattleWindow(tk.Tk):
             camp.from_reserve_to_frontline()
 
     def tactic_round(self):
-        change_weight(self) #No effect for now
         choose_tactic(self)
 
     def check_state_of_division(self):

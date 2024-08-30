@@ -54,7 +54,7 @@ Tactic(defender_bonus=1.1,
 
 Tactic(defender_bonus=1.05,
        attacker_bonus=1.25,
-       weight=1,
+       weight=0,
        width_bonus=1.5,
        name="Encirclement",
        countered_by="Tactical Withdrawal",
@@ -88,6 +88,7 @@ Tactic(defender_bonus=0.95,
 
 Tactic(defender_bonus=1.1,
        attacker_bonus=1.1,
+       weight=0,
        width_bonus=1.5,
        name="Mass Charge"
        ),
