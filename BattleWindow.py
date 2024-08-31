@@ -5,6 +5,7 @@ import os
 from Classes import Division,Camp
 from Functions.TacticsFunctions import choose_tactic, change_weight
 from Library.TerrainList import terrain_list
+from Library import LeaderList
 
 #TODO
 #   - Rafraichir les stats dans la fenetre aprés des dégats
@@ -22,8 +23,10 @@ class BattleWindow(tk.Tk):
 
         # Initialiser les camps
         self.camp_attacker = Camp()
+        self.camp_attacker.add_leader(LeaderList.leader_A)
         self.camp_attacker.is_attacking = True
         self.camp_defender = Camp()
+        self.camp_defender.add_leader(LeaderList.leader_B)
         self.camp_defender.is_attacking = False
 
         # Charger les divisions sauvegardées
@@ -137,6 +140,7 @@ class BattleWindow(tk.Tk):
             self.tactic_round()
         self._round(self.camp_attacker,self.camp_defender)
         # Vérification états de chaque division et renforts ?
+
         self.check_state_of_division()
         self.renfort_round()
         # Ecriture des logs

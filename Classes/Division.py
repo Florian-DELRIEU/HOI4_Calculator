@@ -102,6 +102,9 @@ class Division:
     def do_attack(self):
         if len(self.target_list) == 0:
             return
+        # add bonus to sa and ha from leader
+        self.soft_attack += 0.025 * self.camp_info["Leader"].attack_level
+        self.hard_attack += 0.025 * self.camp_info["Leader"].attack_level
         coordinated_share = 0.35 + self.camp_info["coordination"] * (1 + self.initiative)
         sa_per_division = (self.soft_attack * (1 - coordinated_share)) // len(self.target_list)
         ha_per_division = (self.hard_attack * (1 - coordinated_share)) // len(self.target_list)
@@ -120,9 +123,15 @@ class Division:
             target.take_damage(self, total_attack)
 
     def take_damage(self, striker, total_attack):
-        # Hits calculation
+        # Variable attribution
         is_attacking = self.camp_info["is_attacking"]
+        entrenchment_level = self.camp_info["entrenchment_level"]
+        
+        # Hits calculation
         total_defense = self.attaque if is_attacking else self.defense
+        total_defense += 0 if is_attacking else 0.02*entrenchment_level
+        total_defense += 0.025 * self.camp_info["Leader"].defense_level
+
         if total_defense > total_attack:
             total_attack *= 0.1
         else:

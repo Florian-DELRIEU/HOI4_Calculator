@@ -4,7 +4,7 @@ class Camp:
     def __init__(self):
         self.divisions = []
         self.leader = None
-        self.entrenchment = 0.0
+        self.entrenchment = 0
         self.coordination = 0
         self.is_attacking = False
         self.frontline = []
@@ -59,10 +59,16 @@ class Camp:
         added_division = division.__copy__()
         added_division.camp_info = {
             "is_attacking": self.is_attacking,
-            "coordination": self.coordination
+            "coordination": self.coordination,
+            "entrenchment_level": self.entrenchment,
+            "leader": self.leader
         }
         self.divisions.append(added_division)
 
+    def add_leader(self,leader):
+        self.leader = leader
+        if self.leader is not None: self.coordination = 0.01
+        self.coordination += 0.02 * self.leader.level
 
     def remove_division(self, division_name):
         self.divisions = [d for d in self.divisions if d.template != division_name]
