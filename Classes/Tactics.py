@@ -1,6 +1,6 @@
 class Tactic:
     def __init__(self, attacker_bonus=1, defender_bonus=1, width_bonus = 1,
-                 countered_by=None, begin_phase=None, name="", weight=4, conditions = {}):
+                 countered_by=None, begin_phase=None, name="", weight=4, weight_mult = 1):
         """
         Classe des tactiques
         :param attacker_bonus: Bonus de dommage à l'attaquant
@@ -22,8 +22,7 @@ class Tactic:
         self.weight = weight
         self.begin_battle_phase = begin_phase
         # Trigger
-        self.weight_mult = 1
-        self.conditions = conditions
+        self.weight_mult = weight_mult
 
     def __repr__(self):
         return self.name
