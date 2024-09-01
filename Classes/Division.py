@@ -103,8 +103,8 @@ class Division:
         if len(self.target_list) == 0:
             return
         # add bonus to sa and ha from leader
-        self.soft_attack += 0.025 * self.camp_info["Leader"].attack_level
-        self.hard_attack += 0.025 * self.camp_info["Leader"].attack_level
+        self.soft_attack += 0.025 * self.camp_info["leader"].attack_level
+        self.hard_attack += 0.025 * self.camp_info["leader"].attack_level
         coordinated_share = 0.35 + self.camp_info["coordination"] * (1 + self.initiative)
         sa_per_division = (self.soft_attack * (1 - coordinated_share)) // len(self.target_list)
         ha_per_division = (self.hard_attack * (1 - coordinated_share)) // len(self.target_list)
