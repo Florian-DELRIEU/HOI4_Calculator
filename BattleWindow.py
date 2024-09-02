@@ -437,10 +437,10 @@ class BattleWindow(tk.Tk):
             selected_name = listbox.get(listbox.curselection())
             if camp_type == "attacker":
                 self.attacker_leader_label.config(text=f"Leader Attaquant : {selected_name}")
-                self.camp_attacker.leader = selected_name
+                self.camp_attacker.add_leader(next((leader for leader in self.get_leaders() if leader.name == selected_name), None))
             else:
                 self.defender_leader_label.config(text=f"Leader Défenseur : {selected_name}")
-                self.camp_defender.leader = selected_name
+                self.camp_defender.add_leader(next((leader for leader in self.get_leaders() if leader.name == selected_name), None))
             leader_window.destroy()
 
         tk.Button(leader_window, text="Sélectionner", command=on_select).pack(pady=10)
