@@ -138,11 +138,36 @@ def change_weight(Battle,ATK_tactic,DEF_tactic):
     """
     Change tactics weight with regards to Generals skills and abilities and terrain
     """
+    # Variables initialisations
+    Attacker = Battle.camp_attacker
+    ATK_leader = Battle.camp_attacker.leader
+    Defender = Battle.camp_defender
+    DEF_leader = Battle.camp_defender.leader
+
+    #todo tactique actuelle : Blitz
     for tactic in ATK_tactic:
+        if tactic.name == "Assaut":
+            if Battle.terrain.name == "Urban":
+                tactic.weight_mult *= 5
+            if "Agressive Assaulter" in ATK_leader.traits:
+                tactic.weight_mult *= 2
+        if tactic.name == "Shock":
+            if "Agressive Assaulter" in ATK_leader.traits:
+                tactic.weight_mult = 2
         if tactic.name == "Encirclement":
-            if has_reserves_available(Battle.camp_attacker) and has_full_width(Battle,Battle.camp_attacker):
-                tactic.weight = 4
+            if (has_reserves_available(Attacker)
+            and has_full_width(Battle,Attacker))\
+            and (ATK_leader.level - DEF_leader.level >= 0
+                or "Panzer Leader" in ATK_leader.traits
+                or "Trickster" in ATK_leader.traits):
+                tactic.weight_mult = 1
+                if ("Panzer Expert" in ATK_leader.traits
+                    or "Combined Arms Expert" in ATK_leader.traits):
+                    tactic.weight_mult = 2
         if tactic.name == "Mass Charge":
             if has_reserves_available(Battle.camp_attacker) and has_full_width(Battle, Battle.camp_attacker):
-                tactic.weight = 4
+                tactic.weight_mult = 1
+        if tactic.name == "Breakthrough":
+            if has_hardness_over(Attacker,50) or ATK_leader.level - DEF_leader.level >= 1:
+                tactic.weight_mult = 1
     pass

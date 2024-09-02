@@ -23,10 +23,8 @@ class BattleWindow(tk.Tk):
 
         # Initialiser les camps
         self.camp_attacker = Camp()
-        self.camp_attacker.add_leader(LeaderList.leader_A)
         self.camp_attacker.is_attacking = True
         self.camp_defender = Camp()
-        self.camp_defender.add_leader(LeaderList.leader_B)
         self.camp_defender.is_attacking = False
 
         # Charger les divisions sauvegardées
@@ -409,6 +407,8 @@ app = BattleWindow()
 
 test_case = "Case 1"
 if __name__ == "__main__" and test_case == "Case 1":
+    app.camp_attacker.add_leader(LeaderList.leader_A)
+    app.camp_defender.add_leader(LeaderList.no_leader)
     app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
     app.camp_attacker.get_divisions()[-1].nom = "Div. A1"
     app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))

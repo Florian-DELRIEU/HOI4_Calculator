@@ -9,7 +9,7 @@ Tactic(attacker_bonus=1.05,
        ),
 
 Tactic(attacker_bonus=1.25,
-       weight=2,
+       weight=0.4,
        name="Assaut",
        countered_by="Counter Attack",
        begin_phase="Close Quarter Combat"
@@ -63,6 +63,7 @@ Tactic(defender_bonus=1.05,
 
 Tactic(defender_bonus=0.85,
        attacker_bonus=1.25,
+       weight_mult=0,
        name="Breakthrough",
        countered_by="Backhand Blow"
        ),

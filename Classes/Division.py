@@ -32,6 +32,8 @@ class Division:
         self.primary_target = None
         self.strength = 1
         self.camp_info = {}
+        #todo add self.type = type
+        # assert self.type in ["Infantry","Armored"]
 
     def __repr__(self):
         return self.nom if self.nom != "" else self.template
