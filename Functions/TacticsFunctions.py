@@ -105,15 +105,28 @@ def initiative_round(Battle):
     # sourcery skip: assign-if-exp, remove-redundant-pass
     """
     Choisis quel camp aura l'initiative
-        - Le camps qui remporte l'initiative choisiras sa tacttique en second pour essayer de contrer l'autre camps.
-        - Basic pour le moment car leaders ne sont pas ajoutés
+        Le round se déroule en plusieurs étapes
+        1- On compare la valeur max de reconnaissance parmis les divisions des deux camps. Celui qui à la plus grosse
+         valeur gagne 5 niveau.
+        2- La compétence des Leaders est ajouté
+        3- Le camp avec le niveau de compétence effectif le plus élevé obtient l'initiative, les égalités favorisant
+        le défenseur.
+
+        NOTA: Dans cette version les niveau de competences sont des poids permettant un choix pondéré du vainqueur.
     """
-    ATK_weight = int()
-    DEF_weight = int()
-    if Battle.camp_attacker.leader is None:   ATK_weight = 1
-    else:   pass  # Need Leader upgrade
-    if Battle.camp_defender.leader is None:   DEF_weight = 1
-    else:   pass  # Need Leader upgrade
+    ATK_weight = 1
+    DEF_weight = 1
+    ATK_max_reco = max(division.recon for division in Battle.camp_attacker)
+    DEF_max_reco = max(division.recon for division in Battle.camp_defender)
+
+    ATK_weight += Battle.camp_attacker.leader.level
+    ATK_weight += Battle.camp_defender.leader.level
+
+    if ATK_max_reco >= DEF_max_reco:
+        ATK_weight += 5
+    elif DEF_max_reco >= ATK_max_reco:
+        DEF_weight += 5
+    else: pass
 
     # todo renvoyer directement l'instance des camps
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]

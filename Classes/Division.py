@@ -27,6 +27,7 @@ class Division:
         self.initiative = initiative
         self.tactic_damage_bonus = 1
         self.combat_width_malus = 1
+        self.recon = 0
         self.id = generate_id()
         self.target_list = []
         self.primary_target = None
