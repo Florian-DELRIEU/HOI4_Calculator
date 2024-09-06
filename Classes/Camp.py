@@ -67,8 +67,7 @@ class Camp:
 
     def add_leader(self,leader):
         self.leader = leader
-        if self.leader is not None: self.coordination = 0.01
-        self.coordination += 0.02 * self.leader.level
+        if self.leader is not None: self.coordination = 0.01 + 0.02 * self.leader.level
 
     def remove_division(self, division_name):
         self.divisions = [d for d in self.divisions if d.template != division_name]

@@ -5,7 +5,7 @@ from MyPack2.Utilities import truncDecimal
 
 class Division:
     def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor,
-                 hardness, width, initiative):
+                 hardness, width, initiative, recon=0, experience = "regular"):
         self.nom = ""
         self.template = template
         self._PV = pv
@@ -27,7 +27,8 @@ class Division:
         self.initiative = initiative
         self.tactic_damage_bonus = 1
         self.combat_width_malus = 1
-        self.recon = 0
+        self.recon = recon
+        self.experience = experience
         self.id = generate_id()
         self.target_list = []
         self.primary_target = None
@@ -35,6 +36,7 @@ class Division:
         self.camp_info = {}
         #todo add self.type = type
         # assert self.type in ["Infantry","Armored"]
+        assert self.experience in ["green","regular","trained","seasoned","veteran"]
 
     def __repr__(self):
         return self.nom if self.nom != "" else self.template
@@ -122,6 +124,12 @@ class Division:
                 total_ha = ha_per_division * target.hardness
             total_attack = total_sa + total_ha
             total_attack = total_attack if self.piercing >= target.armor else total_attack / 2
+            # XP level
+            if   self.experience == "green":    total_attack *= 0.75
+            elif self.experience == "trained":  total_attack *= 1
+            elif self.experience == "regular":  total_attack *= 1.25
+            elif self.experience == "seasoned": total_attack *= 1.50
+            elif self.experience == "veteran":  total_attack *= 1.75
             total_attack /= 10
             target.take_damage(self, total_attack)
 
@@ -134,7 +142,11 @@ class Division:
         total_defense = self.attaque if is_attacking else self.defense
         total_defense += 0 if is_attacking else 0.02*entrenchment_level
         total_defense += 0.025 * self.camp_info["Leader"].defense_level
-
+        if   self.experience == "green":    total_defense *= 0.75
+        elif self.experience == "trained":  total_defense *= 1
+        elif self.experience == "regular":  total_defense *= 1.25
+        elif self.experience == "seasoned": total_defense *= 1.50
+        elif self.experience == "veteran":  total_defense *= 1.75
         if total_defense > total_attack:
             total_attack *= 0.1
         else:
