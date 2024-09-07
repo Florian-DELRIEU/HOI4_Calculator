@@ -4,20 +4,73 @@ from Functions.TacticTriggersFunctions import *
 ## ATTACKS
 ATK_TACTICS = [
 Tactic(attacker_bonus=1.05,
-       name="Attaque",
+       name="Attack",
        countered_by="Counter Attack"
        ),
 
 Tactic(attacker_bonus=1.25,
        weight=0.4,
-       name="Assaut",
+       name="Assault",
        countered_by="Counter Attack",
        begin_phase="Close Quarter Combat"
+       ),
+
+Tactic(defender_bonus=1.05,
+       attacker_bonus=1.25,
+       weight=4,
+       weight_mult=0,
+       width_bonus=1.5,
+       name="Encirclement",
+       countered_by="Tactical Withdrawal",
        ),
 
 Tactic(defender_bonus=0.75,
        name="Shock",
        countered_by="Ambush"
+       ),
+
+Tactic(defender_bonus=0.85,
+       attacker_bonus=1.25,
+       weight_mult=0,
+       name="Breakthrough",
+       countered_by="Backhand Blow"
+       ),
+
+Tactic(defender_bonus=0.85,
+       attacker_bonus=1.15,
+       weight_mult=0,
+       name="Blitz",
+       countered_by="Elastic Defense"
+       ),
+
+Tactic(defender_bonus=0.8,
+       attacker_bonus=1.2,
+       width_bonus=1.1,
+       name="Masterful Blitz",
+       countered_by="Elastic Defense"
+       ),
+
+Tactic(defender_bonus=0.95,
+       attacker_bonus=1.2,
+       weight=2,
+       weight_mult=0,
+       width_bonus=0.75,
+       name="Seize Bridge",
+       begin_phase="Seize Bridge"
+       ),
+
+Tactic(defender_bonus=1.1,
+       attacker_bonus=1.1,
+       weight=4,
+       weight_mult=0,
+       width_bonus=1.5,
+       name="Mass Charge"
+       ),
+
+Tactic(defender_bonus=1.1,
+       attacker_bonus=1.25,
+       name="Banzai Charge",
+       countered_by="Overwhelming Fire"
        ),
 
 Tactic(attacker_bonus=1.1,
@@ -44,67 +97,22 @@ Tactic(attacker_bonus=1.10,
        defender_bonus=0.8,
        name="Suppressive Barrage"
        ),
-
-# Need requirements
-Tactic(defender_bonus=1.1,
-       attacker_bonus=1.25,
-       name="Banzai Charge",
-       countered_by="Overwhelming Fire"
-       ),
-
-Tactic(defender_bonus=1.05,
-       attacker_bonus=1.25,
-       weight=4,
-       weight_mult=0,
-       width_bonus=1.5,
-       name="Encirclement",
-       countered_by="Tactical Withdrawal",
-       ),
-
-Tactic(defender_bonus=0.85,
-       attacker_bonus=1.25,
-       weight_mult=0,
-       name="Breakthrough",
-       countered_by="Backhand Blow"
-       ),
-
-Tactic(defender_bonus=0.85,
-       attacker_bonus=1.15,
-       name="Blitz",
-       countered_by="Elastic Defense"
-       ),
-
-Tactic(defender_bonus=0.8,
-       attacker_bonus=1.2,
-       width_bonus=0.9,
-       countered_by="Elastic Defense"
-       ),
-
-Tactic(defender_bonus=0.95,
-       attacker_bonus=1.2,
-       weight=2,
-       width_bonus=0.75,
-       name="Seize Bridge",
-       begin_phase="Seize Bridge"
-       ),
-
-Tactic(defender_bonus=1.1,
-       attacker_bonus=1.1,
-       weight=4,
-       weight_mult=0,
-       width_bonus=1.5,
-       name="Mass Charge"
-       ),
 ]
 
 ## DEFENSES
 DEF_TACTICS = [
 Tactic(defender_bonus=1.05,
-       name="Defense"
+       name="Defend"
        ),
 
 Tactic(defender_bonus=1.25,
-       name="Counter Attack"
+       name="Counter-Attack"
+       ),
+
+Tactic(attacker_bonus=0.75,
+       defender_bonus=1.15,
+       name="Delay",
+       countered_by="Shock"
        ),
 
 Tactic(attacker_bonus=0.75,
@@ -112,12 +120,6 @@ Tactic(attacker_bonus=0.75,
        width_bonus=0.75,
        name="Tactic Withdrawal",
        begin_phase="Tactic Withdraw"
-       ),
-
-Tactic(attacker_bonus=0.75,
-       defender_bonus=1.15,
-       name="Delay",
-       countered_by="Shock"
        ),
 
 Tactic(attacker_bonus=0.75,
@@ -136,6 +138,14 @@ Tactic(attacker_bonus=0.80,
        name="Backhand Blow"
        ),
 
+Tactic(attacker_bonus=1.2,
+       defender_bonus=.95,
+       weight=2,
+       width_bonus=0.75,
+       name="Hold Bridge",
+       begin_phase="Hold Bridge"
+       ),
+
 Tactic(attacker_bonus=0.3,
        defender_bonus=.4,
        width_bonus=0.5,
@@ -146,15 +156,6 @@ Tactic(attacker_bonus=0.9,
        defender_bonus=1.1,
        weight=2,
        name="Overwhelming Fire"
-       ),
-
-# Need Requirement
-Tactic(attacker_bonus=1.2,
-       defender_bonus=.95,
-       weight=2,
-       width_bonus=0.75,
-       name="Hold Bridge",
-       begin_phase="Hold Bridge"
        ),
 ]
 
@@ -255,13 +256,13 @@ DEF_SB_TACTICS = [
 Tactic(attacker_bonus=1,
         defender_bonus=0.95,
         width_bonus=0.75,
-        name="Bridge Assaut"
+        name="Assault Bridge"
        ),
 
 Tactic(attacker_bonus=1.25,
         defender_bonus=0.9,
         width_bonus=0.75,
-        name="Bridge Reckless Assaut"
+        name="Reckless Assaut"
        ),
 
 Tactic(attacker_bonus=1.1,
