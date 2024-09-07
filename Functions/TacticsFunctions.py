@@ -116,8 +116,8 @@ def initiative_round(Battle):
     """
     ATK_weight = 1
     DEF_weight = 1
-    ATK_max_reco = max(division.recon for division in Battle.camp_attacker)
-    DEF_max_reco = max(division.recon for division in Battle.camp_defender)
+    ATK_max_reco = max(division.recon for division in Battle.camp_attacker.divisions)
+    DEF_max_reco = max(division.recon for division in Battle.camp_defender.divisions)
 
     ATK_weight += Battle.camp_attacker.leader.level
     ATK_weight += Battle.camp_defender.leader.level

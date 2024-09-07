@@ -141,12 +141,20 @@ class Division:
         # Hits calculation
         total_defense = self.attaque if is_attacking else self.defense
         total_defense += 0 if is_attacking else 0.02*entrenchment_level
-        total_defense += 0.025 * self.camp_info["Leader"].defense_level
+        total_defense += 0.025 * self.camp_info["leader"].defense_level
+
+        # Defenses Bonus
+        total_defense *= 1.02 ** self.camp_info["entrenchment_level"]
+
+        # XP Level
         if   self.experience == "green":    total_defense *= 0.75
         elif self.experience == "trained":  total_defense *= 1
         elif self.experience == "regular":  total_defense *= 1.25
         elif self.experience == "seasoned": total_defense *= 1.50
         elif self.experience == "veteran":  total_defense *= 1.75
+
+        # compare with attack
+        total_defense /= 10
         if total_defense > total_attack:
             total_attack *= 0.1
         else:
