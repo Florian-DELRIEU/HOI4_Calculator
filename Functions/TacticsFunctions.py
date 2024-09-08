@@ -1,6 +1,4 @@
 import random as rd
-from  Library.TacticList import ATK_TACTICS, ATK_HB_TACTICS, ATK_CQ_TACTICS, ATK_SB_TACTICS, ATK_TW_TACTICS
-from  Library.TacticList import DEF_TACTICS, DEF_HB_TACTICS, DEF_CQ_TACTICS, DEF_SB_TACTICS, DEF_TW_TACTICS
 from Classes.Tactics import *
 from Functions.TacticTriggersFunctions import *
 
@@ -8,6 +6,8 @@ from Functions.TacticTriggersFunctions import *
 
 
 def choose_tactic(Battle):
+    from Library.TacticList import ATK_TACTICS, ATK_HB_TACTICS, ATK_CQ_TACTICS, ATK_SB_TACTICS, ATK_TW_TACTICS
+    from Library.TacticList import DEF_TACTICS, DEF_HB_TACTICS, DEF_CQ_TACTICS, DEF_SB_TACTICS, DEF_TW_TACTICS
     """
     Choisi une tactique selon une sélection pondérée
         - run "change-weight"
@@ -50,8 +50,10 @@ def choose_tactic(Battle):
     Battle.camp_attacker.tactic = attacker_Tactic
     Battle.camp_defender.tactic = defender_Tactic
     if intiative_winner == "DEF" and Battle.camp_defender.tactic.begin_battle_phase is not None:
+        Battle.battle_phase = Battle.camp_attacker.tactic.begin_battle_phase
         Battle.battle_phase = Battle.camp_defender.tactic.begin_battle_phase
     if intiative_winner == "ATK" and Battle.camp_attacker.tactic.begin_battle_phase is not None:
+        Battle.battle_phase = Battle.camp_defender.tactic.begin_battle_phase
         Battle.battle_phase = Battle.camp_attacker.tactic.begin_battle_phase
 
     is_countered(Battle) # test if any tactics has been coutered

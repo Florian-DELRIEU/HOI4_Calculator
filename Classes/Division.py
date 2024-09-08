@@ -131,7 +131,7 @@ class Division:
             elif self.experience == "seasoned": atk_bonus_percent += 50
             elif self.experience == "veteran":  atk_bonus_percent += 75
             # apply bonus
-            total_attack = base_attack * (1 + atk_bonus_percent) / 100
+            total_attack = base_attack * (1 + atk_bonus_percent / 100)
             total_attack = total_attack if self.piercing >= target.armor else total_attack / 2
             total_attack /= 10
             target.take_damage(self, total_attack)
@@ -148,14 +148,14 @@ class Division:
         def_bonus_percent += 2.5 * self.camp_info["leader"].defense_level
 
         # XP Level
-        if   self.experience == "green":    def_bonus_percent *= -25
-        elif self.experience == "trained":  def_bonus_percent *= 0
-        elif self.experience == "regular":  def_bonus_percent *= 25
-        elif self.experience == "seasoned": def_bonus_percent *= 50
-        elif self.experience == "veteran":  def_bonus_percent *= 75
+        if   self.experience == "green":    def_bonus_percent += -25
+        elif self.experience == "trained":  def_bonus_percent += 0
+        elif self.experience == "regular":  def_bonus_percent += 25
+        elif self.experience == "seasoned": def_bonus_percent += 50
+        elif self.experience == "veteran":  def_bonus_percent += 75
 
         # compare with attack
-        total_defense = base_defense * (1 + def_bonus_percent)/100
+        total_defense = base_defense * (1 + def_bonus_percent/100)
         total_defense /= 10
         if total_defense > total_attack:
             total_attack *= 0.1
@@ -164,6 +164,7 @@ class Division:
 
         # HP Damage calculation
         # todo remplacer par des jets de dés
+        # todo pas de comparaison de piercing / hardness !!
         self.pv -= 1.5 * total_attack * striker.tactic_damage_bonus * striker.combat_width_malus
         self.pv = truncDecimal(self.pv, 1)
         self.pv = max(self.pv, 0)
