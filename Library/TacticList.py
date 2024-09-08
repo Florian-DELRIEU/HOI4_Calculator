@@ -26,7 +26,6 @@ Tactic(defender_bonus=1.05,
 
 Tactic(defender_bonus=0.75,
        name="Shock",
-       weight_mult=0,
        countered_by="Ambush",
        ),
 

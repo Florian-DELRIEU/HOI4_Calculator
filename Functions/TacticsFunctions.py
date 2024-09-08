@@ -36,6 +36,10 @@ def choose_tactic(Battle):
     else: return NameError , "Wrong phase name"
 
     change_weight(Battle,attacker_tactic_list,defender_tactic_list)
+    # remove tactics that cannot be choose
+    attacker_tactic_list = [tactic for tactic in attacker_tactic_list if tactic.weight * tactic.weight_mult > 0]
+    defender_tactic_list = [tactic for tactic in defender_tactic_list if tactic.weight * tactic.weight_mult > 0]
+
 
     # Initiative round
     #todo fixme from here
@@ -69,17 +73,17 @@ def _choose_tactic(ATK_tactic_list, DEF_tactic_list, Initiative_winner):
             Counter_tactic.weight_mult *= 1.35
         except: pass # if counter tactic doesn't exist
         # ATK tactics weighted choice finnaly
-        ATK_Tactic = rd.choices(ATK_tactic_list, [el.weight for el in ATK_tactic_list] )[0]
+        ATK_Tactic = rd.choices(ATK_tactic_list, [el.weight*el.weight_mult for el in ATK_tactic_list] )[0]
 
     if Initiative_winner == "DEF":
         # ATK choice first
-        ATK_Tactic = rd.choices(ATK_tactic_list, [el.weight for el in ATK_tactic_list] )[0]
+        ATK_Tactic = rd.choices(ATK_tactic_list, [el.weight*el.weight_mult for el in ATK_tactic_list] )[0]
         try: # Change weight for try counter ATK tactic
             Counter_tactic = [el for el in DEF_tactic_list if el.name == ATK_Tactic.countered_by][0]  # Quel est la tactique de contre ?
             Counter_tactic.weight_mult *= 1.35
         except: pass
     # DEF choice
-        DEF_Tactic = rd.choices(DEF_tactic_list, [el.weight for el in DEF_tactic_list] )[0]
+        DEF_Tactic = rd.choices(DEF_tactic_list, [el.weight*el.weight_mult for el in DEF_tactic_list] )[0]
     return ATK_Tactic , DEF_Tactic
 
 def is_countered(Battle):
