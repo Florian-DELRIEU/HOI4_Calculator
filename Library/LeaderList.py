@@ -11,4 +11,5 @@ traits_list = [
     "Panzer Leader",
     "Trickster",
     "Combined Arms Expert",
+    "Defensive Doctrine"
 ]

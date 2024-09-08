@@ -157,18 +157,13 @@ def change_weight(Battle,ATK_tactic,DEF_tactic):
     Defender = Battle.camp_defender
     DEF_leader = Battle.camp_defender.leader
 
-    #todo tactique actuelle : Blitz
     for tactic in ATK_tactic:
-
+    # Classic Phase
         if tactic.name == "Assaut":
             if Battle.terrain.name == "Urban":
                 tactic.weight_mult *= 5
             if "Agressive Assaulter" in ATK_leader.traits:
                 tactic.weight_mult *= 2
-
-        if tactic.name == "Shock":
-            if "Agressive Assaulter" in ATK_leader.traits:
-                tactic.weight_mult = 2
 
         if tactic.name == "Encirclement":
             if (has_reserves_available(Attacker)
@@ -181,15 +176,26 @@ def change_weight(Battle,ATK_tactic,DEF_tactic):
                     or "Combined Arms Expert" in ATK_leader.traits):
                     tactic.weight_mult = 2
 
-        if tactic.name == "Mass Charge":
-            if has_reserves_available(Battle.camp_attacker) and has_full_width(Battle, Battle.camp_attacker):
-                tactic.weight_mult = 1
+        if tactic.name == "Shock":
+            if "Agressive Assaulter" in ATK_leader.traits:
+                tactic.weight_mult = 2
 
         if tactic.name == "Breakthrough":
             if has_hardness_over(Attacker,50) or ATK_leader.level - DEF_leader.level >= 1:
                 tactic.weight_mult = 1
 
-        if tactic.name == "Blitz" or "Masterful Blitz":
+        if tactic.name == "Blitz":
+            if (has_hardness_over(Battle.camp_attacker,50)
+            #todo and not have Soviet focus "Glory of red army"
+            and (ATK_leader.level > 2
+                 or "Panzer Leader" in ATK_leader.traits
+                 or ATK_leader.level - DEF_leader.level > 1)):
+                tactic.weight_mult = 1
+                if ("Panzer Expert" in ATK_leader.traits
+                        or "Combined Arms Expert" in ATK_leader.traits):
+                    tactic.weight_mult = 2
+
+        if tactic.name == "Masterful Blitz":
             if (has_hardness_over(Battle.camp_attacker,50)
             and (ATK_leader.level > 2
                  or "Panzer Leader" in ATK_leader.traits
@@ -203,6 +209,83 @@ def change_weight(Battle,ATK_tactic,DEF_tactic):
             if (has_river(Battle)
             and (ATK_leader.level > 3
                     or ("Offensive Doctrine" in ATK_leader.traits and ATK_leader.level < 2))):
+                tactic.weight_mult = 1
+
+        if tactic.name == "Mass Charge":
+            if has_reserves_available(Battle.camp_attacker) and has_full_width(Battle, Battle.camp_attacker):
+                tactic.weight_mult = 1
+
+        if tactic.name == "Banzai Charge": pass
+            #todo if camp si japan
+
+    # Phase Seize Bridge
+        if tactic.name == "Defend Bridge":
+            if ATK_leader.level > 4:
+                tactic.weight_mult = 1
+
+    # Phase Hold Bridge
+        if tactic.name == "Rush Bridge":
+            if ATK_leader.level > 4:
+                tactic.weight_mult = 1
+
+
+    for tactic in DEF_tactic:
+
+        if tactic.name == "Counter-Attack":
+            if DEF_leader.level - ATK_leader.level > 0:
+                tactic.weight_mult = 1
+                if "Unyielding Defender" in DEF_leader.traits:
+                    tactic.weight_mult = 2
+
+        if tactic.name == "Tactic Withdrawal":
+            if (DEF_leader.level - ATK_leader.level > 0
+            or "Trickster" in DEF_leader.traits):
+                tactic.weight_mult = 1
+
+        if tactic.name == "Ambush":
+            if (DEF_leader.level - ATK_leader.level > 1
+            or DEF_leader.level > 2
+            or "Trickster" in DEF_leader.traits):
+                tactic.weight_mult = 1
+
+        if tactic.name == "Elastic Defense":
+            if (DEF_leader.level > 2
+            or "Defensive Doctrine" in DEF_leader.traits):
+                tactic.weight_mult = 1
+
+        if tactic.name == "Backhand Blow":
+            if (DEF_leader.level > 4
+            or ("Trickster" in DEF_leader.traits
+                and DEF_leader.level > 3)):
+                tactic.weight_mult = 1
+
+        if tactic.name == "Hold Bridge":
+            if (has_river(Battle)
+            and (DEF_leader.level > 2
+                or "Defensive Doctrine" in DEF_leader.traits)):
+                tactic.weight_mult = 1
+
+        if tactic.name == "Guerrilla Tactics":
+            if (DEF_leader.level > 2
+                or "Trickster" in DEF_leader.traits):
+                tactic.weight_mult = 1
+
+    # Phase Seize Bridge
+        if tactic.name == "Reckless Assault":
+            if DEF_leader.level < 3:
+                tactic.weight_mult = 1
+
+        if tactic.name == "Recapture Bridge":
+            if DEF_leader.level > 2 or "Trickster" in DEF_leader.traits:
+                tactic.weight_mult = 1
+
+    # Phase Hold Bridge
+        if tactic.name == "Hold Bridge":
+            if DEF_leader.level < 3:
+                tactic.weight_mult = 1
+
+        if tactic.name == "Defend Bridge":
+            if DEF_leader.level > 2 or "Trickster" in DEF_leader.traits:
                 tactic.weight_mult = 1
 
         pass

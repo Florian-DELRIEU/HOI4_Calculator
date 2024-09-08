@@ -26,7 +26,8 @@ Tactic(defender_bonus=1.05,
 
 Tactic(defender_bonus=0.75,
        name="Shock",
-       countered_by="Ambush"
+       weight_mult=0,
+       countered_by="Ambush",
        ),
 
 Tactic(defender_bonus=0.85,
@@ -46,6 +47,7 @@ Tactic(defender_bonus=0.85,
 Tactic(defender_bonus=0.8,
        attacker_bonus=1.2,
        width_bonus=1.1,
+       weight_mult=0,
        name="Masterful Blitz",
        countered_by="Elastic Defense"
        ),
@@ -69,6 +71,7 @@ Tactic(defender_bonus=1.1,
 
 Tactic(defender_bonus=1.1,
        attacker_bonus=1.25,
+       weight_mult=0,
        name="Banzai Charge",
        countered_by="Overwhelming Fire"
        ),
@@ -106,7 +109,8 @@ Tactic(defender_bonus=1.05,
        ),
 
 Tactic(defender_bonus=1.25,
-       name="Counter-Attack"
+       name="Counter-Attack",
+       weight_mult=0
        ),
 
 Tactic(attacker_bonus=0.75,
