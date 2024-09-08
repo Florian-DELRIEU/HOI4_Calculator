@@ -38,6 +38,7 @@ def choose_tactic(Battle):
     change_weight(Battle,attacker_tactic_list,defender_tactic_list)
 
     # Initiative round
+    #todo fixme from here
     intiative_winner = initiative_round(Battle) # wich side has initiative
     attacker_Tactic, defender_Tactic = _choose_tactic(attacker_tactic_list, defender_tactic_list, intiative_winner) # choose tactics
 
@@ -61,11 +62,11 @@ def _choose_tactic(ATK_tactic_list, DEF_tactic_list, Initiative_winner):
     DEF_Tactic = Tactic()
     if Initiative_winner == "ATK":
         # DEF tactics weighted choice first
-        DEF_Tactic = rd.choices(DEF_tactic_list, [el.weight for el in DEF_tactic_list])[0]
+        DEF_Tactic = rd.choices(DEF_tactic_list, [el.weight*el.weight_mult for el in DEF_tactic_list])[0]
         # Change weight for try counter DEF tactic
         try: # Increase weight if counter tactic exist
             Counter_tactic = [el for el in ATK_tactic_list if el.name == DEF_Tactic.countered_by][0]
-            Counter_tactic.weight *= 1.35
+            Counter_tactic.weight_mult *= 1.35
         except: pass # if counter tactic doesn't exist
         # ATK tactics weighted choice finnaly
         ATK_Tactic = rd.choices(ATK_tactic_list, [el.weight for el in ATK_tactic_list] )[0]
@@ -75,7 +76,7 @@ def _choose_tactic(ATK_tactic_list, DEF_tactic_list, Initiative_winner):
         ATK_Tactic = rd.choices(ATK_tactic_list, [el.weight for el in ATK_tactic_list] )[0]
         try: # Change weight for try counter ATK tactic
             Counter_tactic = [el for el in DEF_tactic_list if el.name == ATK_Tactic.countered_by][0]  # Quel est la tactique de contre ?
-            Counter_tactic.weight *= 1.35
+            Counter_tactic.weight_mult *= 1.35
         except: pass
     # DEF choice
         DEF_Tactic = rd.choices(DEF_tactic_list, [el.weight for el in DEF_tactic_list] )[0]
@@ -120,11 +121,11 @@ def initiative_round(Battle):
     DEF_max_reco = max(division.recon for division in Battle.camp_defender.divisions)
 
     ATK_weight += Battle.camp_attacker.leader.level
-    ATK_weight += Battle.camp_defender.leader.level
+    DEF_weight += Battle.camp_defender.leader.level
 
-    if ATK_max_reco >= DEF_max_reco:
+    if ATK_max_reco > DEF_max_reco:
         ATK_weight += 5
-    elif DEF_max_reco >= ATK_max_reco:
+    elif DEF_max_reco > ATK_max_reco:
         DEF_weight += 5
     else: pass
 
@@ -159,7 +160,7 @@ def change_weight(Battle,ATK_tactic,DEF_tactic):
 
     for tactic in ATK_tactic:
     # Classic Phase
-        if tactic.name == "Assaut":
+        if tactic.name == "Assault":
             if Battle.terrain.name == "Urban":
                 tactic.weight_mult *= 5
             if "Agressive Assaulter" in ATK_leader.traits:
@@ -168,7 +169,7 @@ def change_weight(Battle,ATK_tactic,DEF_tactic):
         if tactic.name == "Encirclement":
             if (has_reserves_available(Attacker)
             and has_full_width(Battle,Attacker))\
-            and (ATK_leader.level - DEF_leader.level >= 0
+            and (ATK_leader.level - DEF_leader.level > 0
                 or "Panzer Leader" in ATK_leader.traits
                 or "Trickster" in ATK_leader.traits):
                 tactic.weight_mult = 1
@@ -181,7 +182,7 @@ def change_weight(Battle,ATK_tactic,DEF_tactic):
                 tactic.weight_mult = 2
 
         if tactic.name == "Breakthrough":
-            if has_hardness_over(Attacker,50) or ATK_leader.level - DEF_leader.level >= 1:
+            if has_hardness_over(Attacker,50) or ATK_leader.level - DEF_leader.level > 1:
                 tactic.weight_mult = 1
 
         if tactic.name == "Blitz":
@@ -280,7 +281,7 @@ def change_weight(Battle,ATK_tactic,DEF_tactic):
                 tactic.weight_mult = 1
 
     # Phase Hold Bridge
-        if tactic.name == "Hold Bridge":
+        if tactic.name == "Holding Bridge":
             if DEF_leader.level < 3:
                 tactic.weight_mult = 1
 

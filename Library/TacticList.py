@@ -123,28 +123,33 @@ Tactic(attacker_bonus=0.75,
        defender_bonus=0.95,
        width_bonus=0.75,
        name="Tactic Withdrawal",
-       begin_phase="Tactic Withdraw"
+       begin_phase="Tactic Withdraw",
+       weight_mult=0,
        ),
 
 Tactic(attacker_bonus=0.75,
        defender_bonus=1,
+       weight_mult=0,
        name="Ambush",
        countered_by="Breakthrough"
        ),
 
 Tactic(attacker_bonus=0.85,
        defender_bonus=1.1,
+       weight_mult=0,
        name="Elastic Defense"
        ),
 
 Tactic(attacker_bonus=0.80,
        defender_bonus=1.2,
+       weight_mult=0,
        name="Backhand Blow"
        ),
 
 Tactic(attacker_bonus=1.2,
        defender_bonus=.95,
        weight=2,
+       weight_mult=0,
        width_bonus=0.75,
        name="Hold Bridge",
        begin_phase="Hold Bridge"
@@ -153,6 +158,7 @@ Tactic(attacker_bonus=1.2,
 Tactic(attacker_bonus=0.3,
        defender_bonus=.4,
        width_bonus=0.5,
+       weight_mult=0,
        name="Guerrilla Tactics"
        ),
 
@@ -310,7 +316,7 @@ Tactic(attacker_bonus=1.2,
        defender_bonus=0.9,
        weight=2,
        width_bonus=0.75,
-       name="Hold Bridge"
+       name="Holding Bridge"
        ),
 
 Tactic(attacker_bonus=1.1,

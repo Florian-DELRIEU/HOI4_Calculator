@@ -105,11 +105,9 @@ class Division:
             self.primary_target = max(priority_scores_dict, key=priority_scores_dict.get)
 
     def do_attack(self):
+        atk_bonus_percent = 0
         if len(self.target_list) == 0:
             return
-        # add bonus to sa and ha from leader
-        self.soft_attack += 0.025 * self.camp_info["leader"].attack_level
-        self.hard_attack += 0.025 * self.camp_info["leader"].attack_level
         coordinated_share = 0.35 + self.camp_info["coordination"] * (1 + self.initiative)
         sa_per_division = (self.soft_attack * (1 - coordinated_share)) // len(self.target_list)
         ha_per_division = (self.hard_attack * (1 - coordinated_share)) // len(self.target_list)
@@ -122,38 +120,42 @@ class Division:
             else:
                 total_sa = sa_per_division * (1 - target.hardness)
                 total_ha = ha_per_division * target.hardness
-            total_attack = total_sa + total_ha
-            total_attack = total_attack if self.piercing >= target.armor else total_attack / 2
+            base_attack = total_sa + total_ha
+
+            # Leader level bonus
+            atk_bonus_percent += 2.5 * self.camp_info["leader"].attack_level
             # XP level
-            if   self.experience == "green":    total_attack *= 0.75
-            elif self.experience == "trained":  total_attack *= 1
-            elif self.experience == "regular":  total_attack *= 1.25
-            elif self.experience == "seasoned": total_attack *= 1.50
-            elif self.experience == "veteran":  total_attack *= 1.75
+            if   self.experience == "green":    atk_bonus_percent += -25
+            elif self.experience == "trained":  atk_bonus_percent += 0
+            elif self.experience == "regular":  atk_bonus_percent += 25
+            elif self.experience == "seasoned": atk_bonus_percent += 50
+            elif self.experience == "veteran":  atk_bonus_percent += 75
+            # apply bonus
+            total_attack = base_attack * (1 + atk_bonus_percent) / 100
+            total_attack = total_attack if self.piercing >= target.armor else total_attack / 2
             total_attack /= 10
             target.take_damage(self, total_attack)
 
     def take_damage(self, striker, total_attack):
+        def_bonus_percent = 0
         # Variable attribution
         is_attacking = self.camp_info["is_attacking"]
         entrenchment_level = self.camp_info["entrenchment_level"]
         
         # Hits calculation
-        total_defense = self.attaque if is_attacking else self.defense
-        total_defense += 0 if is_attacking else 0.02*entrenchment_level
-        total_defense += 0.025 * self.camp_info["leader"].defense_level
-
-        # Defenses Bonus
-        total_defense *= 1.02 ** self.camp_info["entrenchment_level"]
+        base_defense = self.attaque if is_attacking else self.defense
+        def_bonus_percent += 0 if is_attacking else 2*entrenchment_level
+        def_bonus_percent += 2.5 * self.camp_info["leader"].defense_level
 
         # XP Level
-        if   self.experience == "green":    total_defense *= 0.75
-        elif self.experience == "trained":  total_defense *= 1
-        elif self.experience == "regular":  total_defense *= 1.25
-        elif self.experience == "seasoned": total_defense *= 1.50
-        elif self.experience == "veteran":  total_defense *= 1.75
+        if   self.experience == "green":    def_bonus_percent *= -25
+        elif self.experience == "trained":  def_bonus_percent *= 0
+        elif self.experience == "regular":  def_bonus_percent *= 25
+        elif self.experience == "seasoned": def_bonus_percent *= 50
+        elif self.experience == "veteran":  def_bonus_percent *= 75
 
         # compare with attack
+        total_defense = base_defense * (1 + def_bonus_percent)/100
         total_defense /= 10
         if total_defense > total_attack:
             total_attack *= 0.1
