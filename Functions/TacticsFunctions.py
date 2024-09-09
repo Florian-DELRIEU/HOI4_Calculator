@@ -18,19 +18,19 @@ def choose_tactic(Battle):
     """
 
     # Which tactics lists is used according the battle phase
-    if Battle.battle_phase == "Default":
+    if Battle.battle_phase == BattlePhase.DEFAULT:
         attacker_tactic_list = ATK_TACTICS
         defender_tactic_list = DEF_TACTICS
-    elif Battle.battle_phase == "Close Quarter Combat":
+    elif Battle.battle_phase == BattlePhase.CLOSE_QUARTER_COMBAT:
         attacker_tactic_list = ATK_CQ_TACTICS
         defender_tactic_list = DEF_CQ_TACTICS
-    elif Battle.battle_phase == "Seize Bridge":
+    elif Battle.battle_phase == BattlePhase.SEIZE_BRIDGE:
         attacker_tactic_list = ATK_SB_TACTICS
         defender_tactic_list = DEF_SB_TACTICS
-    elif Battle.battle_phase == "Hold Bridge":
+    elif Battle.battle_phase == BattlePhase.HOLD_BRIDGE:
         attacker_tactic_list = ATK_HB_TACTICS
         defender_tactic_list = DEF_HB_TACTICS
-    elif Battle.battle_phase == "Tactical Withdraw":
+    elif Battle.battle_phase == BattlePhase.TACTICAL_WITHDRAW:
         attacker_tactic_list = ATK_TW_TACTICS
         defender_tactic_list = DEF_TW_TACTICS
     else: return NameError , "Wrong phase name"

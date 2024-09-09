@@ -26,3 +26,11 @@ class Tactic:
 
     def __repr__(self):
         return self.name
+
+
+class BattlePhase(enumerate):
+    DEFAULT = "Default"
+    CLOSE_QUARTER_COMBAT = "Close Quarter Combat"
+    SEIZE_BRIDGE = "Seize Bridge"
+    HOLD_BRIDGE = "Hold Bridge"
+    TACTICAL_WITHDRAW = "Tactical Withdraw"
