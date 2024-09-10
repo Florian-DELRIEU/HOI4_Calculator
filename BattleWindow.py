@@ -8,9 +8,6 @@ from Library.TerrainList import terrain_list
 from Library import LeaderList
 from Library.LeaderList import *
 
-#TODO
-#   - Rafraichir les stats dans la fenetre aprés des dégats
-
 Division = Division.Division # shortcut
 Camp = Camp.Camp # shortcut
 
@@ -188,7 +185,6 @@ class BattleWindow(tk.Tk):
             division.do_attack()
 
     def renfort_round(self):
-        # todo faire des test
         for camp in [self.camp_attacker,self.camp_defender]:
             camp.from_reserve_to_frontline()
 

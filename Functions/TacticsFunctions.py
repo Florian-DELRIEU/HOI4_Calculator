@@ -42,7 +42,6 @@ def choose_tactic(Battle):
 
 
     # Initiative round
-    #todo fixme from here
     intiative_winner = initiative_round(Battle) # wich side has initiative
     attacker_Tactic, defender_Tactic = _choose_tactic(attacker_tactic_list, defender_tactic_list, intiative_winner) # choose tactics
 
