@@ -3,11 +3,10 @@ from tkinter import ttk
 import json
 import os
 from Classes import Division,Camp
-from TerrainList import terrain_list
-import random
-
-#TODO
-#   - Rafraichir les stats dans la fenetre aprés des dégats
+from Functions.TacticsFunctions import choose_tactic, change_weight
+from Library.TerrainList import terrain_list
+from Library import LeaderList
+from Library.LeaderList import *
 
 Division = Division.Division # shortcut
 Camp = Camp.Camp # shortcut
@@ -17,6 +16,8 @@ class BattleWindow(tk.Tk):
         super().__init__()
         self.title("Fenêtre de Bataille")
         self.geometry("800x600")
+
+        self.battle_phase = "Default"
 
         # Initialiser les camps
         self.camp_attacker = Camp()
@@ -31,23 +32,58 @@ class BattleWindow(tk.Tk):
         frame_params = tk.Frame(self)
         frame_params.pack(fill=tk.X, pady=10)
 
+        # Ajouter une frame pour les leaders
+        self.frame_leaders = tk.Frame(self)
+        self.frame_leaders.pack(fill=tk.X, pady=10)
+
+        # Label pour le leader du camp attaquant
+        self.attacker_leader_label = tk.Label(self.frame_leaders, text="Leader Attaquant : Aucun",
+                                              font=("Arial", 12, "bold"), bd=2, relief=tk.RIDGE)
+        self.attacker_leader_label.pack(side=tk.LEFT, padx=20)
+        self.attacker_leader_label.bind("<Button-1>", lambda event: self.select_leader("attacker"))
+
+        # Label pour le leader du camp défenseur
+        self.defender_leader_label = tk.Label(self.frame_leaders, text="Leader Défenseur : Aucun",
+                                              font=("Arial", 12, "bold"), bd=2, relief=tk.RIDGE)
+        self.defender_leader_label.pack(side=tk.RIGHT, padx=20)
+        self.defender_leader_label.bind("<Button-1>", lambda event: self.select_leader("defender"))
+
+        # Ajout des labels pour les tactiques et la phase de bataille
+        self.battle_phase_label = tk.Label(self, text="Phase de Bataille : Aucune", font=("Arial", 12, "bold"))
+        self.battle_phase_label.pack(side=tk.TOP, pady=5)
+
+        # Créer un cadre pour les labels de tactiques
+        frame_tactics = tk.Frame(self)
+        frame_tactics.pack(fill=tk.X, pady=10)
+
+        # Label pour la tactique du camp attaquant (à gauche)
+        self.attacker_tactic_label = tk.Label(frame_tactics, text="Tactique Attaquant : Aucune",
+                                                                                            font=("Arial", 12, "bold"))
+        self.attacker_tactic_label.pack(side=tk.LEFT, padx=20)
+
+        # Label pour la tactique du camp défenseur (à droite)
+        self.defender_tactic_label = tk.Label(frame_tactics, text="Tactique Défenseur : Aucune",
+                                                                                            font=("Arial", 12, "bold"))
+        self.defender_tactic_label.pack(side=tk.RIGHT, padx=20)
+
         tk.Label(frame_params, text="Météo").grid(row=0, column=0, padx=5)
         self.weather = tk.StringVar()
         tk.Entry(frame_params, textvariable=self.weather).grid(row=0, column=1, padx=5)
 
-        self.terrain = None
+        self.terrain = terrain_list[0]
         tk.Label(frame_params, text="Terrain").grid(row=0, column=2, padx=5)
         self.selected_terrain = tk.StringVar()
         self.selected_terrain.set(terrain_list[0].name)  # Set default terrain
         terrain_names = [terrain.name for terrain in terrain_list]
         self.terrain_dropdown = ttk.Combobox(frame_params, textvariable=self.selected_terrain, values=terrain_names)
         self.terrain_dropdown.grid(row=0, column=3, padx=5)
-        self.terrain_dropdown.bind("<<ComboboxSelected>>", self.update_terrain())
+        self.terrain_dropdown.bind("<<ComboboxSelected>>", self.update_terrain)
 
+        self.combat_width = terrain_list[0].width
         tk.Label(frame_params, text="Aire de combat").grid(row=2, column=0, padx=5)
-        self.combat_width = tk.StringVar()
-        self.combat_width.set(str(terrain_list[0].width))  # Set default width
-        tk.Label(frame_params, textvariable=self.combat_width).grid(row=2, column=1, padx=5)
+        self.combat_width_display = tk.StringVar()
+        self.combat_width_display.set(str(self.combat_width))  # Set default width
+        tk.Label(frame_params, textvariable=self.combat_width_display).grid(row=2, column=1, padx=5)
 
         tk.Label(frame_params, text="Leader Camp A").grid(row=1, column=0, padx=5)
         self.leader_attacker = tk.StringVar()
@@ -104,17 +140,32 @@ class BattleWindow(tk.Tk):
             Retour:
                 None
             """
+        # Mets a jour battle infos
+        self.camp_defender.get_battle_info(self)
+        self.camp_attacker.get_battle_info(self)
+
         # Round initial
         if self.round_counter == 0:
             for camp in [self.camp_attacker,self.camp_defender]:
                 camp.move_in_frontline()
+        if self.round_counter % 12 == 0:
+            self.tactic_round()
         self._round(self.camp_attacker,self.camp_defender)
+        # Vérification états de chaque division et renforts ?
+
+        self.check_state_of_division()
+        self.renfort_round()
         # Ecriture des logs
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
         self.log_text.see(tk.END)
-        self.refresh_display()
         self.round_counter += 1
+
+        # Mets a jour affichage
+        self.refresh_display()
+        self.update_battle_info_display()
+        self.update_combat_width()
+
 
     def _round(self,camp_attacker,camp_defender):
         """
@@ -132,16 +183,13 @@ class BattleWindow(tk.Tk):
         for division in camp_defender.frontline:
             division.targeting(camp_attacker)
             division.do_attack()
-        # Vérification états de chaques division
-        self.check_state_of_division()
-        self.renfort_round()
 
     def renfort_round(self):
-        # todo faire des test
         for camp in [self.camp_attacker,self.camp_defender]:
             camp.from_reserve_to_frontline()
 
-
+    def tactic_round(self):
+        choose_tactic(self)
 
     def check_state_of_division(self):
         """
@@ -153,6 +201,7 @@ class BattleWindow(tk.Tk):
                 if division.pv <= 0 or division.organisation <= 0:
                     self.retreat_division(division)
 
+###################################################
     def retreat_division(self,division_to_retreat):
         """
         Retire la division de toute les listes de la bataille. Pour représenté que la division s'est replié du champ de
@@ -178,7 +227,7 @@ class BattleWindow(tk.Tk):
                         widget.destroy()  # Détruire le cadre correspondant à la division retirée
                         break
 
-    def update_terrain(self):
+    def update_terrain(self,event=None):
         """
         Recupère l'instance :terrain: a partir du choix fait dans le menu déroulant.
         :return:
@@ -187,6 +236,28 @@ class BattleWindow(tk.Tk):
         for terrain in terrain_list:
             if terrain.name == selected_terrain_name:
                 self.terrain = terrain
+                break
+        self.update_combat_width()
+
+    def update_combat_width(self):
+        """
+        Mets à jour l'affichage du combat_width
+        """
+        self.combat_width = self.terrain.width
+        try:
+            self.combat_width *= self.camp_attacker.tactic.width_bonus * self.camp_defender.tactic.width_bonus
+        except Exception:
+            pass
+        self.combat_width_display.set(str(self.combat_width))
+
+    def update_battle_info_display(self):
+        """
+        Met à jour l'affichage des tactiques pour chaque camp et la phase de bataille en cours.
+        """
+        self.attacker_tactic_label.config(text=f"Tactique Attaquant : {self.camp_attacker.tactic.name}")
+        self.defender_tactic_label.config(text=f"Tactique Défenseur : {self.camp_defender.tactic.name}")
+        self.battle_phase_label.config(text=f"Phase de Bataille : {self.battle_phase}")
+
 
     ############# BOUTONS ####################
 
@@ -335,13 +406,54 @@ class BattleWindow(tk.Tk):
     def refresh_display(self):
         for frame, current_camp in [(self.camp_attacker_divisions_frame, self.camp_attacker),
                                     (self.camp_defender_divisions_frame, self.camp_defender)]:
-            for widget, value in self.get_updated_values(current_camp):
-                widget.config(text=value)
+            for widget in frame.winfo_children():
+                widget.destroy()  # Effacer les anciennes stats
+
+            for division in current_camp.get_divisions():
+                division_frame = tk.Frame(frame, bd=1, relief=tk.SOLID, padx=5, pady=5)
+                division_frame.pack(fill=tk.X, pady=2)
+                stats_frame = tk.Frame(division_frame)
+                stats_frame.pack(fill=tk.X)
+                self.display_division_stats(stats_frame, division, current_camp)
+
+    def select_leader(self, camp_type):
+        leader_window = tk.Toplevel(self)
+        leader_window.title("Sélectionner un Leader")
+        leader_window.geometry("300x200")
+
+        listbox = tk.Listbox(leader_window)
+        listbox.pack(fill=tk.BOTH, expand=True)
+
+        # Remplir la liste avec les noms des leaders disponibles
+        leaders = self.get_leaders()
+        for leader in leaders:
+            listbox.insert(tk.END, leader.name)  # Assurez-vous que les instances Leader ont un attribut `name`
+
+        def on_select():
+            selected_name = listbox.get(listbox.curselection())
+            if camp_type == "attacker":
+                self.attacker_leader_label.config(text=f"Leader Attaquant : {selected_name}")
+                self.camp_attacker.add_leader(next((leader for leader in self.get_leaders() if leader.name == selected_name), None))
+            else:
+                self.defender_leader_label.config(text=f"Leader Défenseur : {selected_name}")
+                self.camp_defender.add_leader(next((leader for leader in self.get_leaders() if leader.name == selected_name), None))
+            leader_window.destroy()
+
+        tk.Button(leader_window, text="Sélectionner", command=on_select).pack(pady=10)
+
+    def get_leaders(self):
+        """
+        Retourne la liste des leaders disponibles pour le camp spécifié.
+        """
+        return [leader_A, leader_B, leader_C, leader_D]
+
 
 app = BattleWindow()
 
 test_case = "Case 1"
 if __name__ == "__main__" and test_case == "Case 1":
+    app.camp_attacker.add_leader(LeaderList.leader_A)
+    app.camp_defender.add_leader(LeaderList.no_leader)
     app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
     app.camp_attacker.get_divisions()[-1].nom = "Div. A1"
     app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))

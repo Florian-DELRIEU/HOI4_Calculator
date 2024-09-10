@@ -1,10 +1,11 @@
-from Functions import generate_id
+from Functions.GlobalFunctions import generate_id
 import random
 from MyPack2.Utilities import truncDecimal
 
+
 class Division:
     def __init__(self, template, pv, organisation, soft_attack, hard_attack, defense, attaque, piercing, armor,
-                 hardness, width, initiative):
+                 hardness, width, initiative, recon=0, experience = "regular"):
         self.nom = ""
         self.template = template
         self._PV = pv
@@ -24,12 +25,19 @@ class Division:
         self.hardness = hardness
         self.width = width
         self.initiative = initiative
+        self.tactic_damage_bonus = 1
+        self.combat_width_malus = 1
+        self.recon = recon
+        self.experience = experience
         self.id = generate_id()
         self.target_list = []
         self.primary_target = None
         self.strength = 1
         self.camp_info = {}
-        
+        #todo add self.type = type
+        # assert self.type in ["Infantry","Armored"]
+        assert self.experience in ["green","regular","trained","seasoned","veteran"]
+
     def __repr__(self):
         return self.nom if self.nom != "" else self.template
 
@@ -38,9 +46,9 @@ class Division:
         Programme permmettant de copier un object quelconque
           - Attention : newObject = Object_a_copier()
         """
-        newObject = Division(self.template,0,0,0,0,0,0,0,0,0,0,0)
+        newObject = Division(self.template, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         for attr in self.__dict__:
-            newObject.__setattr__(attr,self.__getattribute__(attr))
+            newObject.__setattr__(attr, self.__getattribute__(attr))
         newObject.id = generate_id()
         return newObject
 
@@ -74,6 +82,7 @@ class Division:
         :param target_list:
         :return:
         """
+
         def target_priority(target):
             """
             Calcul le score de priorisation des cibles
@@ -96,13 +105,22 @@ class Division:
             self.primary_target = max(priority_scores_dict, key=priority_scores_dict.get)
 
     def do_attack(self):
+        # Variable attribution
+        EXPERIENCE_BONUSES = {
+            "green": -25,
+            "trained": 0,
+            "regular": 25,
+            "seasoned": 50,
+            "veteran": 75
+        }
+        atk_bonus_percent = 0
         if len(self.target_list) == 0:
             return
         coordinated_share = 0.35 + self.camp_info["coordination"] * (1 + self.initiative)
         sa_per_division = (self.soft_attack * (1 - coordinated_share)) // len(self.target_list)
         ha_per_division = (self.hard_attack * (1 - coordinated_share)) // len(self.target_list)
-        sa_for_primary  = self.soft_attack * coordinated_share
-        ha_for_primary  = self.hard_attack * coordinated_share
+        sa_for_primary = self.soft_attack * coordinated_share
+        ha_for_primary = self.hard_attack * coordinated_share
         for target in self.target_list:
             if target == self.primary_target:
                 total_sa = (sa_per_division + sa_for_primary) * (1 - target.hardness)
@@ -110,34 +128,65 @@ class Division:
             else:
                 total_sa = sa_per_division * (1 - target.hardness)
                 total_ha = ha_per_division * target.hardness
-            total_attack = total_sa + total_ha
-            total_attack = total_attack if self.piercing >= target.armor else total_attack/2
-            total_attack /= 10
-            target.take_damage(self,total_attack)
+            base_attack = total_sa + total_ha
 
-    def take_damage(self,striker,total_attack):
-        # Hits calculation
+            # Leader level bonus
+            atk_bonus_percent += 2.5 * self.camp_info["leader"].attack_level
+            # XP level
+            atk_bonus_percent += EXPERIENCE_BONUSES[self.experience]
+            # apply bonus
+            total_attack = base_attack * (1 + atk_bonus_percent / 100)
+            total_attack = total_attack if self.piercing >= target.armor else total_attack / 2
+            total_attack /= 10
+            target.take_damage(self, total_attack)
+
+    def take_damage(self, striker, total_attack):
+        # Variable attribution
+        EXPERIENCE_BONUSES = {
+            "green": -25,
+            "trained": 0,
+            "regular": 25,
+            "seasoned": 50,
+            "veteran": 75
+        }
+        entrenchment_level = self.camp_info["entrenchment_level"]
         is_attacking = self.camp_info["is_attacking"]
-        total_defense = self.attaque if is_attacking else self.defense
-        if total_defense > total_attack:    total_attack *= 0.1
-        else:                               total_attack  = total_defense*0.1 + (total_attack - total_defense)*0.4
+        def_bonus_percent = 0
+
+        # Hits calculation
+        base_defense = self.attaque if is_attacking else self.defense
+        def_bonus_percent += 0 if is_attacking else 2*entrenchment_level
+        def_bonus_percent += 2.5 * self.camp_info["leader"].defense_level
+        def_bonus_percent += EXPERIENCE_BONUSES[self.experience]
+
+        # compare with attack
+        total_defense = base_defense * (1 + def_bonus_percent/100)
+        total_defense /= 10
+        if total_defense > total_attack:
+            total_attack *= 0.1
+        else:
+            total_attack = total_defense * 0.1 + (total_attack - total_defense) * 0.4
 
         # HP Damage calculation
-        #todo remplacer par des jets de dés
-        self.pv -= 1.5*total_attack
-        self.pv = truncDecimal(self.pv,1)
-        self.pv = max(self.pv,0)
+        # todo remplacer par des jets de dés
+        # todo pas de comparaison de piercing / hardness !!
+        self.pv -= 1.5 * total_attack * striker.tactic_damage_bonus * striker.combat_width_malus
+        self.pv = truncDecimal(self.pv, 1)
+        self.pv = max(self.pv, 0)
 
         # ORG Damage Calulation
-        #todo remplacer par des jets de dés
-        self.organisation -= 3.5 * total_attack if striker.piercing > self.hardness else 2.5 * total_attack
+        # todo remplacer par des jets de dés
+        if striker.piercing > self.hardness:
+            self.organisation -= 3.5 * total_attack * striker.tactic_damage_bonus * striker.combat_width_malus
+        else:
+            self.organisation -= 2.5 * total_attack * striker.tactic_damage_bonus
         self.organisation = truncDecimal(self.organisation, 1)
         self.organisation = max(self.organisation, 0)
 
         self.set_strength()
 
     def set_strength(self):
-        self.strength = round(self.pv / self._PV,2)
+        self.strength = round(self.pv / self._PV, 2)
         self.soft_attack = round(self._SOFT_ATTACK * self.strength)
         self.hard_attack = round(self._HARD_ATTACK * self.strength)
         self.defense = round(self._DEFENSE * self.strength)
