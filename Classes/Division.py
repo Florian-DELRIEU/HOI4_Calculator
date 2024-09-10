@@ -105,6 +105,14 @@ class Division:
             self.primary_target = max(priority_scores_dict, key=priority_scores_dict.get)
 
     def do_attack(self):
+        # Variable attribution
+        EXPERIENCE_BONUSES = {
+            "green": -25,
+            "trained": 0,
+            "regular": 25,
+            "seasoned": 50,
+            "veteran": 75
+        }
         atk_bonus_percent = 0
         if len(self.target_list) == 0:
             return
@@ -125,11 +133,7 @@ class Division:
             # Leader level bonus
             atk_bonus_percent += 2.5 * self.camp_info["leader"].attack_level
             # XP level
-            if   self.experience == "green":    atk_bonus_percent += -25
-            elif self.experience == "trained":  atk_bonus_percent += 0
-            elif self.experience == "regular":  atk_bonus_percent += 25
-            elif self.experience == "seasoned": atk_bonus_percent += 50
-            elif self.experience == "veteran":  atk_bonus_percent += 75
+            atk_bonus_percent += EXPERIENCE_BONUSES[self.experience]
             # apply bonus
             total_attack = base_attack * (1 + atk_bonus_percent / 100)
             total_attack = total_attack if self.piercing >= target.armor else total_attack / 2
@@ -137,22 +141,23 @@ class Division:
             target.take_damage(self, total_attack)
 
     def take_damage(self, striker, total_attack):
-        def_bonus_percent = 0
         # Variable attribution
-        is_attacking = self.camp_info["is_attacking"]
+        EXPERIENCE_BONUSES = {
+            "green": -25,
+            "trained": 0,
+            "regular": 25,
+            "seasoned": 50,
+            "veteran": 75
+        }
         entrenchment_level = self.camp_info["entrenchment_level"]
-        
+        is_attacking = self.camp_info["is_attacking"]
+        def_bonus_percent = 0
+
         # Hits calculation
         base_defense = self.attaque if is_attacking else self.defense
         def_bonus_percent += 0 if is_attacking else 2*entrenchment_level
         def_bonus_percent += 2.5 * self.camp_info["leader"].defense_level
-
-        # XP Level
-        if   self.experience == "green":    def_bonus_percent += -25
-        elif self.experience == "trained":  def_bonus_percent += 0
-        elif self.experience == "regular":  def_bonus_percent += 25
-        elif self.experience == "seasoned": def_bonus_percent += 50
-        elif self.experience == "veteran":  def_bonus_percent += 75
+        def_bonus_percent += EXPERIENCE_BONUSES[self.experience]
 
         # compare with attack
         total_defense = base_defense * (1 + def_bonus_percent/100)

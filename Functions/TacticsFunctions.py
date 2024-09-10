@@ -18,23 +18,14 @@ def choose_tactic(Battle):
     """
 
     # Which tactics lists is used according the battle phase
-    if Battle.battle_phase == BattlePhase.DEFAULT:
-        attacker_tactic_list = ATK_TACTICS
-        defender_tactic_list = DEF_TACTICS
-    elif Battle.battle_phase == BattlePhase.CLOSE_QUARTER_COMBAT:
-        attacker_tactic_list = ATK_CQ_TACTICS
-        defender_tactic_list = DEF_CQ_TACTICS
-    elif Battle.battle_phase == BattlePhase.SEIZE_BRIDGE:
-        attacker_tactic_list = ATK_SB_TACTICS
-        defender_tactic_list = DEF_SB_TACTICS
-    elif Battle.battle_phase == BattlePhase.HOLD_BRIDGE:
-        attacker_tactic_list = ATK_HB_TACTICS
-        defender_tactic_list = DEF_HB_TACTICS
-    elif Battle.battle_phase == BattlePhase.TACTICAL_WITHDRAW:
-        attacker_tactic_list = ATK_TW_TACTICS
-        defender_tactic_list = DEF_TW_TACTICS
-    else: return NameError , "Wrong phase name"
-
+    phase_tactics = {
+        BattlePhase.DEFAULT:                (ATK_TACTICS, DEF_TACTICS),
+        BattlePhase.CLOSE_QUARTER_COMBAT:   (ATK_CQ_TACTICS, DEF_CQ_TACTICS),
+        BattlePhase.SEIZE_BRIDGE:           (ATK_SB_TACTICS, DEF_SB_TACTICS),
+        BattlePhase.HOLD_BRIDGE:            (ATK_HB_TACTICS, DEF_HB_TACTICS),
+        BattlePhase.TACTICAL_WITHDRAW:      (ATK_TW_TACTICS, DEF_TW_TACTICS)
+    }
+    attacker_tactic_list,defender_tactic_list = phase_tactics.get(Battle.battle_phase, (None, None))
     change_weight(Battle,attacker_tactic_list,defender_tactic_list)
     # remove tactics that cannot be choose
     attacker_tactic_list = [tactic for tactic in attacker_tactic_list if tactic.weight * tactic.weight_mult > 0]
