@@ -109,7 +109,6 @@ def cancel_tactic(Tactic_to_cancel):
     Tactic_to_cancel.begin_battle_phase = None
 
 def initiative_round(Battle):
-    # sourcery skip: assign-if-exp, remove-redundant-pass
     """
     Choisis quel camp aura l'initiative
         Le round se déroule en plusieurs étapes
@@ -153,8 +152,8 @@ def apply_tactics(Battle):
     for division in Battle.camp_attacker.frontline:
         division.tactic_damage_bonus = ATK_tactic.attacker_bonus
 
-
 def change_weight(Battle,ATK_tactic,DEF_tactic):
+    # sourcery skip: all
     """
     Change tactics weight with regards to Generals skills and abilities and terrain
     """

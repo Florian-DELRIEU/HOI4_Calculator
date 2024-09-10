@@ -250,7 +250,7 @@ class BattleWindow(tk.Tk):
         self.combat_width = self.terrain.width
         try:
             self.combat_width *= self.camp_attacker.tactic.width_bonus * self.camp_defender.tactic.width_bonus
-        except:
+        except Exception:
             pass
         self.combat_width_display.set(str(self.combat_width))
 
