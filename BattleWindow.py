@@ -451,10 +451,9 @@ class BattleWindow(tk.Tk):
         """
         Retourne la liste des leaders disponibles pour le camp spécifié.
         """
-        return [leader_A, leader_B, leader_C, leader_D]
+        return [leader_A, leader_B, leader_C, leader_D, no_leader]
 
     def on_river_change(self):
-        print("Rivers changed")
         self.has_small_river = self.small_river_box.get()
         self.has_large_river = self.large_river_box.get()
 
@@ -464,7 +463,10 @@ app = BattleWindow()
 test_case = "Case 1"
 if __name__ == "__main__" and test_case == "Case 1":
     app.camp_attacker.add_leader(LeaderList.leader_A)
+    app.attacker_leader_label.config(text=f"Leader Attaquant : {app.camp_attacker.leader.name}")
     app.camp_defender.add_leader(LeaderList.no_leader)
+    app.defender_leader_label.config(text=f"Leader Defenseur : {app.camp_defender.leader.name}")
+
     app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
     app.camp_attacker.get_divisions()[-1].nom = "Div. A1"
     app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))

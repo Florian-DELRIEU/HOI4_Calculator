@@ -106,6 +106,7 @@ class Division:
 
     def do_attack(self,Battle):
         # Variable attribution
+        atk_bonus_percent = 0
         EXPERIENCE_BONUSES = {
             "green": -25,
             "trained": 0,
@@ -113,7 +114,8 @@ class Division:
             "seasoned": 50,
             "veteran": 75
         }
-        atk_bonus_percent = 0
+
+        # Calcul of SA and HA for each targets
         if len(self.target_list) == 0:
             return
         coordinated_share = 0.35 + self.camp_info["coordination"] * (1 + self.initiative)
@@ -122,6 +124,8 @@ class Division:
         sa_for_primary = self.soft_attack * coordinated_share
         ha_for_primary = self.hard_attack * coordinated_share
         for target in self.target_list:
+
+            # total attack for targets
             if target == self.primary_target:
                 total_sa = (sa_per_division + sa_for_primary) * (1 - target.hardness)
                 total_ha = (ha_per_division + ha_for_primary) * target.hardness
@@ -130,10 +134,9 @@ class Division:
                 total_ha = ha_per_division * target.hardness
             base_attack = total_sa + total_ha
 
-            # Leader level bonus
+            # Bonus from leader, XP, terrain and others
             atk_bonus_percent += 2.5 * self.camp_info["leader"].attack_level
             atk_bonus_percent += (Battle.terrain.attack*100)
-            # XP level
             atk_bonus_percent += EXPERIENCE_BONUSES[self.experience]
             # apply bonus
             total_attack = base_attack * (1 + atk_bonus_percent / 100)
