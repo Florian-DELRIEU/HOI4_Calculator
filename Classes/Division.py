@@ -104,7 +104,7 @@ class Division:
         else:
             self.primary_target = max(priority_scores_dict, key=priority_scores_dict.get)
 
-    def do_attack(self):
+    def do_attack(self,Battle):
         # Variable attribution
         EXPERIENCE_BONUSES = {
             "green": -25,
@@ -132,6 +132,7 @@ class Division:
 
             # Leader level bonus
             atk_bonus_percent += 2.5 * self.camp_info["leader"].attack_level
+            atk_bonus_percent += (Battle.terrain.attack*100)
             # XP level
             atk_bonus_percent += EXPERIENCE_BONUSES[self.experience]
             # apply bonus

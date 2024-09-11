@@ -23,7 +23,7 @@ class Camp:
                                division not in self.frontline and division not in self.reserves]
         for division in available_divisions:
             total_camp_width = sum(division.width for division in self.frontline)
-            if total_camp_width + division.width <= 1.33 * self.battle_info["Width"]:
+            if total_camp_width + division.width <= 1.33 * self.battle_info["Width"] + self.battle_info["terrain"].extra_width:
                 self.frontline.append(division)
         # Move divisions in reserves
         for division in self.divisions:
@@ -82,5 +82,7 @@ class Camp:
         return any(division_in_camp.id == division.id for division_in_camp in self.divisions)
 
 
-    def get_battle_info(self,battle_window):
-        self.battle_info["Width"] = battle_window.combat_width
+    def get_battle_info(self, Battle):
+        self.battle_info["Width"] = Battle.combat_width
+        self.battle_info["terrain"] = Battle.terrain
+        self.battle_info["extra_side"] = Battle.extra_side

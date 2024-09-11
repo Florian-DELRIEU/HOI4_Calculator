@@ -18,6 +18,7 @@ class BattleWindow(tk.Tk):
         self.geometry("800x600")
 
         self.battle_phase = "Default"
+        self.extra_side = 0
 
         # Initialiser les camps
         self.camp_attacker = Camp()
@@ -178,11 +179,11 @@ class BattleWindow(tk.Tk):
         # Tour Attaquant
         for division in camp_attacker.frontline:
             division.targeting(camp_defender)
-            division.do_attack()
+            division.do_attack(self)
         # Tour Defenseur
         for division in camp_defender.frontline:
             division.targeting(camp_attacker)
-            division.do_attack()
+            division.do_attack(self)
 
     def renfort_round(self):
         for camp in [self.camp_attacker,self.camp_defender]:
