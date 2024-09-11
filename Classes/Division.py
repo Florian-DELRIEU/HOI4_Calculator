@@ -139,9 +139,9 @@ class Division:
             total_attack = base_attack * (1 + atk_bonus_percent / 100)
             total_attack = total_attack if self.piercing >= target.armor else total_attack / 2
             total_attack /= 10
-            target.take_damage(self, total_attack)
+            target.take_damage(Battle,self, total_attack)
 
-    def take_damage(self, striker, total_attack):
+    def take_damage(self, Battle, striker, total_attack):
         # Variable attribution
         EXPERIENCE_BONUSES = {
             "green": -25,
@@ -159,6 +159,10 @@ class Division:
         def_bonus_percent += 0 if is_attacking else 2*entrenchment_level
         def_bonus_percent += 2.5 * self.camp_info["leader"].defense_level
         def_bonus_percent += EXPERIENCE_BONUSES[self.experience]
+
+        # Terrain adjusters
+        total_attack *= 0.7 if Battle.has_small_river else 1
+        total_attack *= 0.4 if Battle.has_large_river else 1
 
         # compare with attack
         total_defense = base_defense * (1 + def_bonus_percent/100)

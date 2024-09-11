@@ -20,6 +20,12 @@ class BattleWindow(tk.Tk):
         self.battle_phase = "Default"
         self.extra_side = 0
 
+        # Variables pour les cases à cocher (Petite et Grande Rivière)
+        self.small_river_box = tk.BooleanVar()
+        self.large_river_box = tk.BooleanVar()
+        self.has_small_river = False
+        self.has_large_river = False
+
         # Initialiser les camps
         self.camp_attacker = Camp()
         self.camp_attacker.is_attacking = True
@@ -80,19 +86,18 @@ class BattleWindow(tk.Tk):
         self.terrain_dropdown.grid(row=0, column=3, padx=5)
         self.terrain_dropdown.bind("<<ComboboxSelected>>", self.update_terrain)
 
+        # Ajouter les cases à cocher pour les rivières
+        tk.Checkbutton(frame_params, text="Petite Rivière", variable=self.small_river_box,
+                       command=self.on_river_change).grid(row=0, column=4, padx=5)
+        tk.Checkbutton(frame_params, text="Grande Rivière", variable=self.large_river_box,
+                       command=self.on_river_change).grid(row=1, column=4, padx=5)
+
         self.combat_width = terrain_list[0].width
         tk.Label(frame_params, text="Aire de combat").grid(row=2, column=0, padx=5)
         self.combat_width_display = tk.StringVar()
         self.combat_width_display.set(str(self.combat_width))  # Set default width
         tk.Label(frame_params, textvariable=self.combat_width_display).grid(row=2, column=1, padx=5)
 
-        tk.Label(frame_params, text="Leader Camp A").grid(row=1, column=0, padx=5)
-        self.leader_attacker = tk.StringVar()
-        tk.Entry(frame_params, textvariable=self.leader_attacker).grid(row=1, column=1, padx=5)
-
-        tk.Label(frame_params, text="Leader Camp B").grid(row=1, column=2, padx=5)
-        self.leader_defender = tk.StringVar()
-        tk.Entry(frame_params, textvariable=self.leader_defender).grid(row=1, column=3, padx=5)
 
         # Cadre pour les camps
         frame_battle = tk.Frame(self)
@@ -447,6 +452,11 @@ class BattleWindow(tk.Tk):
         Retourne la liste des leaders disponibles pour le camp spécifié.
         """
         return [leader_A, leader_B, leader_C, leader_D]
+
+    def on_river_change(self):
+        print("Rivers changed")
+        self.has_small_river = self.small_river_box.get()
+        self.has_large_river = self.large_river_box.get()
 
 
 app = BattleWindow()
