@@ -18,7 +18,8 @@ class BattleWindow(tk.Tk):
         self.geometry("800x600")
 
         self.battle_phase = "Default"
-        self.extra_side = 0
+        self.extra_side = tk.IntVar(value=0)
+
 
         # Variables pour les cases à cocher (Petite et Grande Rivière)
         self.small_river_box = tk.BooleanVar()
@@ -98,6 +99,11 @@ class BattleWindow(tk.Tk):
         self.combat_width_display.set(str(self.combat_width))  # Set default width
         tk.Label(frame_params, textvariable=self.combat_width_display).grid(row=2, column=1, padx=5)
 
+        # Ajouter un Spinbox pour extra_width juste en dessous
+        tk.Label(frame_params, text="Autres directions d'attaques").grid(row=1, column=0, padx=5)
+        extra_width_spinbox = tk.Spinbox(frame_params, from_=1, to=5, textvariable=self.extra_side)
+        extra_width_spinbox.grid(row=1, column=1, padx=5)
+
 
         # Cadre pour les camps
         frame_battle = tk.Frame(self)
@@ -153,6 +159,7 @@ class BattleWindow(tk.Tk):
         # Round initial
         if self.round_counter == 0:
             for camp in [self.camp_attacker,self.camp_defender]:
+                camp.get_battle_info(self)
                 camp.move_in_frontline()
         if self.round_counter % 12 == 0:
             self.tactic_round()
