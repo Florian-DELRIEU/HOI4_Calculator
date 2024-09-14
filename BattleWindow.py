@@ -101,7 +101,7 @@ class BattleWindow(tk.Tk):
 
         # Ajouter un Spinbox pour extra_width juste en dessous
         tk.Label(frame_params, text="Autres directions d'attaques").grid(row=1, column=0, padx=5)
-        extra_width_spinbox = tk.Spinbox(frame_params, from_=1, to=5, textvariable=self.extra_side)
+        extra_width_spinbox = tk.Spinbox(frame_params, from_=0, to=5, textvariable=self.extra_side)
         extra_width_spinbox.grid(row=1, column=1, padx=5)
 
 
