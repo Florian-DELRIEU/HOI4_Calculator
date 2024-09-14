@@ -473,7 +473,6 @@ if __name__ == "__main__" and test_case == "Case 1":
     app.attacker_leader_label.config(text=f"Leader Attaquant : {app.camp_attacker.leader.name}")
     app.camp_defender.add_leader(LeaderList.no_leader)
     app.defender_leader_label.config(text=f"Leader Defenseur : {app.camp_defender.leader.name}")
-
     app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
     app.camp_attacker.get_divisions()[-1].nom = "Div. A1"
     app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
@@ -487,4 +486,13 @@ if __name__ == "__main__" and test_case == "Case 1":
     app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
     app.camp_defender.get_divisions()[-1].nom = "Div. B3"
 
+if __name__ == "__main__" and test_case == "Case 2":
+    app.camp_attacker.add_leader(LeaderList.no_leader)
+    app.attacker_leader_label.config(text=f"Leader Attaquant : {app.camp_attacker.leader.name}")
+    app.camp_defender.add_leader(LeaderList.no_leader)
+    app.defender_leader_label.config(text=f"Leader Defenseur : {app.camp_defender.leader.name}")
+    app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.camp_attacker.get_divisions()[-1].nom = "Div. A"
+    app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.camp_attacker.get_divisions()[-1].nom = "Div. B"
 app.mainloop()

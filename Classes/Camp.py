@@ -10,7 +10,7 @@ class Camp:
         self.frontline = []
         self.reserves = []
         self.tactic = None
-        self.combat_width_malus = 1
+        self.combat_penalty = 1
         self.battle_info = {}
 
     def __repr__(self):
@@ -34,7 +34,7 @@ class Camp:
             if division not in self.frontline:
                 self.reserves.append(division)
 
-        self.combat_width_penality()
+        self.combat_width_penalty()
 
     def from_reserve_to_frontline(self):
         total_camp_width = sum(division.width for division in self.frontline)
@@ -48,15 +48,21 @@ class Camp:
             if ((random.randint(0,100) <= 2 and total_camp_width + division.width <= 1.33 * total_battle_width)
                 or len(self.frontline) == 0):
                 self.frontline.append(self.reserves.pop(self.reserves.index(division)))
-        self.combat_width_penality()
+        self.combat_width_penalty()
 
-    def combat_width_penality(self):
+    def combat_width_penalty(self):
         total_camp_width = sum(division.width for division in self.frontline)
+        combat_width_malus = 1
+        stacking_penalty = 1
         if total_camp_width >= self.battle_info["Width"]:
-            self.combat_width_malus = min(total_camp_width / self.battle_info["Width"],1.33)
-            self.combat_width_malus = round(1 - (self.combat_width_malus-1),1)
+            combat_width_malus = min(total_camp_width / self.battle_info["Width"],1.33)
+            #self.combat_width_malus = round(1 - (self.combat_width_malus-1),1)
+        stacking_limit = 5 + 3 * self.battle_info["extra_side"]
+        if len(self.frontline) > stacking_limit:
+            stacking_penalty = 2 * (len(self.frontline) - stacking_limit)
+        self.combat_penalty = round(1 - (combat_width_malus+stacking_penalty - 1), 1)
         for division in self.frontline:
-            division.combat_width_malus = self.combat_width_malus
+            division.combat_width_malus = self.combat_penalty
 
     ############# GESTION ####################
     def get_data(self):
