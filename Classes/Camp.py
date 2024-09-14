@@ -38,6 +38,8 @@ class Camp:
 
     def from_reserve_to_frontline(self):
         total_camp_width = sum(division.width for division in self.frontline)
+        self.reserves.extend([division for division in self.divisions if division not in self.frontline
+                                                                     and division not in self.reserves])
         for division in self.reserves:
             total_battle_width = self.battle_info["Width"]
             total_battle_width *= self.tactic.width_bonus
