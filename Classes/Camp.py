@@ -39,7 +39,11 @@ class Camp:
     def from_reserve_to_frontline(self):
         total_camp_width = sum(division.width for division in self.frontline)
         for division in self.reserves:
-            if ((random.randint(0,100) <= 2 and total_camp_width + division.width <= 1.33 * self.battle_info["Width"])
+            total_battle_width = self.battle_info["Width"]
+            total_battle_width *= self.tactic.width_bonus
+            if self.is_attacking: total_battle_width += (self.battle_info["extra_side"]
+                                                         * self.battle_info["terrain"].extra_width)
+            if ((random.randint(0,100) <= 2 and total_camp_width + division.width <= 1.33 * total_battle_width)
                 or len(self.frontline) == 0):
                 self.frontline.append(self.reserves.pop(self.reserves.index(division)))
         self.combat_width_penality()
@@ -48,7 +52,7 @@ class Camp:
         total_camp_width = sum(division.width for division in self.frontline)
         if total_camp_width >= self.battle_info["Width"]:
             self.combat_width_malus = min(total_camp_width / self.battle_info["Width"],1.33)
-            self.combat_width_malus = 1 - (self.combat_width_malus-1)
+            self.combat_width_malus = round(1 - (self.combat_width_malus-1),1)
         for division in self.frontline:
             division.combat_width_malus = self.combat_width_malus
 
