@@ -60,7 +60,7 @@ class Camp:
         stacking_limit = 5 + 3 * self.battle_info["extra_side"]
         if len(self.frontline) > stacking_limit:
             stacking_penalty = 2 * (len(self.frontline) - stacking_limit)
-        self.combat_penalty = round(1 - (combat_width_malus+stacking_penalty - 1), 1)
+        self.combat_penalty = round(1 - (combat_width_malus+stacking_penalty - 2), 1)
         for division in self.frontline:
             division.combat_width_malus = self.combat_penalty
 

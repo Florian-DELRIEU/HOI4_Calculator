@@ -24,8 +24,6 @@ class BattleWindow(tk.Tk):
         # Variables pour les cases à cocher (Petite et Grande Rivière)
         self.small_river_box = tk.BooleanVar()
         self.large_river_box = tk.BooleanVar()
-        self.has_small_river = False
-        self.has_large_river = False
 
         # Initialiser les camps
         self.camp_attacker = Camp()
@@ -461,8 +459,8 @@ class BattleWindow(tk.Tk):
         return [leader_A, leader_B, leader_C, leader_D, no_leader]
 
     def on_river_change(self):
-        self.has_small_river = self.small_river_box.get()
-        self.has_large_river = self.large_river_box.get()
+        self.terrain.has_small_river = self.small_river_box.get()
+        self.terrain.has_large_river = self.large_river_box.get()
 
 
 app = BattleWindow()

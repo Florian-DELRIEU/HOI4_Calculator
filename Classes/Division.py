@@ -164,8 +164,8 @@ class Division:
         def_bonus_percent += EXPERIENCE_BONUSES[self.experience]
 
         # Terrain adjusters
-        total_attack *= 0.7 if Battle.has_small_river else 1
-        total_attack *= 0.4 if Battle.has_large_river else 1
+        total_attack *= 0.7 if Battle.terrain.has_small_river else 1
+        total_attack *= 0.4 if Battle.terrain.has_large_river else 1
 
         # compare with attack
         total_defense = base_defense * (1 + def_bonus_percent/100)
