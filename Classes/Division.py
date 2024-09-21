@@ -106,6 +106,8 @@ class Division:
 
     def do_attack(self,Battle):
         # Variable attribution
+        fort_level = Battle.fort_level.get()
+        extra_side = Battle.extra_side.get()
         atk_bonus_percent = 0
         EXPERIENCE_BONUSES = {
             "green": -25,
@@ -138,6 +140,7 @@ class Division:
             atk_bonus_percent += 2.5 * self.camp_info["leader"].attack_level
             atk_bonus_percent += (Battle.terrain.attack*100)
             atk_bonus_percent += EXPERIENCE_BONUSES[self.experience]
+            atk_bonus_percent += -15 * max(fort_level - extra_side,1 if fort_level > 0 else 0)
             # apply bonus
             total_attack = base_attack * (1 + atk_bonus_percent / 100)
             total_attack = total_attack if self.piercing >= target.armor else total_attack / 2
@@ -146,6 +149,8 @@ class Division:
 
     def take_damage(self, Battle, striker, total_attack):
         # Variable attribution
+        fort_level = Battle.fort_level.get()
+        extra_side = Battle.extra_side.get()
         EXPERIENCE_BONUSES = {
             "green": -25,
             "trained": 0,
@@ -162,6 +167,7 @@ class Division:
         def_bonus_percent += 0 if is_attacking else 2*entrenchment_level
         def_bonus_percent += 2.5 * self.camp_info["leader"].defense_level
         def_bonus_percent += EXPERIENCE_BONUSES[self.experience]
+        if is_attacking: def_bonus_percent += -15 * max(fort_level - extra_side,1 if fort_level > 0 else 0)
 
         # Terrain adjusters
         total_attack *= 0.7 if Battle.terrain.has_small_river else 1

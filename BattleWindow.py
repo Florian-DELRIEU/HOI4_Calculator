@@ -15,10 +15,11 @@ class BattleWindow(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Fenêtre de Bataille")
-        self.geometry("800x600")
+        self.geometry("1000x800")
 
         self.battle_phase = "Default"
         self.extra_side = tk.IntVar(value=0)
+        self.fort_level = tk.IntVar(value=0)
 
 
         # Variables pour les cases à cocher (Petite et Grande Rivière)
@@ -97,11 +98,15 @@ class BattleWindow(tk.Tk):
         self.combat_width_display.set(str(self.combat_width))  # Set default width
         tk.Label(frame_params, textvariable=self.combat_width_display).grid(row=2, column=1, padx=5)
 
-        # Ajouter un Spinbox pour extra_width juste en dessous
+        # Ajouter le Spinbox pour "Autres directions d'attaques" (assumons que vous avez déjà ce Spinbox)
         tk.Label(frame_params, text="Autres directions d'attaques").grid(row=1, column=0, padx=5)
-        extra_width_spinbox = tk.Spinbox(frame_params, from_=0, to=5, textvariable=self.extra_side)
-        extra_width_spinbox.grid(row=1, column=1, padx=5)
+        attack_directions_spinbox = tk.Spinbox(frame_params, from_=0, to=10, textvariable=self.extra_side)
+        attack_directions_spinbox.grid(row=1, column=1, padx=5)
 
+        # Ajouter le Spinbox pour "Niveaux de Fortification" juste à côté
+        tk.Label(frame_params, text="Niveaux de Fortification").grid(row=1, column=2, padx=5)
+        fortification_spinbox = tk.Spinbox(frame_params, from_=0, to=5, textvariable=self.fort_level)
+        fortification_spinbox.grid(row=1, column=3, padx=5)
 
         # Cadre pour les camps
         frame_battle = tk.Frame(self)

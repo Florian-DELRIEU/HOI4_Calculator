@@ -24,7 +24,7 @@ class Camp:
         for division in available_divisions:
             width_filled = sum(division.width for division in self.frontline)
             total_battle_width = self.battle_info["Width"]
-            if self.is_attacking: total_battle_width += (self.battle_info["extra_side"]
+            if self.is_attacking: total_battle_width += (self.battle_info["extra side"]
                                                          *self.battle_info["terrain"].extra_width)
             if width_filled + division.width <= 1.33 * total_battle_width:
                 self.frontline.append(division)
@@ -43,7 +43,7 @@ class Camp:
         for division in self.reserves:
             total_battle_width = self.battle_info["Width"]
             total_battle_width *= self.tactic.width_bonus
-            if self.is_attacking: total_battle_width += (self.battle_info["extra_side"]
+            if self.is_attacking: total_battle_width += (self.battle_info["extra side"]
                                                          * self.battle_info["terrain"].extra_width)
             if ((random.randint(0,100) <= 2 and total_camp_width + division.width <= 1.33 * total_battle_width)
                 or len(self.frontline) == 0):
@@ -57,7 +57,7 @@ class Camp:
         if total_camp_width >= self.battle_info["Width"]:
             combat_width_malus = min(total_camp_width / self.battle_info["Width"],1.33)
             #self.combat_width_malus = round(1 - (self.combat_width_malus-1),1)
-        stacking_limit = 5 + 3 * self.battle_info["extra_side"]
+        stacking_limit = 5 + 3 * self.battle_info["extra side"]
         if len(self.frontline) > stacking_limit:
             stacking_penalty = 2 * (len(self.frontline) - stacking_limit)
         self.combat_penalty = round(1 - (combat_width_malus+stacking_penalty - 2), 1)
@@ -102,4 +102,5 @@ class Camp:
     def get_battle_info(self, Battle):
         self.battle_info["Width"] = Battle.combat_width
         self.battle_info["terrain"] = Battle.terrain
-        self.battle_info["extra_side"] = Battle.extra_side.get()
+        self.battle_info["extra side"] = Battle.extra_side.get()
+        self.battle_info["Fort Level"] = Battle.fort_level.get()
