@@ -15,9 +15,17 @@ class BattleWindow(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Fenêtre de Bataille")
-        self.geometry("800x600")
+        self.geometry("1000x800")
 
         self.battle_phase = "Default"
+        self.extra_side = tk.IntVar(value=0)
+        self.fort_level = tk.IntVar(value=0)
+
+
+        # Variables pour les cases à cocher (Petite et Grande Rivière)
+        self.small_river_box = tk.BooleanVar()
+        self.large_river_box = tk.BooleanVar()
+        self.encirclement_box = tk.BooleanVar()
 
         # Initialiser les camps
         self.camp_attacker = Camp()
@@ -58,12 +66,12 @@ class BattleWindow(tk.Tk):
 
         # Label pour la tactique du camp attaquant (à gauche)
         self.attacker_tactic_label = tk.Label(frame_tactics, text="Tactique Attaquant : Aucune",
-                                                                                            font=("Arial", 12, "bold"))
+                                              font=("Arial", 12, "bold"))
         self.attacker_tactic_label.pack(side=tk.LEFT, padx=20)
 
         # Label pour la tactique du camp défenseur (à droite)
         self.defender_tactic_label = tk.Label(frame_tactics, text="Tactique Défenseur : Aucune",
-                                                                                            font=("Arial", 12, "bold"))
+                                              font=("Arial", 12, "bold"))
         self.defender_tactic_label.pack(side=tk.RIGHT, padx=20)
 
         tk.Label(frame_params, text="Météo").grid(row=0, column=0, padx=5)
@@ -79,19 +87,29 @@ class BattleWindow(tk.Tk):
         self.terrain_dropdown.grid(row=0, column=3, padx=5)
         self.terrain_dropdown.bind("<<ComboboxSelected>>", self.update_terrain)
 
+        # Ajouter les cases à cocher pour les rivières
+        tk.Checkbutton(frame_params, text="Petite Rivière", variable=self.small_river_box,
+                       command=self.on_river_change).grid(row=0, column=4, padx=5)
+        tk.Checkbutton(frame_params, text="Grande Rivière", variable=self.large_river_box,
+                       command=self.on_river_change).grid(row=1, column=4, padx=5)
+        tk.Checkbutton(frame_params, text="Encerclement", variable=self.encirclement_box,
+                       command=self.on_encirclement_change).grid(row=0, column=5, padx=5)
+
         self.combat_width = terrain_list[0].width
         tk.Label(frame_params, text="Aire de combat").grid(row=2, column=0, padx=5)
         self.combat_width_display = tk.StringVar()
         self.combat_width_display.set(str(self.combat_width))  # Set default width
         tk.Label(frame_params, textvariable=self.combat_width_display).grid(row=2, column=1, padx=5)
 
-        tk.Label(frame_params, text="Leader Camp A").grid(row=1, column=0, padx=5)
-        self.leader_attacker = tk.StringVar()
-        tk.Entry(frame_params, textvariable=self.leader_attacker).grid(row=1, column=1, padx=5)
+        # Ajouter le Spinbox pour "Autres directions d'attaques" (assumons que vous avez déjà ce Spinbox)
+        tk.Label(frame_params, text="Autres directions d'attaques").grid(row=1, column=0, padx=5)
+        attack_directions_spinbox = tk.Spinbox(frame_params, from_=0, to=10, textvariable=self.extra_side)
+        attack_directions_spinbox.grid(row=1, column=1, padx=5)
 
-        tk.Label(frame_params, text="Leader Camp B").grid(row=1, column=2, padx=5)
-        self.leader_defender = tk.StringVar()
-        tk.Entry(frame_params, textvariable=self.leader_defender).grid(row=1, column=3, padx=5)
+        # Ajouter le Spinbox pour "Niveaux de Fortification" juste à côté
+        tk.Label(frame_params, text="Niveaux de Fortification").grid(row=1, column=2, padx=5)
+        fortification_spinbox = tk.Spinbox(frame_params, from_=0, to=5, textvariable=self.fort_level)
+        fortification_spinbox.grid(row=1, column=3, padx=5)
 
         # Cadre pour les camps
         frame_battle = tk.Frame(self)
@@ -147,6 +165,7 @@ class BattleWindow(tk.Tk):
         # Round initial
         if self.round_counter == 0:
             for camp in [self.camp_attacker,self.camp_defender]:
+                camp.get_battle_info(self)
                 camp.move_in_frontline()
         if self.round_counter % 12 == 0:
             self.tactic_round()
@@ -178,11 +197,11 @@ class BattleWindow(tk.Tk):
         # Tour Attaquant
         for division in camp_attacker.frontline:
             division.targeting(camp_defender)
-            division.do_attack()
+            division.do_attack(self)
         # Tour Defenseur
         for division in camp_defender.frontline:
             division.targeting(camp_attacker)
-            division.do_attack()
+            division.do_attack(self)
 
     def renfort_round(self):
         for camp in [self.camp_attacker,self.camp_defender]:
@@ -201,7 +220,7 @@ class BattleWindow(tk.Tk):
                 if division.pv <= 0 or division.organisation <= 0:
                     self.retreat_division(division)
 
-###################################################
+    ###################################################
     def retreat_division(self,division_to_retreat):
         """
         Retire la division de toute les listes de la bataille. Pour représenté que la division s'est replié du champ de
@@ -445,15 +464,23 @@ class BattleWindow(tk.Tk):
         """
         Retourne la liste des leaders disponibles pour le camp spécifié.
         """
-        return [leader_A, leader_B, leader_C, leader_D]
+        return [leader_A, leader_B, leader_C, leader_D, no_leader]
 
+    def on_river_change(self):
+        self.terrain.has_small_river = self.small_river_box.get()
+        self.terrain.has_large_river = self.large_river_box.get()
+
+    def on_encirclement_change(self):
+        self.encirclement = self.encirclement_box.get()
 
 app = BattleWindow()
 
 test_case = "Case 1"
 if __name__ == "__main__" and test_case == "Case 1":
     app.camp_attacker.add_leader(LeaderList.leader_A)
+    app.attacker_leader_label.config(text=f"Leader Attaquant : {app.camp_attacker.leader.name}")
     app.camp_defender.add_leader(LeaderList.no_leader)
+    app.defender_leader_label.config(text=f"Leader Defenseur : {app.camp_defender.leader.name}")
     app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
     app.camp_attacker.get_divisions()[-1].nom = "Div. A1"
     app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
@@ -467,4 +494,13 @@ if __name__ == "__main__" and test_case == "Case 1":
     app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
     app.camp_defender.get_divisions()[-1].nom = "Div. B3"
 
+if __name__ == "__main__" and test_case == "Case 2":
+    app.camp_attacker.add_leader(LeaderList.no_leader)
+    app.attacker_leader_label.config(text=f"Leader Attaquant : {app.camp_attacker.leader.name}")
+    app.camp_defender.add_leader(LeaderList.no_leader)
+    app.defender_leader_label.config(text=f"Leader Defenseur : {app.camp_defender.leader.name}")
+    app.add_division(app.camp_attacker_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.camp_attacker.get_divisions()[-1].nom = "Div. A"
+    app.add_division(app.camp_defender_divisions_frame,tk.StringVar(value="Infanterie 36"))
+    app.camp_attacker.get_divisions()[-1].nom = "Div. B"
 app.mainloop()

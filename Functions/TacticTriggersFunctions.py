@@ -8,4 +8,4 @@ def has_hardness_over(camp,hard_level):
     return any(division.hardness > hard_level for division in camp.frontline)
 
 def has_river(Battle):
-    return Battle.terrain.has_river
+    return Battle.terrain.has_small_river or Battle.terrain.has_small_river

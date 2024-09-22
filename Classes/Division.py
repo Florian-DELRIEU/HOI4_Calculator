@@ -104,8 +104,12 @@ class Division:
         else:
             self.primary_target = max(priority_scores_dict, key=priority_scores_dict.get)
 
-    def do_attack(self):
+    def do_attack(self,Battle):
         # Variable attribution
+        fort_level = Battle.fort_level.get()
+        extra_side = Battle.extra_side.get()
+        encirclement = Battle.encirclement
+        atk_bonus_percent = 0
         EXPERIENCE_BONUSES = {
             "green": -25,
             "trained": 0,
@@ -113,7 +117,8 @@ class Division:
             "seasoned": 50,
             "veteran": 75
         }
-        atk_bonus_percent = 0
+
+        # Calcul of SA and HA for each targets
         if len(self.target_list) == 0:
             return
         coordinated_share = 0.35 + self.camp_info["coordination"] * (1 + self.initiative)
@@ -122,6 +127,8 @@ class Division:
         sa_for_primary = self.soft_attack * coordinated_share
         ha_for_primary = self.hard_attack * coordinated_share
         for target in self.target_list:
+
+            # total attack for targets
             if target == self.primary_target:
                 total_sa = (sa_per_division + sa_for_primary) * (1 - target.hardness)
                 total_ha = (ha_per_division + ha_for_primary) * target.hardness
@@ -130,18 +137,21 @@ class Division:
                 total_ha = ha_per_division * target.hardness
             base_attack = total_sa + total_ha
 
-            # Leader level bonus
+            # Bonus from leader, XP, terrain and others
             atk_bonus_percent += 2.5 * self.camp_info["leader"].attack_level
-            # XP level
+            atk_bonus_percent += (Battle.terrain.attack*100)
             atk_bonus_percent += EXPERIENCE_BONUSES[self.experience]
+            atk_bonus_percent += -15 * max(fort_level - extra_side,1 if fort_level > 0 else 0)
             # apply bonus
             total_attack = base_attack * (1 + atk_bonus_percent / 100)
             total_attack = total_attack if self.piercing >= target.armor else total_attack / 2
             total_attack /= 10
-            target.take_damage(self, total_attack)
+            target.take_damage(Battle,self, total_attack)
 
-    def take_damage(self, striker, total_attack):
+    def take_damage(self, Battle, striker, total_attack):
         # Variable attribution
+        fort_level = Battle.fort_level.get()
+        extra_side = Battle.extra_side.get()
         EXPERIENCE_BONUSES = {
             "green": -25,
             "trained": 0,
@@ -158,6 +168,12 @@ class Division:
         def_bonus_percent += 0 if is_attacking else 2*entrenchment_level
         def_bonus_percent += 2.5 * self.camp_info["leader"].defense_level
         def_bonus_percent += EXPERIENCE_BONUSES[self.experience]
+        if is_attacking: def_bonus_percent += -15 * max(fort_level - extra_side,1 if fort_level > 0 else 0)
+        if not is_attacking and Battle.encirclement: def_bonus_percent += -30
+
+        # Terrain adjusters
+        total_attack *= 0.7 if Battle.terrain.has_small_river else 1
+        total_attack *= 0.4 if Battle.terrain.has_large_river else 1
 
         # compare with attack
         total_defense = base_defense * (1 + def_bonus_percent/100)
