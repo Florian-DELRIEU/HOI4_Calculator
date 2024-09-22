@@ -15,7 +15,6 @@ class Camp:
 
     def __repr__(self):
         return "Camp Attacking" if self.is_attacking else "Camp Defending"
-    ############# ROUNDS ####################
 
     def move_in_frontline(self):
         # Move divisions in frontline
@@ -54,17 +53,22 @@ class Camp:
         total_camp_width = sum(division.width for division in self.frontline)
         combat_width_malus = 1
         stacking_penalty = 1
+        #
+        # Penalty for extra width
         if total_camp_width >= self.battle_info["Width"]:
             combat_width_malus = min(total_camp_width / self.battle_info["Width"],1.33)
-            #self.combat_width_malus = round(1 - (self.combat_width_malus-1),1)
+            #self.combat_width_malus = round(1 - (self.combat_width_malus-1),1) #todo uncomment ?
+        #
+        # Penlalty for stacking
         stacking_limit = 5 + 3 * self.battle_info["extra side"]
         if len(self.frontline) > stacking_limit:
             stacking_penalty = 2 * (len(self.frontline) - stacking_limit)
+        #
+        # Sum and attribute the two penalty
         self.combat_penalty = round(1 - (combat_width_malus+stacking_penalty - 2), 1)
         for division in self.frontline:
             division.combat_width_malus = self.combat_penalty
 
-    ############# GESTION ####################
     def get_data(self):
         return {
             "divisions": [division.__dict__ for division in self.divisions],

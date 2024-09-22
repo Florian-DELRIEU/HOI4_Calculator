@@ -1,8 +1,7 @@
-from Classes import Terrain
+from Classes.Terrain import Terrain
+from enum import Enum
 
-Terrain = Terrain.Terrain
-
-class Terrain_name(enumerate):
+class Terrain_name(Enum):
         Desert = "Desert"
         Forest = "Forest"
         Hills = "Hills"

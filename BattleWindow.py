@@ -140,49 +140,53 @@ class BattleWindow(tk.Tk):
             Retour:
                 None
             """
+        def round(self, camp_attacker, camp_defender):
+            """
+            Mecanique des rounds
+            :return:
+            """
+            # Todo
+            #  - Verifier si la riposte du défenseur est fait correctement selon les mécaniques du jeu
+            # Tour Attaquant
+            for division in camp_attacker.frontline:
+                division.targeting(camp_defender)
+                division.do_attack(self)
+            # Tour Defenseur
+            for division in camp_defender.frontline:
+                division.targeting(camp_attacker)
+                division.do_attack(self)
+
         # Mets a jour battle infos
         self.camp_defender.get_battle_info(self)
         self.camp_attacker.get_battle_info(self)
-
+        #
         # Round initial
         if self.round_counter == 0:
             for camp in [self.camp_attacker,self.camp_defender]:
                 camp.get_battle_info(self)
                 camp.move_in_frontline()
+        #
+        # Tout les 12 tours
         if self.round_counter % 12 == 0:
             self.tactic_round()
-        self._round(self.camp_attacker,self.camp_defender)
+        #
+        # Lancement du round
+        round(self,self.camp_attacker,self.camp_defender)
+        #
         # Vérification états de chaque division et renforts ?
-
         self.check_state_of_division()
         self.renfort_round()
+        #
         # Ecriture des logs
         log_entry = "Résultats du round de bataille...\n"
         self.log_text.insert(tk.END, log_entry)
         self.log_text.see(tk.END)
-        self.round_counter += 1
-
+        #
         # Mets a jour affichage
         refresh_display(self)
         update_battle_info_display(self)
         update_combat_width(self)
-
-    def _round(self,camp_attacker,camp_defender):
-        """
-        Mecanique des rounds
-        :return:
-        """
-        # Todo
-        #  - Verifier si la riposte du défenseur est fait correctement selon les mécaniques du jeu
-
-        # Tour Attaquant
-        for division in camp_attacker.frontline:
-            division.targeting(camp_defender)
-            division.do_attack(self)
-        # Tour Defenseur
-        for division in camp_defender.frontline:
-            division.targeting(camp_attacker)
-            division.do_attack(self)
+        self.round_counter += 1
 
     def renfort_round(self):
         for camp in [self.camp_attacker,self.camp_defender]:
