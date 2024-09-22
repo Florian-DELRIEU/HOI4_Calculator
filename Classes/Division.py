@@ -78,8 +78,6 @@ class Division:
     def choose_priority_target(self):
         """
         Définie la cible prioritaire en fonction des paramètres
-        :param attacking_division:
-        :param target_list:
         :return:
         """
 
