@@ -108,6 +108,7 @@ class Division:
         # Variable attribution
         fort_level = Battle.fort_level.get()
         extra_side = Battle.extra_side.get()
+        encirclement = Battle.encirclement
         atk_bonus_percent = 0
         EXPERIENCE_BONUSES = {
             "green": -25,
@@ -168,6 +169,7 @@ class Division:
         def_bonus_percent += 2.5 * self.camp_info["leader"].defense_level
         def_bonus_percent += EXPERIENCE_BONUSES[self.experience]
         if is_attacking: def_bonus_percent += -15 * max(fort_level - extra_side,1 if fort_level > 0 else 0)
+        if not is_attacking and Battle.encirclement: def_bonus_percent += -30
 
         # Terrain adjusters
         total_attack *= 0.7 if Battle.terrain.has_small_river else 1

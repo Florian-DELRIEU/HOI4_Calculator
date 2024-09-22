@@ -25,6 +25,7 @@ class BattleWindow(tk.Tk):
         # Variables pour les cases à cocher (Petite et Grande Rivière)
         self.small_river_box = tk.BooleanVar()
         self.large_river_box = tk.BooleanVar()
+        self.encirclement_box = tk.BooleanVar()
 
         # Initialiser les camps
         self.camp_attacker = Camp()
@@ -65,12 +66,12 @@ class BattleWindow(tk.Tk):
 
         # Label pour la tactique du camp attaquant (à gauche)
         self.attacker_tactic_label = tk.Label(frame_tactics, text="Tactique Attaquant : Aucune",
-                                                                                            font=("Arial", 12, "bold"))
+                                              font=("Arial", 12, "bold"))
         self.attacker_tactic_label.pack(side=tk.LEFT, padx=20)
 
         # Label pour la tactique du camp défenseur (à droite)
         self.defender_tactic_label = tk.Label(frame_tactics, text="Tactique Défenseur : Aucune",
-                                                                                            font=("Arial", 12, "bold"))
+                                              font=("Arial", 12, "bold"))
         self.defender_tactic_label.pack(side=tk.RIGHT, padx=20)
 
         tk.Label(frame_params, text="Météo").grid(row=0, column=0, padx=5)
@@ -91,6 +92,8 @@ class BattleWindow(tk.Tk):
                        command=self.on_river_change).grid(row=0, column=4, padx=5)
         tk.Checkbutton(frame_params, text="Grande Rivière", variable=self.large_river_box,
                        command=self.on_river_change).grid(row=1, column=4, padx=5)
+        tk.Checkbutton(frame_params, text="Encerclement", variable=self.encirclement_box,
+                       command=self.on_encirclement_change).grid(row=0, column=5, padx=5)
 
         self.combat_width = terrain_list[0].width
         tk.Label(frame_params, text="Aire de combat").grid(row=2, column=0, padx=5)
@@ -217,7 +220,7 @@ class BattleWindow(tk.Tk):
                 if division.pv <= 0 or division.organisation <= 0:
                     self.retreat_division(division)
 
-###################################################
+    ###################################################
     def retreat_division(self,division_to_retreat):
         """
         Retire la division de toute les listes de la bataille. Pour représenté que la division s'est replié du champ de
@@ -467,6 +470,8 @@ class BattleWindow(tk.Tk):
         self.terrain.has_small_river = self.small_river_box.get()
         self.terrain.has_large_river = self.large_river_box.get()
 
+    def on_encirclement_change(self):
+        self.encirclement = self.encirclement_box.get()
 
 app = BattleWindow()
 
