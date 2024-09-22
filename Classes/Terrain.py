@@ -1,10 +1,10 @@
 class Terrain:
     def __init__(self, name, attack, width, extra_width, air_support):
         #todo add on GUI:
-        #   - river
-        #   - other side
-        #   - Paradrop ?
-        #   - Naval invasion
+        #   + river
+        #   + other side
+        #   o Paradrop ?
+        #   o Naval invasion
 
         self.name = name
         self.attack = attack

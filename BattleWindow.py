@@ -23,8 +23,8 @@ class BattleWindow(tk.Tk):
 
 
         # Variables pour les cases à cocher (Petite et Grande Rivière)
-        self.small_river_box = tk.BooleanVar()
-        self.large_river_box = tk.BooleanVar()
+        self.small_river_box  = tk.BooleanVar()
+        self.large_river_box  = tk.BooleanVar()
         self.encirclement_box = tk.BooleanVar()
 
         # Initialiser les camps
@@ -103,12 +103,12 @@ class BattleWindow(tk.Tk):
 
         # Ajouter le Spinbox pour "Autres directions d'attaques" (assumons que vous avez déjà ce Spinbox)
         tk.Label(frame_params, text="Autres directions d'attaques").grid(row=1, column=0, padx=5)
-        attack_directions_spinbox = tk.Spinbox(frame_params, from_=0, to=10, textvariable=self.extra_side)
+        attack_directions_spinbox = tk.Spinbox(frame_params, from_=0, to=5, textvariable=self.extra_side)
         attack_directions_spinbox.grid(row=1, column=1, padx=5)
 
         # Ajouter le Spinbox pour "Niveaux de Fortification" juste à côté
         tk.Label(frame_params, text="Niveaux de Fortification").grid(row=1, column=2, padx=5)
-        fortification_spinbox = tk.Spinbox(frame_params, from_=0, to=5, textvariable=self.fort_level)
+        fortification_spinbox = tk.Spinbox(frame_params, from_=0, to=10, textvariable=self.fort_level)
         fortification_spinbox.grid(row=1, column=3, padx=5)
 
         # Cadre pour les camps
