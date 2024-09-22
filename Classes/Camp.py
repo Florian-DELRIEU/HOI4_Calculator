@@ -98,7 +98,6 @@ class Camp:
         """
         return any(division_in_camp.id == division.id for division_in_camp in self.divisions)
 
-
     def get_battle_info(self, Battle):
         self.battle_info["Width"] = Battle.combat_width
         self.battle_info["terrain"] = Battle.terrain
