@@ -3,6 +3,7 @@ from Functions.TacticsFunctions import choose_tactic
 from Functions.UI_functions import *
 from Functions.SavingFunctions import *
 from Library.TerrainList import terrain_list
+from Library.Constants import *
 
 
 class BattleWindow(tk.Tk):
@@ -167,7 +168,7 @@ class BattleWindow(tk.Tk):
                 camp.move_in_frontline()
         #
         # Tout les 12 tours
-        if self.round_counter % 12 == 0:
+        if self.round_counter % TACTICS_ROUND_OCCURENCE  == 0:
             self.tactic_round()
         #
         # Lancement du round

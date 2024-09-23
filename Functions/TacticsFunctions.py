@@ -1,6 +1,7 @@
 import random as rd
 from Classes.Tactics import *
 from Functions.TacticTriggersFunctions import *
+from Library.Constants import *
 
 ########################################################################################################################
 
@@ -79,7 +80,7 @@ def _choose_tactic(ATK_tactic_list, DEF_tactic_list, Initiative_winner):
         ATK_Tactic = rd.choices(ATK_tactic_list, [el.weight*el.weight_mult for el in ATK_tactic_list] )[0]
         try: # Change weight for try counter ATK tactic
             Counter_tactic = [el for el in DEF_tactic_list if el.name == ATK_Tactic.countered_by][0]  # Quel est la tactique de contre ?
-            Counter_tactic.weight_mult *= 1.35
+            Counter_tactic.weight_mult *= COUNTER_TACTIC_MULT
         except: pass
     # DEF choice
         DEF_Tactic = rd.choices(DEF_tactic_list, [el.weight*el.weight_mult for el in DEF_tactic_list] )[0]
@@ -117,8 +118,8 @@ def initiative_round(Battle):
 
         NOTA: Dans cette version les niveau de competences sont des poids permettant un choix pondéré du vainqueur.
     """
-    ATK_weight = 1
-    DEF_weight = 1
+    ATK_weight = ATK_INITIATIVE_BONUS
+    DEF_weight = DEF_INITIATIVE_BONUS
     ATK_max_reco = max(division.recon for division in Battle.camp_attacker.divisions)
     DEF_max_reco = max(division.recon for division in Battle.camp_defender.divisions)
 
@@ -126,10 +127,9 @@ def initiative_round(Battle):
     DEF_weight += Battle.camp_defender.leader.level
 
     if ATK_max_reco > DEF_max_reco:
-        ATK_weight += 5
+        ATK_weight += RECO_INITIATIVE_BONUS
     elif DEF_max_reco > ATK_max_reco:
-        DEF_weight += 5
-    else: pass
+        DEF_weight += RECO_INITIATIVE_BONUS
 
     # todo renvoyer directement l'instance des camps
     return rd.choices(["ATK","DEF"],[ATK_weight,DEF_weight])[0]
