@@ -294,6 +294,9 @@ class BattleWindow(QMainWindow):
         new_btn = QPushButton("Nouvelle bataille")
         new_btn.clicked.connect(self.new_battle)
         top.addWidget(new_btn)
+        divisions_btn = QPushButton("Éditeur de divisions…")
+        divisions_btn.clicked.connect(self._open_division_editor)
+        top.addWidget(divisions_btn)
         leaders_btn = QPushButton("Éditeur de leaders…")
         leaders_btn.clicked.connect(self._open_leader_editor)
         top.addWidget(leaders_btn)
@@ -451,6 +454,13 @@ class BattleWindow(QMainWindow):
                     f"repliées {r['divisions_repliees']}")
 
     # ------------------------------------------------------------ éditeurs
+
+    def _open_division_editor(self) -> None:
+        from gui.division_editor import DivisionEditor
+        editor = DivisionEditor(self.store, parent=self)
+        editor.exec()
+        self.attacker_panel.refresh_templates()
+        self.defender_panel.refresh_templates()
 
     def _open_leader_editor(self) -> None:
         editor = LeaderEditor(self.leader_store, self.registry, parent=self)
