@@ -10,6 +10,7 @@ from engine.rng import CombatRNG
 from engine.tactics import ActiveTactic, TacticManager, TacticRegistry
 
 REINFORCE_CHANCE = 0.02        # 2 % par heure (§8.2)
+FORT_INTEGRITY_PER_LEVEL = 500.0   # jauge d'intégrité d'un niveau de fort (§8.6)
 MAX_OVERWIDTH_RATIO = 1.33     # entrée en ligne refusée au-delà (§8.1)
 MAX_WIDTH_PENALTY = -33.0      # plafond de pénalité de dépassement
 STACKING_BASE_LIMIT = 5
@@ -179,6 +180,22 @@ class Battle:
         self.active_tactics: dict[str, ActiveTactic | None] = {"attacker": None, "defender": None}
         self.battle_phase = "default"
         self.tactic_manager = TacticManager(tactic_registry) if use_tactics else None
+        # Jauge d'intégrité du niveau de fort courant (§8.6)
+        self.fort_integrity = FORT_INTEGRITY_PER_LEVEL
+        self._pending_events: list[str] = []
+
+    def apply_fort_damage(self, amount: float) -> None:
+        """Érosion progressive du fort par dégâts collatéraux (§8.6)."""
+        if self.params.fort_level <= 0:
+            return
+        self.fort_integrity -= amount
+        while self.fort_integrity <= 0 and self.params.fort_level > 0:
+            self.params.fort_level -= 1
+            self.fort_integrity += FORT_INTEGRITY_PER_LEVEL
+            self._pending_events.append(
+                f"Les fortifications cèdent : niveau de fort réduit à {self.params.fort_level}.")
+        if self.params.fort_level <= 0:
+            self.fort_integrity = 0.0
 
     @property
     def effective_combat_width(self) -> float:
@@ -259,7 +276,12 @@ class Battle:
             for division in camp.frontline:
                 log.attacks.extend(combat.resolve_attacks(division, camp, self, self.rng))
 
-        # 6. Décompte parachutage/capacités, nettoyage, fin de bataille
+        # 6. Événements différés (érosion de fort…)
+        if self._pending_events:
+            log.events.extend(self._pending_events)
+            self._pending_events.clear()
+
+        # 7. Décompte parachutage/capacités, nettoyage, fin de bataille
         for camp in (self.attacker, self.defender):
             for division in camp.divisions:
                 if division.paradropped_rounds_left > 0:

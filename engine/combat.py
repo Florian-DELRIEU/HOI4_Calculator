@@ -17,6 +17,7 @@ HIT_CHANCE_DEFENDED = 0.10
 HIT_CHANCE_UNDEFENDED = 0.40
 BASE_COORDINATED_SHARE = 0.35
 MAX_COORDINATED_SHARE = 0.90
+FORT_DAMAGE_CHANCE = 0.05      # 5 % par attaque d'endommager le fort (§8.6)
 
 
 # ------------------------------------------------------------------ ciblage
@@ -168,5 +169,12 @@ def resolve_attacks(division: Division, camp: "Camp", battle: "Battle",
         report.hp_damage = round(hp_dmg, 3)
         report.org_damage = round(org_dmg, 3)
         reports.append(report)
+
+        # Dégâts collatéraux sur le fort (§8.6) : seul l'attaquant érode
+        # les fortifications du défenseur.
+        if (camp.is_attacker and battle.params.fort_level > 0
+                and n_attacks > 0 and rng.chance(FORT_DAMAGE_CHANCE)):
+            collateral = 0.1 * division.stats.soft_attack * n_attacks * damage_factor
+            battle.apply_fort_damage(collateral)
 
     return reports

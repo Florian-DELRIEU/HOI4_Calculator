@@ -51,9 +51,56 @@ class CampPanel(QGroupBox):
         self.division_list = QListWidget()
         layout.addWidget(self.division_list, stretch=1)
 
-        remove_btn = QPushButton("Retirer la division sélectionnée")
+        div_btns = QHBoxLayout()
+        remove_btn = QPushButton("Retirer la division")
         remove_btn.clicked.connect(self._on_remove)
-        layout.addWidget(remove_btn)
+        div_btns.addWidget(remove_btn)
+        paradrop_btn = QPushButton("Parachutée (−30 %, 48 h)")
+        paradrop_btn.clicked.connect(self._on_paradrop)
+        div_btns.addWidget(paradrop_btn)
+        layout.addLayout(div_btns)
+
+        # Modificateurs manuels du camp (§9.5), repliés par défaut
+        self.mods_box = QGroupBox("Modificateurs du camp (§9.5)")
+        self.mods_box.setCheckable(True)
+        self.mods_box.setChecked(False)
+        mods_form = QFormLayout(self.mods_box)
+
+        def pct(minimum, maximum, suffix=" %"):
+            s = QDoubleSpinBox()
+            s.setRange(minimum, maximum)
+            s.setSuffix(suffix)
+            return s
+
+        self.coordination_spin = pct(0, 100)
+        mods_form.addRow("Coordination (radio/RADAR)", self.coordination_spin)
+        self.supply_spin = pct(0, 100)
+        mods_form.addRow("Pénurie de ravitaillement", self.supply_spin)
+        self.enemy_air_spin = pct(0, 35)
+        mods_form.addRow("Sup. aérienne ennemie subie", self.enemy_air_spin)
+        self.air_support_spin = pct(0, 100)
+        mods_form.addRow("Soutien aérien", self.air_support_spin)
+        self.nation_atk_spin = pct(-100, 100)
+        mods_form.addRow("Bonus de nation (attaque)", self.nation_atk_spin)
+        self.nation_def_spin = pct(-100, 100)
+        mods_form.addRow("Bonus de nation (défense)", self.nation_def_spin)
+        self.intel_spin = pct(0, 15)
+        mods_form.addRow("Avantage de renseignement", self.intel_spin)
+        self.night_bonus_spin = pct(0, 100)
+        mods_form.addRow("Bonus d'attaque de nuit", self.night_bonus_spin)
+        self.artillery_spin = pct(0, 100)
+        mods_form.addRow("Ratio d'artillerie (override)", self.artillery_spin)
+        self.japan_check = QCheckBox("Japon (Banzai Charge)")
+        mods_form.addRow(self.japan_check)
+        self.masterful_check = QCheckBox("Blitz magistral débloqué")
+        mods_form.addRow(self.masterful_check)
+        self.flame_check = QCheckBox("Chars lance-flammes (urbain)")
+        mods_form.addRow(self.flame_check)
+        self.engineers_check = QCheckBox("Génie présent (Mouse Holing)")
+        mods_form.addRow(self.engineers_check)
+        self.mods_box.toggled.connect(self._on_mods_toggled)
+        layout.addWidget(self.mods_box)
+        self._on_mods_toggled(False)
 
         # Leader + tactique
         bottom = QFormLayout()
@@ -121,12 +168,40 @@ class CampPanel(QGroupBox):
         self.tactic_combo.blockSignals(False)
 
     def sync_to_battle(self) -> None:
-        """Reporte leader et override de tactique sur le camp."""
+        """Reporte leader, override de tactique et curseurs §9.5 sur le camp."""
         if self.camp is None:
             return
         leader = self.leader_combo.currentData()
         self.camp.leader = leader if leader is not None else Leader()
         self.camp.manual_tactic = self.tactic_combo.currentData()
+        sp = (self.battle.params.attacker if self.is_attacker
+              else self.battle.params.defender)
+        sp.coordination = self.coordination_spin.value() / 100.0
+        sp.supply_shortage = self.supply_spin.value() / 100.0
+        sp.enemy_air_superiority = self.enemy_air_spin.value() / 100.0
+        sp.air_support_bonus = self.air_support_spin.value() / 100.0
+        sp.nation_attack_bonus = self.nation_atk_spin.value() / 100.0
+        sp.nation_defense_bonus = self.nation_def_spin.value() / 100.0
+        sp.intel_advantage = self.intel_spin.value() / 100.0
+        sp.night_attack_bonus = self.night_bonus_spin.value() / 100.0
+        sp.artillery_ratio = self.artillery_spin.value() / 100.0
+        sp.is_japan = self.japan_check.isChecked()
+        sp.masterful_blitz = self.masterful_check.isChecked()
+        sp.has_flame_tanks = self.flame_check.isChecked()
+        sp.has_engineers = self.engineers_check.isChecked()
+
+    def _on_mods_toggled(self, visible: bool) -> None:
+        for widget in self.mods_box.findChildren(QWidget):
+            widget.setVisible(visible)
+
+    def _on_paradrop(self) -> None:
+        row = self.division_list.currentRow()
+        if self.camp is None or row < 0:
+            return
+        division = self.division_list.item(row).data(Qt.UserRole)
+        division.paradropped_rounds_left = 48
+        self.log_callback(f"  • {self.camp.label} : {division.name} marquée "
+                          f"parachutée (−30 % pendant 48 tours).")
 
     # -------------------------------------------------------------- slots
 
