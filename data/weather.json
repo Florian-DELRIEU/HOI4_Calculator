@@ -1,0 +1,15 @@
+{
+  "_comment": "Météo — CDC §7.3. Conditions au niveau province (les plus pertinentes pour le combat terrestre). attack/breakthrough en modificateurs relatifs, speed pour l'affichage/immersion. La nuit est gérée à part (−50 % attaque des deux camps).",
+  "conditions": [
+    {"id": "clear",        "nom": "Dégagé",          "attack": 0.0,   "breakthrough": 0.0,   "defense": 0.0,  "attacker_speed": 0.0},
+    {"id": "rain",         "nom": "Pluie",           "attack": 0.0,   "breakthrough": 0.0,   "defense": 0.0,  "attacker_speed": 0.0},
+    {"id": "storm",        "nom": "Tempête",         "attack": 0.0,   "breakthrough": 0.0,   "defense": 0.0,  "attacker_speed": 0.0},
+    {"id": "snowfall",     "nom": "Neige (chute)",   "attack": 0.0,   "breakthrough": 0.0,   "defense": 0.0,  "attacker_speed": 0.0},
+    {"id": "blizzard",     "nom": "Blizzard",        "attack": -0.20, "breakthrough": -0.15, "defense": 0.0,  "attacker_speed": -0.25},
+    {"id": "sandstorm",    "nom": "Tempête de sable","attack": 0.0,   "breakthrough": 0.0,   "defense": 0.0,  "attacker_speed": 3.0},
+    {"id": "ground_snow",  "nom": "Neige (au sol)",  "attack": -0.20, "breakthrough": -0.15, "defense": 0.0,  "attacker_speed": -0.25},
+    {"id": "deep_snow",    "nom": "Neige profonde",  "attack": -0.40, "breakthrough": -0.30, "defense": 0.0,  "attacker_speed": -0.50},
+    {"id": "mud",          "nom": "Boue",            "attack": -0.40, "breakthrough": 0.0,   "defense": 0.0,  "attacker_speed": -0.50},
+    {"id": "flood",        "nom": "Inondation",      "attack": 0.0,   "breakthrough": 0.0,   "defense": 0.50, "attacker_speed": -0.50}
+  ]
+}

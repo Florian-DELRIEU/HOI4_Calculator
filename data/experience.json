@@ -1,0 +1,10 @@
+{
+  "_comment": "Bonus d'expérience de division en % (CDC §8.5) — appliqué à l'attaque et à la défense.",
+  "levels": [
+    {"id": "green",    "nom": "Bleue",      "bonus": -25},
+    {"id": "trained",  "nom": "Entraînée",  "bonus": 0},
+    {"id": "regular",  "nom": "Régulière",  "bonus": 25},
+    {"id": "seasoned", "nom": "Aguerrie",   "bonus": 50},
+    {"id": "veteran",  "nom": "Vétérane",   "bonus": 75}
+  ]
+}

@@ -1,0 +1,18 @@
+{
+    "Nom de Template": "Infanterie 36",
+    "PV": 176.2,
+    "Organisation": 46.6,
+    "Soft Attack": 97.0,
+    "Hard Attack": 11.0,
+    "Defense": 181.7,
+    "Attaque": 34.1,
+    "Piercing": 4.5,
+    "Armor": 0.0,
+    "Hardness": 0.0,
+    "Width": 40,
+    "Initiative": 0.05,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 4.0,
+    "Experience": "regular",
+    "Recon": 0.0
+}

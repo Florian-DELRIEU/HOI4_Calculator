@@ -1,0 +1,289 @@
+"""Orchestration d'une bataille : camps, ligne de front, réserves, tours."""
+from __future__ import annotations
+
+from engine import combat
+from engine.division import Division
+from engine.leader import Leader
+from engine.logs import AttackReport, RoundLog
+from engine.params import BattleParams
+from engine.rng import CombatRNG
+
+REINFORCE_CHANCE = 0.02        # 2 % par heure (§8.2)
+MAX_OVERWIDTH_RATIO = 1.33     # entrée en ligne refusée au-delà (§8.1)
+MAX_WIDTH_PENALTY = -33.0      # plafond de pénalité de dépassement
+STACKING_BASE_LIMIT = 5
+STACKING_PER_DIRECTION = 3
+STACKING_PENALTY_PER_DIV = -2.0
+
+
+class Camp:
+    """Un des deux camps de la bataille."""
+
+    def __init__(self, is_attacker: bool, leader: Leader | None = None):
+        self.is_attacker = is_attacker
+        self.leader = leader or Leader()
+        self.divisions: list[Division] = []
+        self.frontline: list[Division] = []
+        self.reserves: list[Division] = []
+        self.retreated: list[Division] = []
+        self.destroyed: list[Division] = []
+        self.width_penalty = 0.0      # % ≤ 0
+        self.stacking_penalty = 0.0   # % ≤ 0
+        self.manual_tactic: str | None = None   # override joueur (§9.3)
+
+    @property
+    def side(self) -> str:
+        return "attacker" if self.is_attacker else "defender"
+
+    @property
+    def label(self) -> str:
+        return "Attaquant" if self.is_attacker else "Défenseur"
+
+    def add_division(self, division: Division) -> None:
+        self.divisions.append(division)
+
+    @property
+    def active_divisions(self) -> list[Division]:
+        return [d for d in self.divisions if d.can_fight]
+
+    @property
+    def frontline_width(self) -> float:
+        return sum(d.stats.width for d in self.frontline)
+
+    @property
+    def total_recon(self) -> float:
+        """Meilleure valeur de reconnaissance du camp (réserves incluses, §9.2)."""
+        return max((d.recon for d in self.active_divisions), default=0.0)
+
+    # ------------------------------------------------------ ligne de front
+
+    def battle_width(self, battle: "Battle") -> float:
+        width = battle.params.base_combat_width
+        tactic = battle.active_tactics.get(self.side)
+        if tactic is not None:
+            width *= tactic.effective_width_factor
+        return width
+
+    def deploy(self, battle: "Battle", events: list[str]) -> None:
+        """Place en ligne les divisions qui rentrent, le reste en réserve."""
+        width_limit = MAX_OVERWIDTH_RATIO * self.battle_width(battle)
+        for division in self.divisions:
+            if division in self.frontline or division in self.reserves:
+                continue
+            if not division.can_fight:
+                continue
+            if self.frontline_width + division.stats.width <= width_limit or not self.frontline:
+                self.frontline.append(division)
+                division.in_frontline = True
+                events.append(f"{self.label} : {division.name} rejoint la ligne de front.")
+            else:
+                self.reserves.append(division)
+                events.append(f"{self.label} : {division.name} placée en réserve.")
+
+    def try_reinforce(self, battle: "Battle", rng: CombatRNG, events: list[str]) -> None:
+        """Chaque division en réserve a 2 %/tour de rejoindre le front (§8.2)."""
+        width_limit = MAX_OVERWIDTH_RATIO * self.battle_width(battle)
+        for division in list(self.reserves):
+            if not division.can_fight:
+                continue
+            fits = self.frontline_width + division.stats.width <= width_limit
+            if (rng.chance(REINFORCE_CHANCE) and fits) or not self.frontline:
+                self.reserves.remove(division)
+                self.frontline.append(division)
+                division.in_frontline = True
+                events.append(f"{self.label} : {division.name} renforce la ligne de front.")
+
+    def compute_penalties(self, battle: "Battle") -> None:
+        """Pénalités de dépassement de largeur et d'empilement (§8.1)."""
+        width = self.battle_width(battle)
+        total = self.frontline_width
+        if width > 0 and total > width:
+            self.width_penalty = max(-100.0 * (total - width) / width, MAX_WIDTH_PENALTY)
+        else:
+            self.width_penalty = 0.0
+
+        limit = STACKING_BASE_LIMIT + STACKING_PER_DIRECTION * battle.params.extra_directions
+        excess = len(self.frontline) - limit
+        self.stacking_penalty = STACKING_PENALTY_PER_DIV * excess if excess > 0 else 0.0
+
+    def cleanup(self, events: list[str]) -> None:
+        """Retire les divisions détruites ou en déroute en fin de tour."""
+        for division in list(self.frontline):
+            if division.is_destroyed:
+                self.frontline.remove(division)
+                self.destroyed.append(division)
+                events.append(f"{self.label} : {division.name} est DÉTRUITE.")
+            elif division.is_broken:
+                self.frontline.remove(division)
+                self.retreated.append(division)
+                events.append(f"{self.label} : {division.name} se replie (organisation épuisée).")
+        for division in list(self.reserves):
+            if division.is_destroyed:
+                self.reserves.remove(division)
+                self.destroyed.append(division)
+
+    # ---------------------------------------------------------- rapports
+
+    def hp_pool(self) -> tuple[float, float]:
+        cur = sum(d.current_hp for d in self.divisions)
+        tot = sum(d.stats.hp for d in self.divisions)
+        return cur, tot
+
+    def org_pool(self) -> tuple[float, float]:
+        active = self.frontline + self.reserves
+        cur = sum(d.current_org for d in active)
+        tot = sum(d.stats.organisation for d in self.divisions)
+        return cur, tot
+
+
+class Battle:
+    """Une bataille : deux camps, des paramètres, un déroulé tour par tour."""
+
+    def __init__(self, params: BattleParams | None = None,
+                 attacker_leader: Leader | None = None,
+                 defender_leader: Leader | None = None,
+                 seed: int | None = None):
+        self.params = params or BattleParams()
+        self.rng = CombatRNG(seed)
+        self.attacker = Camp(True, attacker_leader)
+        self.defender = Camp(False, defender_leader)
+        self.round = 0
+        self.logs: list[RoundLog] = []
+        self.result: str | None = None   # None | "attacker" | "defender"
+        # Tactiques — branchées au jalon 2 ; état neutre par défaut.
+        self.active_tactics: dict[str, "object | None"] = {"attacker": None, "defender": None}
+        self.battle_phase = "default"
+        self.tactic_manager = None       # engine.tactics.TacticManager (jalon 2)
+
+    # ------------------------------------------------------------ camps
+
+    def camp(self, side: str) -> Camp:
+        return self.attacker if side == "attacker" else self.defender
+
+    def enemy_of(self, camp: Camp) -> Camp:
+        return self.defender if camp.is_attacker else self.attacker
+
+    def damage_factor_for(self, camp: Camp) -> tuple[float, str]:
+        """Facteur de dégâts des tactiques actives pour le camp qui frappe.
+
+        Les deux tactiques actives (attaquant ET défenseur) modifient chacune
+        les dégâts des deux camps (§9.5 : colonnes « Dégâts ATK/DEF »).
+        """
+        factor = 1.0
+        names = []
+        for side in ("attacker", "defender"):
+            tactic = self.active_tactics.get(side)
+            if tactic is None:
+                continue
+            f = tactic.damage_factor_for(camp.side)
+            if f != 1.0:
+                factor *= f
+            names.append(tactic.name)
+        return factor, " / ".join(names)
+
+    # ------------------------------------------------------------- tours
+
+    @property
+    def is_over(self) -> bool:
+        return self.result is not None
+
+    def run_round(self) -> RoundLog:
+        """Exécute un tour de combat (1 heure de jeu)."""
+        if self.is_over:
+            return RoundLog(round=self.round, events=["La bataille est terminée."])
+
+        self.round += 1
+        log = RoundLog(round=self.round, phase=self.battle_phase)
+
+        # 1. Re-sélection des tactiques toutes les 12 h (jalon 2)
+        if self.tactic_manager is not None:
+            self.tactic_manager.maybe_reselect(self, log)
+
+        # 2. Déploiement initial + renforts depuis la réserve
+        for camp in (self.attacker, self.defender):
+            if self.round == 1:
+                camp.deploy(self, log.events)
+            else:
+                camp.deploy(self, log.events)   # nouvelles divisions ajoutées en cours de bataille
+                camp.try_reinforce(self, self.rng, log.events)
+            camp.compute_penalties(self)
+
+        # 3. Pools de défense du tour
+        for camp in (self.attacker, self.defender):
+            for division in camp.frontline:
+                combat.compute_defense_pool(division, camp, self, self.rng)
+
+        # 4. Ciblage
+        for camp in (self.attacker, self.defender):
+            enemy = self.enemy_of(camp)
+            for division in camp.frontline:
+                combat.build_target_list(division, enemy.frontline, self.rng)
+
+        # 5. Résolution des attaques (attaquant puis défenseur ; les
+        #    éliminations ne prennent effet qu'en fin de tour)
+        for camp in (self.attacker, self.defender):
+            for division in camp.frontline:
+                log.attacks.extend(combat.resolve_attacks(division, camp, self, self.rng))
+
+        # 6. Décompte parachutage, nettoyage, fin de bataille
+        for camp in (self.attacker, self.defender):
+            for division in camp.divisions:
+                if division.paradropped_rounds_left > 0:
+                    division.paradropped_rounds_left -= 1
+            camp.cleanup(log.events)
+
+        atk_t = self.active_tactics.get("attacker")
+        def_t = self.active_tactics.get("defender")
+        log.attacker_tactic = atk_t.name if atk_t else ""
+        log.defender_tactic = def_t.name if def_t else ""
+
+        self._check_end(log)
+        self.logs.append(log)
+        return log
+
+    def run_rounds(self, n: int, stop_on_end: bool = True) -> list[RoundLog]:
+        results = []
+        for _ in range(n):
+            if stop_on_end and self.is_over:
+                break
+            results.append(self.run_round())
+        return results
+
+    def _check_end(self, log: RoundLog) -> None:
+        defender_alive = self.defender.frontline or self.defender.reserves
+        attacker_alive = self.attacker.frontline or self.attacker.reserves
+        if not defender_alive:
+            self.result = "attacker"
+            log.events.append("VICTOIRE DE L'ATTAQUANT — le défenseur n'a plus de division en état de combattre.")
+        elif not attacker_alive:
+            self.result = "defender"
+            log.events.append("VICTOIRE DU DÉFENSEUR — l'attaquant n'a plus de division en état de combattre.")
+
+    # --------------------------------------------------------- indicateurs
+
+    def victory_balance(self) -> float:
+        """Équilibre des forces 0..1 (part de l'attaquant), basé sur
+        l'organisation et les PV restants des deux camps."""
+        def score(camp: Camp) -> float:
+            org_cur, org_tot = camp.org_pool()
+            hp_cur, hp_tot = camp.hp_pool()
+            org_part = org_cur / org_tot if org_tot else 0.0
+            hp_part = hp_cur / hp_tot if hp_tot else 0.0
+            return 0.7 * org_part + 0.3 * hp_part
+
+        a, d = score(self.attacker), score(self.defender)
+        return a / (a + d) if (a + d) > 0 else 0.5
+
+    def casualty_report(self) -> dict:
+        """Rapport de fin de bataille simplifié : PV perdus × 70 % (§8.7)."""
+        report = {}
+        for camp in (self.attacker, self.defender):
+            hp_cur, hp_tot = camp.hp_pool()
+            lost = hp_tot - hp_cur
+            report[camp.side] = {
+                "pv_perdus": round(lost, 2),
+                "pertes_estimees": round(lost * 0.70, 2),
+                "divisions_detruites": len(camp.destroyed),
+                "divisions_repliees": len(camp.retreated),
+            }
+        return report

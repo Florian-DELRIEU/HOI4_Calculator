@@ -1,0 +1,13 @@
+{
+  "_comment": "Table des terrains — CDC §7.1, valeurs du wiki officiel reproduites telles quelles. attack_modifier s'applique à l'attaque douce/dure et à la percée de l'attaquant. enemy_air_mitigation atténue la pénalité de supériorité aérienne ennemie.",
+  "terrains": [
+    {"id": "desert",   "nom": "Désert",    "combat_width": 70, "extra_width_per_direction": 35, "movement_cost": 0.05, "attrition": 0.15, "attack_modifier": 0.0,   "enemy_air_mitigation": 0.0,  "max_fort": 4},
+    {"id": "forest",   "nom": "Forêt",     "combat_width": 60, "extra_width_per_direction": 30, "movement_cost": 0.50, "attrition": 0.0,  "attack_modifier": -0.15, "enemy_air_mitigation": 0.10, "max_fort": 4},
+    {"id": "hills",    "nom": "Collines",  "combat_width": 70, "extra_width_per_direction": 35, "movement_cost": 0.50, "attrition": 0.0,  "attack_modifier": -0.25, "enemy_air_mitigation": 0.05, "max_fort": 5},
+    {"id": "jungle",   "nom": "Jungle",    "combat_width": 60, "extra_width_per_direction": 30, "movement_cost": 0.50, "attrition": 0.20, "attack_modifier": -0.30, "enemy_air_mitigation": 0.25, "max_fort": 3},
+    {"id": "marsh",    "nom": "Marais",    "combat_width": 50, "extra_width_per_direction": 25, "movement_cost": 1.00, "attrition": 0.35, "attack_modifier": -0.40, "enemy_air_mitigation": 0.0,  "max_fort": 3},
+    {"id": "mountain", "nom": "Montagne",  "combat_width": 50, "extra_width_per_direction": 25, "movement_cost": 1.00, "attrition": 0.30, "attack_modifier": -0.50, "enemy_air_mitigation": 0.10, "max_fort": 4},
+    {"id": "plains",   "nom": "Plaines",   "combat_width": 70, "extra_width_per_direction": 35, "movement_cost": 0.0,  "attrition": 0.0,  "attack_modifier": 0.0,   "enemy_air_mitigation": 0.0,  "max_fort": 5},
+    {"id": "urban",    "nom": "Urbain",    "combat_width": 80, "extra_width_per_direction": 40, "movement_cost": 0.20, "attrition": 0.0,  "attack_modifier": -0.30, "enemy_air_mitigation": 0.50, "max_fort": 5}
+  ]
+}

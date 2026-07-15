@@ -1,0 +1,18 @@
+{
+    "Nom de Template": "Blindes 36",
+    "PV": 107.2,
+    "Organisation": 30.0,
+    "Soft Attack": 127.0,
+    "Hard Attack": 26.0,
+    "Defense": 127.4,
+    "Attaque": 132.6,
+    "Piercing": 19.7,
+    "Armor": 8.0,
+    "Hardness": 0.3,
+    "Width": 40,
+    "Initiative": 0.05,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 8.0,
+    "Experience": "regular",
+    "Recon": 0.0
+}
