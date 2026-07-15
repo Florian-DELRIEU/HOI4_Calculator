@@ -19,6 +19,12 @@ class SideParams:
     nation_defense_bonus: float = 0.0  # bonus de nation (défense, ±)
     intel_advantage: float = 0.0       # 0..0.15 (réglé directement en %)
     night_attack_bonus: float = 0.0    # atténuation de la pénalité de nuit, 0..1
+    # Drapeaux utilisés par les déclencheurs de tactiques (§9.5)
+    artillery_ratio: float = 0.0       # override manuel du ratio d'artillerie
+    is_japan: bool = False             # Banzai Charge
+    masterful_blitz: bool = False      # focus soviétique (Masterful Blitz)
+    has_flame_tanks: bool = False      # Armour Supported Urban Assault
+    has_engineers: bool = False        # Mouse Holing
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -41,6 +47,7 @@ class BattleParams:
     encirclement: bool = False         # défenseur encerclé (−30 %)
     entrenchment: int = 0              # retranchement du défenseur (+2 %/pt)
     planning_bonus: float = 0.0        # attaquant, 0..0.30
+    victory_points: int = 0            # valeur du point de victoire (Urban Defense)
     attacker: SideParams = field(default_factory=SideParams)
     defender: SideParams = field(default_factory=SideParams)
 

@@ -3,10 +3,11 @@ from __future__ import annotations
 
 from engine import combat
 from engine.division import Division
-from engine.leader import Leader
+from engine.leader import Leader, LeaderAbility
 from engine.logs import AttackReport, RoundLog
 from engine.params import BattleParams
 from engine.rng import CombatRNG
+from engine.tactics import ActiveTactic, TacticManager, TacticRegistry
 
 REINFORCE_CHANCE = 0.02        # 2 % par heure (§8.2)
 MAX_OVERWIDTH_RATIO = 1.33     # entrée en ligne refusée au-delà (§8.1)
@@ -30,6 +31,9 @@ class Camp:
         self.width_penalty = 0.0      # % ≤ 0
         self.stacking_penalty = 0.0   # % ≤ 0
         self.manual_tactic: str | None = None   # override joueur (§9.3)
+        # Capacités de leader activées : [(capacité, tours restants), …]
+        self.active_abilities: list[list] = []
+        self.ability_uses: dict[str, int] = {}
 
     @property
     def side(self) -> str:
@@ -58,11 +62,31 @@ class Camp:
     # ------------------------------------------------------ ligne de front
 
     def battle_width(self, battle: "Battle") -> float:
-        width = battle.params.base_combat_width
-        tactic = battle.active_tactics.get(self.side)
-        if tactic is not None:
-            width *= tactic.effective_width_factor
-        return width
+        return battle.effective_combat_width
+
+    # ------------------------------------------------------- capacités
+
+    def activate_ability(self, ability: LeaderAbility, events: list[str]) -> bool:
+        """Active une capacité de maréchal (§5) si des usages restent."""
+        used = self.ability_uses.get(ability.name, 0)
+        if used >= ability.uses_per_battle:
+            return False
+        self.ability_uses[ability.name] = used + 1
+        if ability.attack_bonus or ability.defense_bonus:
+            self.active_abilities.append([ability, ability.duration_rounds])
+        if ability.org_restore:
+            for division in self.active_divisions:
+                division.current_org = min(
+                    division.current_org + ability.org_restore,
+                    division.stats.organisation)
+        events.append(f"{self.label} : capacité « {ability.name} » activée.")
+        return True
+
+    def tick_abilities(self) -> None:
+        for entry in list(self.active_abilities):
+            entry[1] -= 1
+            if entry[1] <= 0:
+                self.active_abilities.remove(entry)
 
     def deploy(self, battle: "Battle", events: list[str]) -> None:
         """Place en ligne les divisions qui rentrent, le reste en réserve."""
@@ -142,7 +166,9 @@ class Battle:
     def __init__(self, params: BattleParams | None = None,
                  attacker_leader: Leader | None = None,
                  defender_leader: Leader | None = None,
-                 seed: int | None = None):
+                 seed: int | None = None,
+                 tactic_registry: TacticRegistry | None = None,
+                 use_tactics: bool = True):
         self.params = params or BattleParams()
         self.rng = CombatRNG(seed)
         self.attacker = Camp(True, attacker_leader)
@@ -150,10 +176,18 @@ class Battle:
         self.round = 0
         self.logs: list[RoundLog] = []
         self.result: str | None = None   # None | "attacker" | "defender"
-        # Tactiques — branchées au jalon 2 ; état neutre par défaut.
-        self.active_tactics: dict[str, "object | None"] = {"attacker": None, "defender": None}
+        self.active_tactics: dict[str, ActiveTactic | None] = {"attacker": None, "defender": None}
         self.battle_phase = "default"
-        self.tactic_manager = None       # engine.tactics.TacticManager (jalon 2)
+        self.tactic_manager = TacticManager(tactic_registry) if use_tactics else None
+
+    @property
+    def effective_combat_width(self) -> float:
+        """Largeur de combat de base modifiée par les tactiques actives (§9.1)."""
+        width = self.params.base_combat_width
+        for tactic in self.active_tactics.values():
+            if tactic is not None:
+                width *= tactic.effective_width_factor
+        return width
 
     # ------------------------------------------------------------ camps
 
@@ -225,11 +259,12 @@ class Battle:
             for division in camp.frontline:
                 log.attacks.extend(combat.resolve_attacks(division, camp, self, self.rng))
 
-        # 6. Décompte parachutage, nettoyage, fin de bataille
+        # 6. Décompte parachutage/capacités, nettoyage, fin de bataille
         for camp in (self.attacker, self.defender):
             for division in camp.divisions:
                 if division.paradropped_rounds_left > 0:
                     division.paradropped_rounds_left -= 1
+            camp.tick_abilities()
             camp.cleanup(log.events)
 
         atk_t = self.active_tactics.get("attacker")

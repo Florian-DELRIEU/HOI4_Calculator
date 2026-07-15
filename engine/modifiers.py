@@ -60,6 +60,12 @@ def _common_entries(division: "Division", camp: "Camp", battle: "Battle",
         max_pen = SUPPLY_ATTACK_MAX[side] if is_attack_stat else SUPPLY_DEFENSE_MAX[side]
         entries.append(("Manque de ravitaillement", max_pen * sp.supply_shortage))
 
+    # Capacités de leader activées (§5)
+    for ability, _rounds_left in camp.active_abilities:
+        bonus = ability.attack_bonus if is_attack_stat else ability.defense_bonus
+        if bonus:
+            entries.append((f"Capacité : {ability.name}", bonus))
+
     # Renseignement et bonus de nation
     if is_attack_stat:
         if sp.intel_advantage:

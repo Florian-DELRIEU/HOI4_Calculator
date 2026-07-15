@@ -53,6 +53,18 @@ class DivisionTemplate:
     def spawn(self) -> "Division":
         return Division(self)
 
+    def artillery_ratio(self) -> float:
+        """Part de bataillons d'artillerie dans la composition (déclencheur
+        des tactiques Assault / Street by Street Barrage)."""
+        if not self.battalions:
+            return 0.0
+        try:
+            from engine.composition import is_artillery
+        except ImportError:
+            return 0.0
+        count = sum(1 for b in self.battalions if is_artillery(b))
+        return count / len(self.battalions)
+
 
 class Division:
     """Instance d'une division engagée dans une bataille."""

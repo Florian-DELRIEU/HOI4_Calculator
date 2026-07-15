@@ -4,26 +4,34 @@ from __future__ import annotations
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QGroupBox, QHBoxLayout,
-    QLabel, QListWidget, QListWidgetItem, QMainWindow, QMessageBox,
-    QPlainTextEdit, QProgressBar, QPushButton, QSpinBox, QSplitter,
-    QVBoxLayout, QWidget,
+    QInputDialog, QLabel, QListWidget, QListWidgetItem, QMainWindow,
+    QMessageBox, QPlainTextEdit, QProgressBar, QPushButton, QSpinBox,
+    QSplitter, QVBoxLayout, QWidget,
 )
 
 from engine.battle import Battle
 from engine.gamedata import TERRAINS, WEATHER
 from engine.leader import Leader
 from engine.params import BattleParams
+from engine.tactics import PHASE_LABELS, TacticRegistry
+from gui.leader_editor import LeaderEditor
+from gui.tactic_editor import TacticEditor
 from persistence.divisions import DivisionStore
+from persistence.leaders import LeaderStore
 
 
 class CampPanel(QGroupBox):
-    """Panneau d'un camp : divisions engagées + leader."""
+    """Panneau d'un camp : divisions engagées, leader, tactique."""
 
     def __init__(self, title: str, is_attacker: bool, store: DivisionStore,
-                 parent=None):
+                 leader_store: LeaderStore, registry: TacticRegistry,
+                 log_callback, parent=None):
         super().__init__(title, parent)
         self.is_attacker = is_attacker
         self.store = store
+        self.leader_store = leader_store
+        self.registry = registry
+        self.log_callback = log_callback
 
         layout = QVBoxLayout(self)
 
@@ -47,25 +55,34 @@ class CampPanel(QGroupBox):
         remove_btn.clicked.connect(self._on_remove)
         layout.addWidget(remove_btn)
 
-        # Leader
-        leader_box = QGroupBox("Leader")
-        leader_form = QFormLayout(leader_box)
-        self.leader_attack = QSpinBox()
-        self.leader_attack.setRange(0, 10)
-        self.leader_defense = QSpinBox()
-        self.leader_defense.setRange(0, 10)
-        leader_form.addRow("Compétence attaque", self.leader_attack)
-        leader_form.addRow("Compétence défense", self.leader_defense)
-        layout.addWidget(leader_box)
+        # Leader + tactique
+        bottom = QFormLayout()
+        self.leader_combo = QComboBox()
+        bottom.addRow("Leader", self.leader_combo)
+        self.ability_btn = QPushButton("Activer une capacité…")
+        self.ability_btn.clicked.connect(self._on_ability)
+        bottom.addRow(self.ability_btn)
+        self.tactic_combo = QComboBox()
+        bottom.addRow("Tactique (§9.3)", self.tactic_combo)
+        self.tactic_label = QLabel("—")
+        bottom.addRow("Tactique active", self.tactic_label)
+        layout.addLayout(bottom)
 
         self.battle: Battle | None = None
         self.refresh_templates()
+        self.refresh_leaders()
 
     @property
     def camp(self):
         if self.battle is None:
             return None
         return self.battle.attacker if self.is_attacker else self.battle.defender
+
+    @property
+    def side(self) -> str:
+        return "attacker" if self.is_attacker else "defender"
+
+    # -------------------------------------------------------------- listes
 
     def refresh_templates(self) -> None:
         current = self.template_combo.currentText()
@@ -77,11 +94,41 @@ class CampPanel(QGroupBox):
         if index >= 0:
             self.template_combo.setCurrentIndex(index)
 
-    def sync_leader(self) -> None:
-        if self.camp is not None:
-            self.camp.leader = Leader(
-                name="Leader", attack_level=self.leader_attack.value(),
-                defense_level=self.leader_defense.value())
+    def refresh_leaders(self) -> None:
+        current = self.leader_combo.currentText()
+        self.leader_combo.clear()
+        self.leader_combo.addItem("— Sans leader —", None)
+        for leader in self.leader_store.list_leaders():
+            self.leader_combo.addItem(
+                f"{leader.name} (A{leader.attack_level}/D{leader.defense_level})", leader)
+        index = self.leader_combo.findText(current)
+        if index >= 0:
+            self.leader_combo.setCurrentIndex(index)
+
+    def refresh_tactic_combo(self) -> None:
+        """Liste des tactiques forçables pour la phase en cours."""
+        if self.battle is None:
+            return
+        current = self.tactic_combo.currentData()
+        self.tactic_combo.blockSignals(True)
+        self.tactic_combo.clear()
+        self.tactic_combo.addItem("— Automatique (fidèle au jeu) —", None)
+        for tactic in sorted(self.registry.for_side_phase(self.side, self.battle.battle_phase),
+                             key=lambda t: t.name):
+            self.tactic_combo.addItem(tactic.name, tactic.name)
+        index = self.tactic_combo.findData(current)
+        self.tactic_combo.setCurrentIndex(max(index, 0))
+        self.tactic_combo.blockSignals(False)
+
+    def sync_to_battle(self) -> None:
+        """Reporte leader et override de tactique sur le camp."""
+        if self.camp is None:
+            return
+        leader = self.leader_combo.currentData()
+        self.camp.leader = leader if leader is not None else Leader()
+        self.camp.manual_tactic = self.tactic_combo.currentData()
+
+    # -------------------------------------------------------------- slots
 
     def _on_add(self) -> None:
         if self.camp is None:
@@ -104,6 +151,28 @@ class CampPanel(QGroupBox):
             if division in group:
                 group.remove(division)
         self.refresh_divisions()
+
+    def _on_ability(self) -> None:
+        if self.camp is None:
+            return
+        self.sync_to_battle()
+        leader = self.camp.leader
+        available = [a for a in leader.abilities
+                     if self.camp.ability_uses.get(a.name, 0) < a.uses_per_battle]
+        if not available:
+            QMessageBox.information(self, "Aucune capacité",
+                                    "Ce leader n'a plus de capacité disponible.")
+            return
+        names = [a.name for a in available]
+        name, ok = QInputDialog.getItem(self, "Activer une capacité",
+                                        "Capacité :", names, 0, False)
+        if not ok:
+            return
+        ability = next(a for a in available if a.name == name)
+        events: list[str] = []
+        if self.camp.activate_ability(ability, events):
+            for event in events:
+                self.log_callback(f"  • {event}")
 
     def refresh_divisions(self) -> None:
         self.division_list.clear()
@@ -130,6 +199,12 @@ class CampPanel(QGroupBox):
             elif division.is_broken:
                 item.setForeground(Qt.darkYellow)
             self.division_list.addItem(item)
+
+    def refresh_tactic_label(self) -> None:
+        if self.battle is None:
+            return
+        tactic = self.battle.active_tactics.get(self.side)
+        self.tactic_label.setText(tactic.describe() if tactic else "—")
 
 
 class ParamsPanel(QGroupBox):
@@ -180,6 +255,10 @@ class ParamsPanel(QGroupBox):
         self.planning_spin.setSuffix(" %")
         form.addRow("Bonus de planification", self.planning_spin)
 
+        self.vp_spin = QSpinBox()
+        self.vp_spin.setRange(0, 50)
+        form.addRow("Points de victoire (urbain)", self.vp_spin)
+
     def apply_to(self, params: BattleParams) -> None:
         params.terrain_id = self.terrain_combo.currentData()
         params.weather_id = self.weather_combo.currentData()
@@ -192,16 +271,19 @@ class ParamsPanel(QGroupBox):
         params.encirclement = self.encirclement_check.isChecked()
         params.entrenchment = self.entrenchment_spin.value()
         params.planning_bonus = self.planning_spin.value() / 100.0
+        params.victory_points = self.vp_spin.value()
 
 
 class BattleWindow(QMainWindow):
     def __init__(self, theme_manager=None):
         super().__init__()
         self.setWindowTitle("Simulateur de bataille HOI4")
-        self.resize(1280, 820)
+        self.resize(1360, 860)
         self.theme_manager = theme_manager
         self.store = DivisionStore()
-        self.battle = Battle(BattleParams())
+        self.leader_store = LeaderStore()
+        self.registry = TacticRegistry()
+        self.battle = Battle(BattleParams(), tactic_registry=self.registry)
 
         central = QWidget()
         self.setCentralWidget(central)
@@ -212,9 +294,17 @@ class BattleWindow(QMainWindow):
         new_btn = QPushButton("Nouvelle bataille")
         new_btn.clicked.connect(self.new_battle)
         top.addWidget(new_btn)
+        leaders_btn = QPushButton("Éditeur de leaders…")
+        leaders_btn.clicked.connect(self._open_leader_editor)
+        top.addWidget(leaders_btn)
+        tactics_btn = QPushButton("Éditeur de tactiques…")
+        tactics_btn.clicked.connect(self._open_tactic_editor)
+        top.addWidget(tactics_btn)
         top.addStretch(1)
         self.round_label = QLabel("Tour : 0")
         top.addWidget(self.round_label)
+        self.phase_label = QLabel("Phase : Défaut")
+        top.addWidget(self.phase_label)
         top.addStretch(1)
         theme_btn = QPushButton("Thème clair/sombre")
         theme_btn.clicked.connect(self._toggle_theme)
@@ -228,11 +318,15 @@ class BattleWindow(QMainWindow):
         self.params_panel = ParamsPanel()
         splitter.addWidget(self.params_panel)
 
-        self.attacker_panel = CampPanel("Attaquant", True, self.store)
-        self.defender_panel = CampPanel("Défenseur", False, self.store)
+        self.attacker_panel = CampPanel("Attaquant", True, self.store,
+                                        self.leader_store, self.registry,
+                                        self._append_log)
+        self.defender_panel = CampPanel("Défenseur", False, self.store,
+                                        self.leader_store, self.registry,
+                                        self._append_log)
         splitter.addWidget(self.attacker_panel)
         splitter.addWidget(self.defender_panel)
-        splitter.setSizes([300, 460, 460])
+        splitter.setSizes([300, 500, 500])
 
         # ---------------------------------------------- barre de victoire
         balance_row = QHBoxLayout()
@@ -273,15 +367,19 @@ class BattleWindow(QMainWindow):
 
     # ----------------------------------------------------------- bataille
 
+    def _append_log(self, text: str) -> None:
+        self.log_view.appendPlainText(text)
+
     def _bind_battle(self) -> None:
-        self.attacker_panel.battle = self.battle
-        self.defender_panel.battle = self.battle
-        self.attacker_panel.refresh_divisions()
-        self.defender_panel.refresh_divisions()
+        for panel in (self.attacker_panel, self.defender_panel):
+            panel.battle = self.battle
+            panel.refresh_divisions()
+            panel.refresh_tactic_combo()
+            panel.refresh_tactic_label()
         self._refresh_status()
 
     def new_battle(self) -> None:
-        self.battle = Battle(BattleParams())
+        self.battle = Battle(BattleParams(), tactic_registry=self.registry)
         self.params_panel.apply_to(self.battle.params)
         self.log_view.clear()
         self.log_view.appendPlainText("=== Nouvelle bataille ===")
@@ -296,10 +394,10 @@ class BattleWindow(QMainWindow):
             QMessageBox.information(self, "Bataille terminée",
                                     "La bataille est terminée — lancez une nouvelle bataille.")
             return
-        # Les paramètres et leaders sont relus à chaque tour : on synchronise.
+        # Les paramètres, leaders et overrides sont relus à chaque tour.
         self.params_panel.apply_to(self.battle.params)
-        self.attacker_panel.sync_leader()
-        self.defender_panel.sync_leader()
+        self.attacker_panel.sync_to_battle()
+        self.defender_panel.sync_to_battle()
 
         logs = self.battle.run_rounds(n)
         detailed = self.detail_check.isChecked()
@@ -333,9 +431,13 @@ class BattleWindow(QMainWindow):
 
     def _refresh_status(self) -> None:
         self.round_label.setText(f"Tour : {self.battle.round}")
+        self.phase_label.setText(
+            f"Phase : {PHASE_LABELS.get(self.battle.battle_phase, self.battle.battle_phase)}")
         self.balance_bar.setValue(round(self.battle.victory_balance() * 100))
-        self.attacker_panel.refresh_divisions()
-        self.defender_panel.refresh_divisions()
+        for panel in (self.attacker_panel, self.defender_panel):
+            panel.refresh_divisions()
+            panel.refresh_tactic_combo()
+            panel.refresh_tactic_label()
         if self.battle.is_over:
             winner = "ATTAQUANT" if self.battle.result == "attacker" else "DÉFENSEUR"
             report = self.battle.casualty_report()
@@ -347,6 +449,20 @@ class BattleWindow(QMainWindow):
                     f"  {label} : PV perdus {r['pv_perdus']}, pertes estimées "
                     f"{r['pertes_estimees']} (×70 %), détruites {r['divisions_detruites']}, "
                     f"repliées {r['divisions_repliees']}")
+
+    # ------------------------------------------------------------ éditeurs
+
+    def _open_leader_editor(self) -> None:
+        editor = LeaderEditor(self.leader_store, self.registry, parent=self)
+        editor.exec()
+        self.attacker_panel.refresh_leaders()
+        self.defender_panel.refresh_leaders()
+
+    def _open_tactic_editor(self) -> None:
+        editor = TacticEditor(self.registry, parent=self)
+        editor.exec()
+        self.attacker_panel.refresh_tactic_combo()
+        self.defender_panel.refresh_tactic_combo()
 
     def _toggle_theme(self) -> None:
         if self.theme_manager is not None:

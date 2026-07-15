@@ -1,0 +1,18 @@
+{
+  "_comment": "Traits de leader par défaut (CDC §5) — liste ouverte, extensible depuis l'éditeur de leader.",
+  "traits": [
+    "Aggressive Assaulter",
+    "Panzer Leader",
+    "Panzer Expert",
+    "Trickster",
+    "Combined Arms Expert",
+    "Defensive Doctrine",
+    "Offensive Doctrine",
+    "Unyielding Defender",
+    "Urban Assault Specialist",
+    "Engineer",
+    "Scavenger",
+    "Winter Specialist",
+    "Adaptable"
+  ]
+}
