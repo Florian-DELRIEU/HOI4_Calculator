@@ -408,6 +408,7 @@ class BattleWindow(QMainWindow):
         self.store = DivisionStore()
         self.leader_store = LeaderStore()
         self.registry = TacticRegistry()
+        self.battle_store = BattleSaveStore()
         self.battle = Battle(BattleParams(), tactic_registry=self.registry)
 
         central = QWidget()
@@ -596,6 +597,42 @@ class BattleWindow(QMainWindow):
                     f"repliées {r['divisions_repliees']}")
 
     # ------------------------------------------------------------ éditeurs
+
+    def _open_save_manager(self) -> None:
+        manager = SaveManager(self.battle_store,
+                              get_battle=lambda: self.battle,
+                              get_log_text=self._log_text,
+                              on_loaded=self._on_battle_loaded,
+                              registry=self.registry,
+                              parent=self)
+        manager.exec()
+
+    def _on_battle_loaded(self, battle: Battle, log_text: str) -> None:
+        """Restaure une bataille chargée : moteur + widgets."""
+        self.battle = battle
+        self.log_view.clear()
+        for line in log_text.splitlines():
+            self._append_log(line)
+        self._append_log("=== Bataille chargée ===")
+        self.params_panel.load_from(battle.params)
+        for panel in (self.attacker_panel, self.defender_panel):
+            panel.battle = battle
+            panel.load_from_battle()
+        self._bind_battle()
+
+    def _export_csv(self) -> None:
+        if not self.battle.logs:
+            QMessageBox.information(self, "Aucun log",
+                                    "Lancez d'abord au moins un tour de combat.")
+            return
+        path, _ = QFileDialog.getSaveFileName(
+            self, "Exporter les logs en CSV", "logs_bataille.csv",
+            "Fichiers CSV (*.csv)")
+        if not path:
+            return
+        rows = export_battle_csv(self.battle, path)
+        QMessageBox.information(self, "Export terminé",
+                                f"{rows} lignes exportées vers :\n{path}")
 
     def _open_division_editor(self) -> None:
         from gui.division_editor import DivisionEditor
