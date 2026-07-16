@@ -122,3 +122,32 @@ def test_tactics_disabled_setting():
     battle.run_round()
     assert battle.active_tactics["attacker"] is None
     assert battle.active_tactics["defender"] is None
+
+
+def test_disabling_tactics_setting_affects_running_battle():
+    """Régression : désactiver les tactiques doit stopper immédiatement les
+    re-sélections d'une bataille DÉJÀ en cours (le gestionnaire existe mais
+    le paramètre le neutralise en temps réel)."""
+    from engine.battle import Battle
+    from engine.params import BattleParams
+    from tests.test_engine import make_template
+
+    settings_module.reset_to_defaults()   # tactics_enabled = True
+    battle = Battle(BattleParams(), seed=3, use_tactics=True)
+    for _ in range(2):
+        battle.attacker.add_division(make_template().spawn())
+        battle.defender.add_division(make_template().spawn())
+    battle.run_round()
+    assert battle.active_tactics["attacker"] is not None   # tactiques actives
+
+    SETTINGS.tactics_enabled = False       # désactivation en cours de bataille
+    battle.run_round()
+    assert battle.active_tactics["attacker"] is None
+    assert battle.active_tactics["defender"] is None
+
+    # Aucune nouvelle sélection de tactique aux périodes suivantes
+    battle.run_rounds(13)
+    later = battle.logs[-1]
+    assert battle.active_tactics["attacker"] is None
+    assert not any("Tactique Attaquant" in e
+                   for log in battle.logs[2:] for e in log.events)

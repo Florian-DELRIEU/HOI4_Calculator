@@ -375,9 +375,16 @@ class Battle:
         if self.params.naval_invasion and self.params.naval_invasion_advanced:
             self.naval_invasion_round += 1
 
-        # 1. Re-sélection des tactiques toutes les 12 h (jalon 2)
-        if self.tactic_manager is not None:
+        # 1. Re-sélection des tactiques (le paramètre « activer les tactiques »
+        #    est respecté en temps réel : le désactiver en cours de bataille
+        #    stoppe immédiatement les re-tirages et neutralise les tactiques
+        #    déjà actives).
+        if self.tactic_manager is not None and SETTINGS.tactics_enabled:
             self.tactic_manager.maybe_reselect(self, log)
+        elif not SETTINGS.tactics_enabled and any(self.active_tactics.values()):
+            self.active_tactics = {"attacker": None, "defender": None}
+            log.events.append("Tactiques désactivées (paramètre) — "
+                              "aucune tactique active.")
 
         # 2. Déploiement initial + renforts depuis la réserve
         for camp in (self.attacker, self.defender):

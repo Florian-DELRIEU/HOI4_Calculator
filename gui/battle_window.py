@@ -592,11 +592,14 @@ class BattleWindow(QMainWindow):
         self._refresh_status()
 
     def _make_battle(self) -> Battle:
-        """Crée une bataille en respectant les paramètres (graine fixe,
-        activation des tactiques)."""
+        """Crée une bataille en respectant la graine fixe. Le gestionnaire de
+        tactiques est toujours instancié : l'activation/désactivation des
+        tactiques est ensuite gérée en temps réel par le paramètre
+        (SETTINGS.tactics_enabled), pour qu'un changement s'applique aussi à
+        la bataille en cours."""
         seed = SETTINGS.fixed_seed if SETTINGS.use_fixed_seed else None
         return Battle(BattleParams(), tactic_registry=self.registry,
-                      seed=seed, use_tactics=SETTINGS.tactics_enabled)
+                      seed=seed, use_tactics=True)
 
     def new_battle(self) -> None:
         self.battle = self._make_battle()
