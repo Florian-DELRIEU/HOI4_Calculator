@@ -1,0 +1,32 @@
+{
+    "Nom de Template": "Blindée légère",
+    "PV": 88.0,
+    "Organisation": 28.0,
+    "Soft Attack": 62.8,
+    "Hard Attack": 18.05,
+    "Defense": 108.0,
+    "Attaque": 149.6,
+    "Piercing": 6.7,
+    "Armor": 5.8,
+    "Hardness": 0.5,
+    "Width": 14,
+    "Initiative": 0.1,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 10.0,
+    "Experience": "regular",
+    "Recon": 1.0,
+    "Bataillons": [
+        "light_tank",
+        "light_tank",
+        "light_tank",
+        "light_tank",
+        "motorized",
+        "motorized",
+        "motorized"
+    ],
+    "Compagnies de soutien": [
+        "recon",
+        "engineer",
+        "signal"
+    ]
+}

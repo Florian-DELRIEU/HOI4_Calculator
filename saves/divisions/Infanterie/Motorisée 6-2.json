@@ -1,0 +1,32 @@
+{
+    "Nom de Template": "Motorisée 6-2",
+    "PV": 155.2,
+    "Organisation": 39.0,
+    "Soft Attack": 68.3,
+    "Hard Attack": 7.05,
+    "Defense": 150.0,
+    "Attaque": 60.0,
+    "Piercing": 3.02,
+    "Armor": 0.0,
+    "Hardness": 0.075,
+    "Width": 18,
+    "Initiative": 0.0,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 4.0,
+    "Experience": "regular",
+    "Recon": 1.0,
+    "Bataillons": [
+        "motorized",
+        "motorized",
+        "motorized",
+        "motorized",
+        "motorized",
+        "motorized",
+        "artillery",
+        "artillery"
+    ],
+    "Compagnies de soutien": [
+        "recon",
+        "logistics"
+    ]
+}

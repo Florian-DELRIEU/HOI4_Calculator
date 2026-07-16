@@ -1,0 +1,31 @@
+{
+    "Nom de Template": "Cavalerie de reconnaissance",
+    "PV": 153.6,
+    "Organisation": 51.11,
+    "Soft Attack": 22.3,
+    "Hard Attack": 23.05,
+    "Defense": 134.0,
+    "Attaque": 18.0,
+    "Piercing": 28.47,
+    "Armor": 0.0,
+    "Hardness": 0.0,
+    "Width": 13,
+    "Initiative": 0.1,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 4.0,
+    "Experience": "regular",
+    "Recon": 1.0,
+    "Bataillons": [
+        "cavalry",
+        "cavalry",
+        "cavalry",
+        "cavalry",
+        "cavalry",
+        "cavalry",
+        "anti_tank"
+    ],
+    "Compagnies de soutien": [
+        "recon",
+        "signal"
+    ]
+}

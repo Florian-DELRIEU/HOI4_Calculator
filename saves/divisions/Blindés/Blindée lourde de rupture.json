@@ -1,0 +1,31 @@
+{
+    "Nom de Template": "Blindée lourde de rupture",
+    "PV": 14.2,
+    "Organisation": 10.0,
+    "Soft Attack": 73.5,
+    "Hard Attack": 98.5,
+    "Defense": 54.0,
+    "Attaque": 175.0,
+    "Piercing": 68.28,
+    "Armor": 53.67,
+    "Hardness": 0.95,
+    "Width": 12,
+    "Initiative": 0.0,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 5.0,
+    "Experience": "regular",
+    "Recon": 0.0,
+    "Bataillons": [
+        "heavy_tank",
+        "heavy_tank",
+        "heavy_tank",
+        "heavy_tank",
+        "heavy_td",
+        "heavy_td"
+    ],
+    "Compagnies de soutien": [
+        "engineer",
+        "logistics",
+        "maintenance"
+    ]
+}

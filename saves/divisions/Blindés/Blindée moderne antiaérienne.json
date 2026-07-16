@@ -1,0 +1,34 @@
+{
+    "Nom de Template": "Blindée moderne antiaérienne",
+    "PV": 16.4,
+    "Organisation": 10.0,
+    "Soft Attack": 197.8,
+    "Hard Attack": 158.55,
+    "Defense": 88.0,
+    "Attaque": 402.6,
+    "Piercing": 98.7,
+    "Armor": 90.33,
+    "Hardness": 0.915,
+    "Width": 16,
+    "Initiative": 0.1,
+    "Attaque Aerienne": 230.0,
+    "Vitesse": 10.0,
+    "Experience": "regular",
+    "Recon": 1.0,
+    "Bataillons": [
+        "modern_tank",
+        "modern_tank",
+        "modern_tank",
+        "modern_tank",
+        "modern_spaa",
+        "modern_spaa",
+        "modern_spaa",
+        "modern_spaa"
+    ],
+    "Compagnies de soutien": [
+        "recon",
+        "engineer",
+        "maintenance",
+        "signal"
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "Nom de Template": "Parachutistes",
+    "PV": 113.0,
+    "Organisation": 55.71,
+    "Soft Attack": 16.5,
+    "Hard Attack": 3.0,
+    "Defense": 122.0,
+    "Attaque": 18.0,
+    "Piercing": 0.91,
+    "Armor": 0.0,
+    "Hardness": 0.0,
+    "Width": 10,
+    "Initiative": 0.1,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 4.0,
+    "Experience": "regular",
+    "Recon": 0.0,
+    "Bataillons": [
+        "paratrooper",
+        "paratrooper",
+        "paratrooper",
+        "paratrooper",
+        "paratrooper"
+    ],
+    "Compagnies de soutien": [
+        "engineer",
+        "signal"
+    ]
+}

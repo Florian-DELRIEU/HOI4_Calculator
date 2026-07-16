@@ -1,0 +1,35 @@
+{
+    "Nom de Template": "Blindée moyenne (Panzer)",
+    "PV": 109.0,
+    "Organisation": 23.85,
+    "Soft Attack": 125.7,
+    "Hard Attack": 92.05,
+    "Defense": 200.0,
+    "Attaque": 286.4,
+    "Piercing": 43.05,
+    "Armor": 39.0,
+    "Hardness": 0.8,
+    "Width": 18,
+    "Initiative": 0.1,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 8.0,
+    "Experience": "regular",
+    "Recon": 1.0,
+    "Bataillons": [
+        "medium_tank",
+        "medium_tank",
+        "medium_tank",
+        "medium_tank",
+        "medium_tank",
+        "medium_tank",
+        "mechanized",
+        "mechanized",
+        "mechanized"
+    ],
+    "Compagnies de soutien": [
+        "recon",
+        "engineer",
+        "logistics",
+        "signal"
+    ]
+}

@@ -1,0 +1,34 @@
+{
+    "Nom de Template": "Infanterie 9-0 défensive",
+    "PV": 230.0,
+    "Organisation": 48.33,
+    "Soft Attack": 31.5,
+    "Hard Attack": 5.5,
+    "Defense": 222.0,
+    "Attaque": 28.0,
+    "Piercing": 0.95,
+    "Armor": 0.0,
+    "Hardness": 0.0,
+    "Width": 18,
+    "Initiative": 0.0,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 4.0,
+    "Experience": "regular",
+    "Recon": 0.0,
+    "Bataillons": [
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry"
+    ],
+    "Compagnies de soutien": [
+        "engineer",
+        "field_hospital",
+        "military_police"
+    ]
+}

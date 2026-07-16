@@ -1,0 +1,33 @@
+{
+    "Nom de Template": "Antichar 5-4",
+    "PV": 107.0,
+    "Organisation": 25.45,
+    "Soft Attack": 33.8,
+    "Hard Attack": 102.55,
+    "Defense": 132.0,
+    "Attaque": 12.0,
+    "Piercing": 40.69,
+    "Armor": 0.0,
+    "Hardness": 0.0,
+    "Width": 13,
+    "Initiative": 0.0,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 4.0,
+    "Experience": "regular",
+    "Recon": 1.0,
+    "Bataillons": [
+        "anti_tank",
+        "anti_tank",
+        "anti_tank",
+        "anti_tank",
+        "anti_tank",
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry"
+    ],
+    "Compagnies de soutien": [
+        "engineer",
+        "recon"
+    ]
+}

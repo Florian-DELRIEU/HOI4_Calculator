@@ -1,0 +1,33 @@
+{
+    "Nom de Template": "Marines amphibies",
+    "PV": 126.2,
+    "Organisation": 43.64,
+    "Soft Attack": 25.5,
+    "Hard Attack": 17.5,
+    "Defense": 150.0,
+    "Attaque": 30.6,
+    "Piercing": 13.11,
+    "Armor": 0.0,
+    "Hardness": 0.0,
+    "Width": 14,
+    "Initiative": 0.1,
+    "Attaque Aerienne": 38.0,
+    "Vitesse": 4.0,
+    "Experience": "regular",
+    "Recon": 0.0,
+    "Bataillons": [
+        "marines",
+        "marines",
+        "marines",
+        "marines",
+        "marines",
+        "marines",
+        "anti_air",
+        "anti_air"
+    ],
+    "Compagnies de soutien": [
+        "engineer",
+        "field_hospital",
+        "signal"
+    ]
+}

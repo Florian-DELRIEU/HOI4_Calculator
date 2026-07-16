@@ -1,0 +1,34 @@
+{
+    "Nom de Template": "Infanterie 7-2",
+    "PV": 181.2,
+    "Organisation": 40.0,
+    "Soft Attack": 72.8,
+    "Hard Attack": 8.05,
+    "Defense": 192.0,
+    "Attaque": 35.0,
+    "Piercing": 2.95,
+    "Armor": 0.0,
+    "Hardness": 0.0,
+    "Width": 20,
+    "Initiative": 0.1,
+    "Attaque Aerienne": 0.0,
+    "Vitesse": 4.0,
+    "Experience": "regular",
+    "Recon": 1.0,
+    "Bataillons": [
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry",
+        "infantry",
+        "artillery",
+        "artillery"
+    ],
+    "Compagnies de soutien": [
+        "engineer",
+        "recon",
+        "signal"
+    ]
+}
