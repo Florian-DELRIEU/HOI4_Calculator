@@ -132,6 +132,30 @@ def test_deploy_respects_width_limit():
     assert battle.attacker.reserves   # au moins une division en réserve
 
 
+def test_force_to_reserve_moves_division_and_preserves_state():
+    battle = _battle_with_divisions()
+    battle.run_round()
+    camp = battle.attacker
+    division = camp.frontline[0]
+    division.current_hp = 12.5
+    division.current_org = 3.0
+
+    assert camp.force_to_reserve(division) is True
+    assert division not in camp.frontline
+    assert division in camp.reserves
+    assert division.in_frontline is False
+    assert division.current_hp == 12.5   # état préservé, pas réinitialisé
+    assert division.current_org == 3.0
+
+
+def test_force_to_reserve_no_op_if_not_in_frontline():
+    battle = _battle_with_divisions()
+    battle.run_round()
+    outsider = make_template().spawn()   # jamais ajoutée à ce camp
+    assert outsider not in battle.attacker.frontline
+    assert battle.attacker.force_to_reserve(outsider) is False
+
+
 # ------------------------------------------------------------- ciblage
 
 def test_targeting_engagement_width():

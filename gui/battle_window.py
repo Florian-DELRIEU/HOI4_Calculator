@@ -5,7 +5,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDoubleSpinBox, QFileDialog, QFormLayout, QGroupBox,
     QHBoxLayout, QInputDialog, QLabel, QListWidget, QListWidgetItem,
-    QMainWindow, QMessageBox, QProgressBar, QPushButton, QSpinBox,
+    QMainWindow, QMenu, QMessageBox, QProgressBar, QPushButton, QSpinBox,
     QSplitter, QVBoxLayout, QWidget,
 )
 
@@ -14,6 +14,7 @@ from engine.gamedata import TEMPERATURE, TERRAINS, WEATHER
 from engine.leader import Leader
 from engine.params import BattleParams, SideParams
 from engine.tactics import PHASE_LABELS, TacticRegistry
+from gui.division_instance_editor import DivisionInstanceDialog
 from gui.leader_editor import LeaderEditor
 from gui.save_manager import SaveManager
 from gui.tactic_editor import TacticEditor
@@ -52,6 +53,8 @@ class CampPanel(QGroupBox):
         layout.addLayout(add_row)
 
         self.division_list = QListWidget()
+        self.division_list.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.division_list.customContextMenuRequested.connect(self._on_division_context_menu)
         layout.addWidget(self.division_list, stretch=1)
 
         div_btns = QHBoxLayout()
@@ -237,6 +240,48 @@ class CampPanel(QGroupBox):
         division.paradropped_rounds_left = 48
         self.log_callback(f"  • {self.camp.label} : {division.name} marquée "
                           f"parachutée (−30 % pendant 48 tours).")
+
+    # ------------------------------------------------------ menu contextuel
+
+    def _on_division_context_menu(self, pos) -> None:
+        item = self.division_list.itemAt(pos)
+        if item is None or self.camp is None:
+            return
+        division = item.data(Qt.UserRole)
+
+        menu = QMenu(self)
+        rename_action = menu.addAction("Renommer…")
+        stats_action = menu.addAction("Modifier les statistiques…")
+        menu.addSeparator()
+        reserve_action = menu.addAction("Mettre en réserve")
+        reserve_action.setEnabled(division in self.camp.frontline)
+
+        chosen = menu.exec(self.division_list.viewport().mapToGlobal(pos))
+        if chosen is rename_action:
+            self._rename_division(division)
+        elif chosen is stats_action:
+            self._edit_division_stats(division)
+        elif chosen is reserve_action:
+            self._force_division_to_reserve(division)
+
+    def _rename_division(self, division) -> None:
+        new_name, ok = QInputDialog.getText(self, "Renommer la division",
+                                            "Nouveau nom :", text=division.name)
+        if ok and new_name.strip():
+            division.name = new_name.strip()
+            self.refresh_divisions()
+
+    def _edit_division_stats(self, division) -> None:
+        dialog = DivisionInstanceDialog(division, parent=self)
+        if dialog.exec():
+            dialog.apply()
+            self.refresh_divisions()
+
+    def _force_division_to_reserve(self, division) -> None:
+        if self.camp.force_to_reserve(division):
+            self.log_callback(f"  • {self.camp.label} : {division.name} "
+                              f"retirée manuellement en réserve.")
+            self.refresh_divisions()
 
     # -------------------------------------------------------------- slots
 

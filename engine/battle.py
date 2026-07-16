@@ -132,6 +132,17 @@ class Camp:
         excess = len(self.frontline) - limit
         self.stacking_penalty = STACKING_PENALTY_PER_DIV * excess if excess > 0 else 0.0
 
+    def force_to_reserve(self, division: Division) -> bool:
+        """Retire manuellement une division du front vers la réserve
+        (décision du joueur, indépendamment de son état) — clic droit
+        « Mettre en réserve » dans la fenêtre de bataille."""
+        if division not in self.frontline:
+            return False
+        self.frontline.remove(division)
+        self.reserves.append(division)
+        division.in_frontline = False
+        return True
+
     def cleanup(self, events: list[str]) -> None:
         """Retire les divisions détruites ou en déroute en fin de tour."""
         for division in list(self.frontline):
