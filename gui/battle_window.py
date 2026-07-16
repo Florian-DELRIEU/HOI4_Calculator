@@ -653,7 +653,13 @@ class BattleWindow(QMainWindow):
                 self._append_log(f"  • [T{log.round}] {event}")
 
     def _refresh_status(self) -> None:
-        self.round_label.setText(f"Tour : {self.battle.round}")
+        round_text = f"Tour : {self.battle.round}"
+        if SETTINGS.day_night_cycle_enabled:
+            hour = self.battle.current_hour
+            round_text += f" — {hour} h ({'Nuit' if self.battle.params.is_night else 'Jour'})"
+        if SETTINGS.dynamic_weather_enabled:
+            round_text += f" — {self.battle.params.weather.nom}"
+        self.round_label.setText(round_text)
         self.phase_label.setText(
             f"Phase : {PHASE_LABELS.get(self.battle.battle_phase, self.battle.battle_phase)}")
         self.balance_bar.setValue(round(self.battle.victory_balance() * 100))

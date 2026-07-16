@@ -70,6 +70,10 @@ def _load_weather() -> dict[str, WeatherCondition]:
     return {w["id"]: WeatherCondition(**w) for w in _load("weather.json")["conditions"]}
 
 
+def _load_weather_transitions() -> dict[str, dict[str, float]]:
+    return _load("weather.json").get("transitions", {})
+
+
 def _load_experience() -> dict[str, dict]:
     return {lvl["id"]: lvl for lvl in _load("experience.json")["levels"]}
 
@@ -80,5 +84,6 @@ def _load_temperature() -> dict[str, TemperatureLevel]:
 
 TERRAINS: dict[str, Terrain] = _load_terrains()
 WEATHER: dict[str, WeatherCondition] = _load_weather()
+WEATHER_TRANSITIONS: dict[str, dict[str, float]] = _load_weather_transitions()
 EXPERIENCE: dict[str, dict] = _load_experience()
 TEMPERATURE: dict[str, TemperatureLevel] = _load_temperature()

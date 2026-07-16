@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from engine import combat
 from engine.division import Division
+from engine.gamedata import WEATHER, WEATHER_TRANSITIONS
 from engine.leader import Leader, LeaderAbility
 from engine.logs import AttackReport, RoundLog
 from engine.params import BattleParams
@@ -17,6 +18,10 @@ MAX_WIDTH_PENALTY = -33.0      # plafond de pénalité de dépassement
 STACKING_BASE_LIMIT = 5
 STACKING_PER_DIRECTION = 3
 STACKING_PENALTY_PER_DIV = -2.0
+# Cycle jour/nuit : 12 h de jour, 12 h de nuit (wiki + CDC §7.3).
+# La nuit court de DAY_END (18 h) à DAY_START (6 h).
+DAY_START_HOUR = 6
+DAY_END_HOUR = 18
 
 
 class Camp:
@@ -220,7 +225,11 @@ class Battle:
         parts = [f"Terrain : {p.terrain.nom}", f"Météo : {p.weather.nom}"]
         if p.temperature_id != "normal":
             parts.append(f"Température : {p.temperature.nom}")
-        parts.append(f"Nuit : {'Oui' if p.is_night else 'Non'}")
+        if SETTINGS.day_night_cycle_enabled:
+            parts.append(f"Heure : {self.current_hour} h "
+                         f"({'Nuit' if p.is_night else 'Jour'})")
+        else:
+            parts.append(f"Nuit : {'Oui' if p.is_night else 'Non'}")
         if p.large_river:
             parts.append("Grande rivière")
         elif p.small_river:
@@ -305,6 +314,52 @@ class Battle:
     def is_over(self) -> bool:
         return self.result is not None
 
+    # ------------------------------------------------ environnement dynamique
+
+    @property
+    def current_hour(self) -> int:
+        """Heure de jeu (0-23) du tour courant, dérivée de l'heure de départ."""
+        elapsed = max(self.round - 1, 0)
+        return (SETTINGS.battle_start_hour + elapsed) % 24
+
+    @staticmethod
+    def _is_night_at(hour: int) -> bool:
+        """Nuit de 18 h à 6 h (12 h de jour, 12 h de nuit)."""
+        return not (DAY_START_HOUR <= hour < DAY_END_HOUR)
+
+    def _roll_weather(self) -> str:
+        """Tire la météo suivante selon la table de transitions pondérée."""
+        weights = WEATHER_TRANSITIONS.get(self.params.weather_id)
+        if not weights:
+            return self.params.weather_id
+        options = [w for w in weights if w in WEATHER]
+        if not options:
+            return self.params.weather_id
+        return self.rng.weighted_choice(options, [weights[w] for w in options])
+
+    def _advance_environment(self, log: RoundLog) -> None:
+        # Cycle jour/nuit : recalcule is_night depuis l'heure courante.
+        if SETTINGS.day_night_cycle_enabled:
+            night = self._is_night_at(self.current_hour)
+            if night != self.params.is_night:
+                self.params.is_night = night
+                if night:
+                    log.events.append(f"La nuit tombe ({self.current_hour} h) — "
+                                      f"−50 % à l'attaque des deux camps.")
+                else:
+                    log.events.append(f"Le jour se lève ({self.current_hour} h).")
+
+        # Météo dynamique : re-tirage à chaque période (après le tour 1).
+        if SETTINGS.dynamic_weather_enabled:
+            period = max(1, SETTINGS.weather_change_period)
+            if self.round > 1 and (self.round - 1) % period == 0:
+                new_weather = self._roll_weather()
+                if new_weather != self.params.weather_id:
+                    log.events.append(
+                        f"La météo change : {self.params.weather.nom} → "
+                        f"{WEATHER[new_weather].nom}.")
+                    self.params.weather_id = new_weather
+
     def run_round(self) -> RoundLog:
         """Exécute un tour de combat (1 heure de jeu)."""
         if self.is_over:
@@ -312,6 +367,9 @@ class Battle:
 
         self.round += 1
         log = RoundLog(round=self.round, phase=self.battle_phase)
+
+        # Environnement dynamique : cycle jour/nuit et météo évolutive
+        self._advance_environment(log)
 
         # Débarquement amphibie progressif (extra optionnel §7.2)
         if self.params.naval_invasion and self.params.naval_invasion_advanced:

@@ -32,6 +32,11 @@ class Settings:
     tactic_reselect_interval: int = 12  # heures entre deux re-sélections
     # --- Fortifications ---
     fort_erosion_enabled: bool = True   # les combats érodent le niveau de fort
+    # --- Environnement dynamique ---
+    day_night_cycle_enabled: bool = False   # la nuit tombe et se lève au fil des tours
+    battle_start_hour: int = 8              # heure (0-23) du tour 1
+    dynamic_weather_enabled: bool = False   # la météo évolue au fil des tours
+    weather_change_period: int = 24         # heures entre deux re-tirages de météo
     # --- Déroulement de la bataille ---
     auto_stop_on_victory: bool = True   # « Lancer N tours » s'arrête à la victoire
     use_fixed_seed: bool = False        # batailles reproductibles
@@ -74,6 +79,17 @@ FIELD_META = [
     ("fort_erosion_enabled", "Érosion des forts par les combats", "bool", 0, 0, 0, "Fortifications",
      "Si activé, les attaques dégradent progressivement le niveau de fort (§8.6)."),
 
+    ("day_night_cycle_enabled", "Cycle jour / nuit", "bool", 0, 0, 0, "Environnement",
+     "12 h de jour puis 12 h de nuit. La nuit inflige −50 % à l'attaque des deux camps. "
+     "Quand activé, la case « Nuit » des paramètres est ignorée (calculée depuis l'heure)."),
+    ("battle_start_hour", "Heure de début de la bataille (0-23)", "int", 0, 23, 1, "Environnement",
+     "Heure du premier tour. La nuit court de 18 h à 6 h."),
+    ("dynamic_weather_enabled", "Météo dynamique", "bool", 0, 0, 0, "Environnement",
+     "La météo évolue au fil des tours par tirage pondéré (persiste et dérive entre conditions "
+     "voisines). La météo choisie dans les paramètres devient la météo de départ."),
+    ("weather_change_period", "Période de changement de météo (heures)", "int", 1, 168, 1, "Environnement",
+     "Nombre de tours entre deux re-tirages de météo. Défaut : 24 (une fois par jour)."),
+
     ("auto_stop_on_victory", "Arrêt automatique des « N tours » à la victoire", "bool", 0, 0, 0, "Déroulement",
      "Interrompt un lot de N tours dès qu'un camp est vaincu."),
     ("use_fixed_seed", "Graine aléatoire fixe (batailles reproductibles)", "bool", 0, 0, 0, "Déroulement",
@@ -82,7 +98,7 @@ FIELD_META = [
      "Valeur de la graine utilisée quand la graine fixe est activée."),
 ]
 
-GROUP_ORDER = ["Combat", "Tactiques", "Fortifications", "Déroulement"]
+GROUP_ORDER = ["Combat", "Tactiques", "Fortifications", "Environnement", "Déroulement"]
 
 DEFAULTS = Settings()
 SETTINGS = Settings()

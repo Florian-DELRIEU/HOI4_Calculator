@@ -11,5 +11,18 @@
     {"id": "deep_snow",    "nom": "Neige profonde",  "attack": -0.40, "breakthrough": -0.30, "defense": 0.0,  "attacker_speed": -0.50},
     {"id": "mud",          "nom": "Boue",            "attack": -0.40, "breakthrough": 0.0,   "defense": 0.0,  "attacker_speed": -0.50},
     {"id": "flood",        "nom": "Inondation",      "attack": 0.0,   "breakthrough": 0.0,   "defense": 0.50, "attacker_speed": -0.50}
-  ]
+  ],
+  "_transitions_comment": "Météo dynamique : table de transitions pondérées re-tirée à chaque période (défaut 24 h). Le jeu réel utilise des tables de probabilités par région stratégique dont la fréquence et les poids exacts ne sont pas publiés ; ces poids sont une approximation plausible (la météo persiste et dérive vers des conditions voisines) et restent librement éditables.",
+  "transitions": {
+    "clear":       {"clear": 60, "rain": 20, "snowfall": 12, "sandstorm": 8},
+    "rain":        {"rain": 40, "clear": 30, "storm": 20, "mud": 10},
+    "storm":       {"storm": 25, "rain": 50, "clear": 15, "mud": 10},
+    "snowfall":    {"snowfall": 40, "clear": 25, "blizzard": 20, "ground_snow": 15},
+    "blizzard":    {"blizzard": 30, "snowfall": 45, "deep_snow": 15, "clear": 10},
+    "sandstorm":   {"sandstorm": 30, "clear": 70},
+    "ground_snow": {"ground_snow": 45, "snowfall": 25, "deep_snow": 20, "clear": 10},
+    "deep_snow":   {"deep_snow": 45, "ground_snow": 35, "blizzard": 20},
+    "mud":         {"mud": 45, "clear": 30, "rain": 25},
+    "flood":       {"flood": 35, "rain": 40, "clear": 25}
+  }
 }
