@@ -11,6 +11,7 @@ from engine.tactics import ActiveTactic, TacticManager, TacticRegistry
 
 REINFORCE_CHANCE = 0.02        # 2 % par heure (§8.2)
 FORT_INTEGRITY_PER_LEVEL = 500.0   # jauge d'intégrité d'un niveau de fort (§8.6)
+NAVAL_INVASION_DECAY_ROUNDS = 24   # extra optionnel (§7.2) : durée assumée de résorption (1 jour)
 MAX_OVERWIDTH_RATIO = 1.33     # entrée en ligne refusée au-delà (§8.1)
 MAX_WIDTH_PENALTY = -33.0      # plafond de pénalité de dépassement
 STACKING_BASE_LIMIT = 5
@@ -183,6 +184,18 @@ class Battle:
         # Jauge d'intégrité du niveau de fort courant (§8.6)
         self.fort_integrity = FORT_INTEGRITY_PER_LEVEL
         self._pending_events: list[str] = []
+        # Extra optionnel (§7.2) : tours écoulés depuis le début du
+        # débarquement, pour la pénalité progressive −80 % → 0 %.
+        self.naval_invasion_round = 0
+
+    @property
+    def naval_invasion_factor(self) -> float:
+        """Facteur multiplicatif du débarquement amphibie progressif
+        (extra optionnel §7.2). Démarre à −80 % et se résorbe linéairement
+        sur ``NAVAL_INVASION_DECAY_ROUNDS`` tours (durée assumée, non
+        spécifiée par le CDC), jusqu'à un effet nul."""
+        progress = min(self.naval_invasion_round / NAVAL_INVASION_DECAY_ROUNDS, 1.0)
+        return -80.0 * (1.0 - progress)
 
     def apply_fort_damage(self, amount: float) -> None:
         """Érosion progressive du fort par dégâts collatéraux (§8.6)."""
@@ -245,6 +258,10 @@ class Battle:
 
         self.round += 1
         log = RoundLog(round=self.round, phase=self.battle_phase)
+
+        # Débarquement amphibie progressif (extra optionnel §7.2)
+        if self.params.naval_invasion and self.params.naval_invasion_advanced:
+            self.naval_invasion_round += 1
 
         # 1. Re-sélection des tactiques toutes les 12 h (jalon 2)
         if self.tactic_manager is not None:

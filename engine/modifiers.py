@@ -100,6 +100,10 @@ def attack_entries(division: "Division", camp: "Camp", battle: "Battle") -> list
     if p.weather.attack:
         entries.append((f"Météo ({p.weather.nom})", p.weather.attack * 100))
 
+    # Température (extra optionnel §7.3, approximation non officielle)
+    if p.temperature.attack:
+        entries.append((f"Température ({p.temperature.nom})", p.temperature.attack * 100))
+
     if camp.is_attacker:
         # Terrain du défenseur
         if p.terrain.attack_modifier:
@@ -109,9 +113,13 @@ def attack_entries(division: "Division", camp: "Camp", battle: "Battle") -> list
             entries.append(("Grande rivière", -60.0))
         elif p.small_river:
             entries.append(("Petite rivière", -30.0))
-        # Débarquement amphibie
+        # Débarquement amphibie (simplifié ou progressif, extra §7.2)
         if p.naval_invasion:
-            entries.append(("Débarquement amphibie", NAVAL_INVASION_PENALTY))
+            if p.naval_invasion_advanced:
+                entries.append(("Débarquement amphibie (progressif)",
+                                battle.naval_invasion_factor))
+            else:
+                entries.append(("Débarquement amphibie", NAVAL_INVASION_PENALTY))
         # Fort (niveaux annulés par les directions supplémentaires)
         if p.effective_fort_level:
             entries.append((f"Fort niveau {p.effective_fort_level}",
@@ -152,7 +160,11 @@ def defense_entries(division: "Division", camp: "Camp", battle: "Battle") -> lis
         elif p.small_river:
             entries.append(("Petite rivière", -30.0))
         if p.naval_invasion:
-            entries.append(("Débarquement amphibie", NAVAL_INVASION_PENALTY))
+            if p.naval_invasion_advanced:
+                entries.append(("Débarquement amphibie (progressif)",
+                                battle.naval_invasion_factor))
+            else:
+                entries.append(("Débarquement amphibie", NAVAL_INVASION_PENALTY))
         if p.effective_fort_level:
             entries.append((f"Fort niveau {p.effective_fort_level}",
                             FORT_PENALTY_PER_LEVEL * p.effective_fort_level))

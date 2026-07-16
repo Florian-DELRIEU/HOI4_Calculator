@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field, asdict
 
-from engine.gamedata import TERRAINS, WEATHER, Terrain, WeatherCondition
+from engine.gamedata import (TEMPERATURE, TERRAINS, WEATHER, Terrain,
+                             TemperatureLevel, WeatherCondition)
 
 
 @dataclass
@@ -38,10 +39,12 @@ class SideParams:
 class BattleParams:
     terrain_id: str = "plains"
     weather_id: str = "clear"
+    temperature_id: str = "normal"      # extra optionnel (§7.3), voir data/temperature.json
     is_night: bool = False
     small_river: bool = False
     large_river: bool = False
     naval_invasion: bool = False
+    naval_invasion_advanced: bool = False  # extra optionnel (§7.2) : pénalité progressive
     fort_level: int = 0
     extra_directions: int = 0          # directions d'attaque supplémentaires
     encirclement: bool = False         # défenseur encerclé (−30 %)
@@ -58,6 +61,10 @@ class BattleParams:
     @property
     def weather(self) -> WeatherCondition:
         return WEATHER[self.weather_id]
+
+    @property
+    def temperature(self) -> TemperatureLevel:
+        return TEMPERATURE[self.temperature_id]
 
     @property
     def base_combat_width(self) -> float:

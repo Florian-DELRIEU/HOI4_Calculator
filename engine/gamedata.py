@@ -49,6 +49,19 @@ class WeatherCondition:
         return self.nom
 
 
+@dataclass(frozen=True)
+class TemperatureLevel:
+    """Extra optionnel (CDC §7.3) — approximation non officielle, voir
+    data/temperature.json."""
+    id: str
+    nom: str
+    attack: float
+    speed: float
+
+    def __str__(self):
+        return self.nom
+
+
 def _load_terrains() -> dict[str, Terrain]:
     return {t["id"]: Terrain(**t) for t in _load("terrains.json")["terrains"]}
 
@@ -61,6 +74,11 @@ def _load_experience() -> dict[str, dict]:
     return {lvl["id"]: lvl for lvl in _load("experience.json")["levels"]}
 
 
+def _load_temperature() -> dict[str, TemperatureLevel]:
+    return {t["id"]: TemperatureLevel(**t) for t in _load("temperature.json")["levels"]}
+
+
 TERRAINS: dict[str, Terrain] = _load_terrains()
 WEATHER: dict[str, WeatherCondition] = _load_weather()
 EXPERIENCE: dict[str, dict] = _load_experience()
+TEMPERATURE: dict[str, TemperatureLevel] = _load_temperature()

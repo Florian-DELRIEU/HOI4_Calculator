@@ -1,0 +1,8 @@
+{
+  "_comment": "Extra optionnel (CDC §7.3 : 'effets simplifiés à proposer comme un paramètre optionnel... non essentiel au moteur de combat'). Le CDC ne fournit aucune table officielle pour la température — ces valeurs sont une approximation raisonnable assumée par Fable 5, pas une reproduction du jeu réel. attack/speed en modificateurs relatifs appliqués aux deux camps.",
+  "levels": [
+    {"id": "normal",    "nom": "Normale",    "attack": 0.0,  "speed": 0.0},
+    {"id": "very_cold", "nom": "Très froid", "attack": -0.10, "speed": -0.10},
+    {"id": "very_hot",  "nom": "Très chaud", "attack": -0.05, "speed": 0.0}
+  ]
+}

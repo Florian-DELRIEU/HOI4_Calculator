@@ -87,3 +87,71 @@ def test_fort_erodes_during_long_battle():
     battle.run_rounds(300)
     assert battle.params.fort_level == 0
     assert any("fortifications" in e for log in battle.logs for e in log.events)
+
+
+# --------------------------------------------------- extra : température
+
+def test_temperature_very_cold_penalty():
+    battle = _battle_with_divisions(temperature_id="very_cold")
+    battle.run_round()
+    div = battle.attacker.frontline[0]
+    entries = dict(modifiers.attack_entries(div, battle.attacker, battle))
+    assert entries["Température (Très froid)"] == pytest.approx(-10.0)
+    # S'applique aussi au défenseur (les deux camps subissent la température)
+    div_def = battle.defender.frontline[0]
+    entries_def = dict(modifiers.attack_entries(div_def, battle.defender, battle))
+    assert entries_def["Température (Très froid)"] == pytest.approx(-10.0)
+
+
+def test_temperature_very_hot_penalty():
+    battle = _battle_with_divisions(temperature_id="very_hot")
+    battle.run_round()
+    div = battle.attacker.frontline[0]
+    entries = dict(modifiers.attack_entries(div, battle.attacker, battle))
+    assert entries["Température (Très chaud)"] == pytest.approx(-5.0)
+
+
+def test_temperature_normal_has_no_effect():
+    battle = _battle_with_divisions(temperature_id="normal")
+    battle.run_round()
+    div = battle.attacker.frontline[0]
+    entries = dict(modifiers.attack_entries(div, battle.attacker, battle))
+    assert "Température (Normale)" not in entries
+    assert not any("Température" in label for label in entries)
+
+
+# --------------------------------------- extra : débarquement progressif
+
+def test_naval_invasion_simplified_stays_fixed_50_percent():
+    battle = _battle_with_divisions(naval_invasion=True, naval_invasion_advanced=False)
+    battle.run_rounds(10)
+    div = battle.attacker.frontline[0]
+    entries = dict(modifiers.attack_entries(div, battle.attacker, battle))
+    assert entries["Débarquement amphibie"] == pytest.approx(-50.0)
+    assert "Débarquement amphibie (progressif)" not in entries
+
+
+def test_naval_invasion_advanced_starts_at_minus_80():
+    battle = _battle_with_divisions(naval_invasion=True, naval_invasion_advanced=True)
+    battle.run_round()
+    div = battle.attacker.frontline[0]
+    entries = dict(modifiers.attack_entries(div, battle.attacker, battle))
+    assert entries["Débarquement amphibie (progressif)"] == pytest.approx(-80.0 * 23 / 24)
+
+
+def test_naval_invasion_advanced_decays_to_zero():
+    battle = _battle_with_divisions(naval_invasion=True, naval_invasion_advanced=True)
+    battle.run_rounds(24)
+    div = battle.attacker.frontline[0]
+    entries = dict(modifiers.attack_entries(div, battle.attacker, battle))
+    assert entries.get("Débarquement amphibie (progressif)", 0.0) == pytest.approx(0.0)
+    # Ne descend pas sous 0 après la résorption complète
+    battle.run_rounds(10)
+    entries = dict(modifiers.attack_entries(div, battle.attacker, battle))
+    assert entries.get("Débarquement amphibie (progressif)", 0.0) == pytest.approx(0.0)
+
+
+def test_naval_invasion_advanced_only_progresses_while_flag_active():
+    battle = _battle_with_divisions(naval_invasion=False, naval_invasion_advanced=True)
+    battle.run_rounds(5)
+    assert battle.naval_invasion_round == 0

@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
 )
 
 from engine.battle import Battle
-from engine.gamedata import TERRAINS, WEATHER
+from engine.gamedata import TEMPERATURE, TERRAINS, WEATHER
 from engine.leader import Leader
 from engine.params import BattleParams, SideParams
 from engine.tactics import PHASE_LABELS, TacticRegistry
@@ -334,6 +334,11 @@ class ParamsPanel(QGroupBox):
             self.weather_combo.addItem(weather.nom, wid)
         form.addRow("Météo", self.weather_combo)
 
+        self.temperature_combo = QComboBox()
+        for tid, temperature in TEMPERATURE.items():
+            self.temperature_combo.addItem(temperature.nom, tid)
+        form.addRow("Température (extra, approximatif)", self.temperature_combo)
+
         self.night_check = QCheckBox("Nuit (−50 % attaque)")
         form.addRow(self.night_check)
 
@@ -344,6 +349,8 @@ class ParamsPanel(QGroupBox):
 
         self.naval_check = QCheckBox("Débarquement amphibie (−50 %)")
         form.addRow(self.naval_check)
+        self.naval_advanced_check = QCheckBox("Version progressive (−80 % → 0 % sur 24 tours, extra)")
+        form.addRow(self.naval_advanced_check)
 
         self.fort_spin = QSpinBox()
         self.fort_spin.setRange(0, 10)
@@ -373,10 +380,13 @@ class ParamsPanel(QGroupBox):
         """Restaure les widgets depuis des paramètres (chargement)."""
         self.terrain_combo.setCurrentIndex(max(self.terrain_combo.findData(params.terrain_id), 0))
         self.weather_combo.setCurrentIndex(max(self.weather_combo.findData(params.weather_id), 0))
+        self.temperature_combo.setCurrentIndex(
+            max(self.temperature_combo.findData(params.temperature_id), 0))
         self.night_check.setChecked(params.is_night)
         self.river_combo.setCurrentIndex(2 if params.large_river
                                          else 1 if params.small_river else 0)
         self.naval_check.setChecked(params.naval_invasion)
+        self.naval_advanced_check.setChecked(params.naval_invasion_advanced)
         self.fort_spin.setValue(params.fort_level)
         self.directions_spin.setValue(params.extra_directions)
         self.encirclement_check.setChecked(params.encirclement)
@@ -387,10 +397,12 @@ class ParamsPanel(QGroupBox):
     def apply_to(self, params: BattleParams) -> None:
         params.terrain_id = self.terrain_combo.currentData()
         params.weather_id = self.weather_combo.currentData()
+        params.temperature_id = self.temperature_combo.currentData()
         params.is_night = self.night_check.isChecked()
         params.small_river = self.river_combo.currentIndex() == 1
         params.large_river = self.river_combo.currentIndex() == 2
         params.naval_invasion = self.naval_check.isChecked()
+        params.naval_invasion_advanced = self.naval_advanced_check.isChecked()
         params.fort_level = self.fort_spin.value()
         params.extra_directions = self.directions_spin.value()
         params.encirclement = self.encirclement_check.isChecked()
