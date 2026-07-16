@@ -3,19 +3,22 @@ from __future__ import annotations
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QGroupBox, QHBoxLayout,
-    QInputDialog, QLabel, QListWidget, QListWidgetItem, QMainWindow,
-    QMessageBox, QPlainTextEdit, QProgressBar, QPushButton, QSpinBox,
+    QCheckBox, QComboBox, QDoubleSpinBox, QFileDialog, QFormLayout, QGroupBox,
+    QHBoxLayout, QInputDialog, QLabel, QListWidget, QListWidgetItem,
+    QMainWindow, QMessageBox, QProgressBar, QPushButton, QSpinBox,
     QSplitter, QVBoxLayout, QWidget,
 )
 
 from engine.battle import Battle
 from engine.gamedata import TERRAINS, WEATHER
 from engine.leader import Leader
-from engine.params import BattleParams
+from engine.params import BattleParams, SideParams
 from engine.tactics import PHASE_LABELS, TacticRegistry
 from gui.leader_editor import LeaderEditor
+from gui.save_manager import SaveManager
 from gui.tactic_editor import TacticEditor
+from persistence.battles import BattleSaveStore
+from persistence.csv_export import export_battle_csv
 from persistence.divisions import DivisionStore
 from persistence.leaders import LeaderStore
 
@@ -166,6 +169,38 @@ class CampPanel(QGroupBox):
         index = self.tactic_combo.findData(current)
         self.tactic_combo.setCurrentIndex(max(index, 0))
         self.tactic_combo.blockSignals(False)
+
+    def load_from_battle(self) -> None:
+        """Restaure les widgets depuis l'état du camp (chargement de sauvegarde)."""
+        if self.camp is None:
+            return
+        sp = (self.battle.params.attacker if self.is_attacker
+              else self.battle.params.defender)
+        self.coordination_spin.setValue(sp.coordination * 100)
+        self.supply_spin.setValue(sp.supply_shortage * 100)
+        self.enemy_air_spin.setValue(sp.enemy_air_superiority * 100)
+        self.air_support_spin.setValue(sp.air_support_bonus * 100)
+        self.nation_atk_spin.setValue(sp.nation_attack_bonus * 100)
+        self.nation_def_spin.setValue(sp.nation_defense_bonus * 100)
+        self.intel_spin.setValue(sp.intel_advantage * 100)
+        self.night_bonus_spin.setValue(sp.night_attack_bonus * 100)
+        self.artillery_spin.setValue(sp.artillery_ratio * 100)
+        self.japan_check.setChecked(sp.is_japan)
+        self.masterful_check.setChecked(sp.masterful_blitz)
+        self.flame_check.setChecked(sp.has_flame_tanks)
+        self.engineers_check.setChecked(sp.has_engineers)
+        # Leader chargé depuis la sauvegarde : proposé tel quel dans le combo
+        leader = self.camp.leader
+        if leader and leader.name != "Sans leader":
+            label = f"{leader.name} (sauvegarde, A{leader.attack_level}/D{leader.defense_level})"
+            self.leader_combo.insertItem(1, label, leader)
+            self.leader_combo.setCurrentIndex(1)
+        # Override de tactique
+        self.refresh_tactic_combo()
+        if self.camp.manual_tactic:
+            idx = self.tactic_combo.findData(self.camp.manual_tactic)
+            if idx >= 0:
+                self.tactic_combo.setCurrentIndex(idx)
 
     def sync_to_battle(self) -> None:
         """Reporte leader, override de tactique et curseurs §9.5 sur le camp."""
@@ -334,6 +369,21 @@ class ParamsPanel(QGroupBox):
         self.vp_spin.setRange(0, 50)
         form.addRow("Points de victoire (urbain)", self.vp_spin)
 
+    def load_from(self, params: BattleParams) -> None:
+        """Restaure les widgets depuis des paramètres (chargement)."""
+        self.terrain_combo.setCurrentIndex(max(self.terrain_combo.findData(params.terrain_id), 0))
+        self.weather_combo.setCurrentIndex(max(self.weather_combo.findData(params.weather_id), 0))
+        self.night_check.setChecked(params.is_night)
+        self.river_combo.setCurrentIndex(2 if params.large_river
+                                         else 1 if params.small_river else 0)
+        self.naval_check.setChecked(params.naval_invasion)
+        self.fort_spin.setValue(params.fort_level)
+        self.directions_spin.setValue(params.extra_directions)
+        self.encirclement_check.setChecked(params.encirclement)
+        self.entrenchment_spin.setValue(params.entrenchment)
+        self.planning_spin.setValue(params.planning_bonus * 100)
+        self.vp_spin.setValue(params.victory_points)
+
     def apply_to(self, params: BattleParams) -> None:
         params.terrain_id = self.terrain_combo.currentData()
         params.weather_id = self.weather_combo.currentData()
@@ -378,6 +428,9 @@ class BattleWindow(QMainWindow):
         tactics_btn = QPushButton("Éditeur de tactiques…")
         tactics_btn.clicked.connect(self._open_tactic_editor)
         top.addWidget(tactics_btn)
+        saves_btn = QPushButton("Sauvegardes…")
+        saves_btn.clicked.connect(self._open_save_manager)
+        top.addWidget(saves_btn)
         top.addStretch(1)
         self.round_label = QLabel("Tour : 0")
         top.addWidget(self.round_label)
@@ -432,21 +485,36 @@ class BattleWindow(QMainWindow):
         self.detail_check = QCheckBox("Log détaillé de chaque tour")
         self.detail_check.setChecked(True)
         controls.addWidget(self.detail_check)
+        csv_btn = QPushButton("Exporter les logs en CSV…")
+        csv_btn.clicked.connect(self._export_csv)
+        controls.addWidget(csv_btn)
         controls.addStretch(1)
         root.addLayout(controls)
 
-        # -------------------------------------------------------------- log
-        self.log_view = QPlainTextEdit()
-        self.log_view.setReadOnly(True)
-        self.log_view.setMaximumBlockCount(20000)
+        # ------------------------------------------------------------- log
+        # Chaque ligne d'attaque porte un tooltip avec le détail complet
+        # (attaques/défenses, dés, bonus appliqués) — CDC §11.
+        self.log_view = QListWidget()
+        self.log_view.setSelectionMode(QListWidget.NoSelection)
+        self.log_view.setUniformItemSizes(True)
         root.addWidget(self.log_view, stretch=1)
 
         self._bind_battle()
 
     # ----------------------------------------------------------- bataille
 
-    def _append_log(self, text: str) -> None:
-        self.log_view.appendPlainText(text)
+    def _append_log(self, text: str, tooltip: str | None = None) -> None:
+        item = QListWidgetItem(text)
+        if tooltip:
+            item.setToolTip(tooltip)
+        self.log_view.addItem(item)
+        if self.log_view.count() > 20000:
+            self.log_view.takeItem(0)
+        self.log_view.scrollToBottom()
+
+    def _log_text(self) -> str:
+        return "\n".join(self.log_view.item(i).text()
+                         for i in range(self.log_view.count()))
 
     def _bind_battle(self) -> None:
         for panel in (self.attacker_panel, self.defender_panel):
@@ -460,7 +528,7 @@ class BattleWindow(QMainWindow):
         self.battle = Battle(BattleParams(), tactic_registry=self.registry)
         self.params_panel.apply_to(self.battle.params)
         self.log_view.clear()
-        self.log_view.appendPlainText("=== Nouvelle bataille ===")
+        self._append_log("=== Nouvelle bataille ===")
         self._bind_battle()
 
     def run_turns(self, n: int) -> None:
@@ -487,11 +555,12 @@ class BattleWindow(QMainWindow):
         self._refresh_status()
 
     def _print_round(self, log) -> None:
-        self.log_view.appendPlainText(f"— Tour {log.round} —")
+        self._append_log(f"— Tour {log.round} —")
         for event in log.events:
-            self.log_view.appendPlainText(f"  • {event}")
+            self._append_log(f"  • {event}")
         for attack in log.attacks:
-            self.log_view.appendPlainText(f"  {attack.summary()}")
+            # Résumé en ligne, détail complet au survol (§11)
+            self._append_log(f"  {attack.summary()}", tooltip=attack.details())
 
     def _print_summary(self, logs) -> None:
         first, last = logs[0].round, logs[-1].round
@@ -499,13 +568,12 @@ class BattleWindow(QMainWindow):
         org_a = sum(l.total_damage('attacker')[1] for l in logs)
         hp_d = sum(l.total_damage('defender')[0] for l in logs)
         org_d = sum(l.total_damage('defender')[1] for l in logs)
-        self.log_view.appendPlainText(
-            f"=== Tours {first} à {last} (résumé) ===\n"
-            f"  Attaquant : PV infligés {hp_a:.1f}, ORG infligée {org_a:.1f}\n"
-            f"  Défenseur : PV infligés {hp_d:.1f}, ORG infligée {org_d:.1f}")
+        self._append_log(f"=== Tours {first} à {last} (résumé) ===")
+        self._append_log(f"  Attaquant : PV infligés {hp_a:.1f}, ORG infligée {org_a:.1f}")
+        self._append_log(f"  Défenseur : PV infligés {hp_d:.1f}, ORG infligée {org_d:.1f}")
         for log in logs:
             for event in log.events:
-                self.log_view.appendPlainText(f"  • [T{log.round}] {event}")
+                self._append_log(f"  • [T{log.round}] {event}")
 
     def _refresh_status(self) -> None:
         self.round_label.setText(f"Tour : {self.battle.round}")
@@ -519,11 +587,10 @@ class BattleWindow(QMainWindow):
         if self.battle.is_over:
             winner = "ATTAQUANT" if self.battle.result == "attacker" else "DÉFENSEUR"
             report = self.battle.casualty_report()
-            self.log_view.appendPlainText(
-                f"\n=== FIN DE BATAILLE — victoire du camp {winner} ===")
+            self._append_log(f"=== FIN DE BATAILLE — victoire du camp {winner} ===")
             for side, label in (("attacker", "Attaquant"), ("defender", "Défenseur")):
                 r = report[side]
-                self.log_view.appendPlainText(
+                self._append_log(
                     f"  {label} : PV perdus {r['pv_perdus']}, pertes estimées "
                     f"{r['pertes_estimees']} (×70 %), détruites {r['divisions_detruites']}, "
                     f"repliées {r['divisions_repliees']}")
