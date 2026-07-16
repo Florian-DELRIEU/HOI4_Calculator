@@ -162,7 +162,19 @@ class Camp:
     # ---------------------------------------------------------- rapports
 
     def hp_pool(self) -> tuple[float, float]:
+        """PV courants/max de TOUTE la composition (y compris repliées et
+        détruites) — utilisé pour le rapport de pertes de fin de bataille."""
         cur = sum(d.current_hp for d in self.divisions)
+        tot = sum(d.stats.hp for d in self.divisions)
+        return cur, tot
+
+    def active_hp_pool(self) -> tuple[float, float]:
+        """PV courants des divisions encore actives (front + réserve)
+        rapportés au total de la composition — pour la barre d'équilibre.
+        Une division repliée ne compte plus, même si elle a encore des PV :
+        elle ne participe plus au combat."""
+        active = self.frontline + self.reserves
+        cur = sum(d.current_hp for d in active)
         tot = sum(d.stats.hp for d in self.divisions)
         return cur, tot
 
@@ -383,7 +395,7 @@ class Battle:
         l'organisation et les PV restants des deux camps."""
         def score(camp: Camp) -> float:
             org_cur, org_tot = camp.org_pool()
-            hp_cur, hp_tot = camp.hp_pool()
+            hp_cur, hp_tot = camp.active_hp_pool()
             org_part = org_cur / org_tot if org_tot else 0.0
             hp_part = hp_cur / hp_tot if hp_tot else 0.0
             return 0.7 * org_part + 0.3 * hp_part

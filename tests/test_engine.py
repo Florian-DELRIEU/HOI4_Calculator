@@ -268,6 +268,40 @@ def test_victory_balance_bounds():
     assert 0.0 <= battle.victory_balance() <= 1.0
 
 
+def test_victory_balance_reaches_100_percent_when_enemy_fully_retreated():
+    """Une division repliée garde souvent l'essentiel de ses PV (elle se
+    replie quand son ORGANISATION tombe à 0, pas ses PV) : la barre
+    d'équilibre ne doit pas rester bloquée à mi-chemin sous prétexte que
+    ces PV comptent encore — reproduit le cas signalé par Florian."""
+    battle = _battle_with_divisions(n_att=1, n_def=1, seed=1)
+    defender_div = battle.defender.divisions[0]
+    attacker_div = battle.attacker.divisions[0]
+    battle.run_round()   # déploiement
+
+    # Le défenseur se replie : plus d'organisation, mais encore ~85 % de PV
+    battle.defender.frontline.remove(defender_div)
+    battle.defender.retreated.append(defender_div)
+    defender_div.current_org = 0.0
+    defender_div.current_hp = 0.85 * defender_div.stats.hp
+
+    assert battle.victory_balance() == pytest.approx(1.0)
+
+
+def test_active_hp_pool_excludes_retreated_but_hp_pool_keeps_them():
+    battle = _battle_with_divisions(n_att=1, n_def=1, seed=1)
+    battle.run_round()
+    division = battle.defender.divisions[0]
+    battle.defender.frontline.remove(division)
+    battle.defender.retreated.append(division)
+    division.current_hp = 42.0
+
+    active_cur, active_tot = battle.defender.active_hp_pool()
+    full_cur, full_tot = battle.defender.hp_pool()
+    assert active_cur == 0.0            # plus aucune division active
+    assert active_tot == full_tot       # même dénominateur (composition totale)
+    assert full_cur == pytest.approx(42.0)   # hp_pool() la compte toujours
+
+
 # ---------------------------------------------------------- persistance
 
 LEGACY_ENTRY = {
