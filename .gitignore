@@ -6,3 +6,4 @@ dist/
 *.spec.bak
 .pytest_cache/
 saves/settings.json
+saves/battalions_custom.json

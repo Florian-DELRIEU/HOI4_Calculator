@@ -47,6 +47,7 @@ class BattleParams:
     naval_invasion_advanced: bool = False  # extra optionnel (§7.2) : pénalité progressive
     fort_level: int = 0
     extra_directions: int = 0          # directions d'attaque supplémentaires
+    combat_width_override: float = 0.0 # 0 = largeur auto (terrain) ; >0 = largeur imposée
     encirclement: bool = False         # défenseur encerclé (−30 %)
     entrenchment: int = 0              # retranchement du défenseur (+2 %/pt)
     planning_bonus: float = 0.0        # attaquant, 0..0.30
@@ -70,7 +71,13 @@ class BattleParams:
     def base_combat_width(self) -> float:
         """Largeur de bataille : terrain + bonus par direction supplémentaire
         (§7.1/§8.1 — on utilise le bonus propre au terrain, plus précis que
-        le « +40 » générique du §8.1)."""
+        le « +40 » générique du §8.1).
+
+        Si ``combat_width_override`` est fixé (> 0), il impose directement la
+        largeur de base (terrain et directions ignorés pour ce calcul) —
+        « aire de combat » réglée manuellement dans les paramètres."""
+        if self.combat_width_override > 0:
+            return self.combat_width_override
         t = self.terrain
         return t.combat_width + self.extra_directions * t.extra_width_per_direction
 

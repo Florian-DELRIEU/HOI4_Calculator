@@ -13,13 +13,16 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 
 from engine.division import DivisionStats
 from engine.gamedata import DATA_DIR
+from engine.paths import saves_dir
 
 MAX_LINE_BATTALIONS = 25
 MAX_SUPPORT_COMPANIES = 5
+
+CUSTOM_BATTALIONS_PATH = saves_dir() / "battalions_custom.json"
 
 
 @dataclass(frozen=True)
@@ -44,21 +47,66 @@ class BattalionDef:
     recon: float = 0.0
     initiative: float = 0.0
     special: str = ""
+    custom: bool = False       # bataillon personnalisé (créé par l'utilisateur)
 
     def __str__(self):
         return self.nom
 
+    def to_dict(self) -> dict:
+        d = asdict(self)
+        d.pop("custom", None)   # ne pas persister le drapeau interne
+        return d
 
-def _load_battalions() -> dict[str, BattalionDef]:
+
+_FIELD_NAMES = {f.name for f in fields(BattalionDef)}
+
+
+def _def_from_dict(data: dict, custom: bool = False) -> BattalionDef:
+    kwargs = {k: v for k, v in data.items() if k in _FIELD_NAMES}
+    kwargs["custom"] = custom
+    return BattalionDef(**kwargs)
+
+
+def _load_official() -> dict[str, BattalionDef]:
     with open(DATA_DIR / "battalions.json", encoding="utf-8") as f:
         payload = json.load(f)
-    return {b["id"]: BattalionDef(**b) for b in payload["battalions"]}
+    return {b["id"]: _def_from_dict(b) for b in payload["battalions"]}
 
 
-BATTALIONS: dict[str, BattalionDef] = _load_battalions()
+def load_custom() -> dict[str, BattalionDef]:
+    """Bataillons personnalisés (saves/battalions_custom.json)."""
+    if not CUSTOM_BATTALIONS_PATH.exists():
+        return {}
+    try:
+        with open(CUSTOM_BATTALIONS_PATH, encoding="utf-8") as f:
+            payload = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    result = {}
+    for entry in payload:
+        if isinstance(entry, dict) and entry.get("id"):
+            result[entry["id"]] = _def_from_dict(entry, custom=True)
+    return result
 
-LINE_BATTALIONS = {k: b for k, b in BATTALIONS.items() if b.line}
-SUPPORT_COMPANIES = {k: b for k, b in BATTALIONS.items() if not b.line}
+
+_OFFICIAL: dict[str, BattalionDef] = _load_official()
+BATTALIONS: dict[str, BattalionDef] = {}
+LINE_BATTALIONS: dict[str, BattalionDef] = {}
+SUPPORT_COMPANIES: dict[str, BattalionDef] = {}
+
+
+def reload() -> None:
+    """Recompose BATTALIONS = officiels + personnalisés (les personnalisés
+    de même identifiant priment). À rappeler après toute édition."""
+    global BATTALIONS, LINE_BATTALIONS, SUPPORT_COMPANIES
+    merged = dict(_OFFICIAL)
+    merged.update(load_custom())
+    BATTALIONS = merged
+    LINE_BATTALIONS = {k: b for k, b in merged.items() if b.line}
+    SUPPORT_COMPANIES = {k: b for k, b in merged.items() if not b.line}
+
+
+reload()
 
 
 def is_artillery(battalion_id: str) -> bool:

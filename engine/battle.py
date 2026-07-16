@@ -148,6 +148,24 @@ class Camp:
         division.in_frontline = False
         return True
 
+    def force_to_frontline(self, division: Division) -> bool:
+        """Envoie manuellement une division en première ligne, depuis la
+        réserve ou après un repli (décision du joueur, sans tenir compte de
+        la limite de largeur) — clic droit « Mettre au front ». Une division
+        sans organisation qui n'est pas en état de combattre se repliera de
+        nouveau au nettoyage de fin de tour."""
+        if division in self.frontline or division not in self.divisions:
+            return False
+        if division in self.reserves:
+            self.reserves.remove(division)
+        elif division in self.retreated:
+            self.retreated.remove(division)
+        else:
+            return False
+        self.frontline.append(division)
+        division.in_frontline = True
+        return True
+
     def cleanup(self, events: list[str]) -> None:
         """Retire les divisions détruites ou en déroute en fin de tour."""
         for division in list(self.frontline):

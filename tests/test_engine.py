@@ -96,6 +96,15 @@ def test_base_combat_width_uses_terrain_extra():
     assert p.base_combat_width == 50 + 25
 
 
+def test_combat_width_manual_override():
+    p = BattleParams(terrain_id="mountain", extra_directions=2)
+    assert p.base_combat_width == 50 + 2 * 25   # auto
+    p.combat_width_override = 120
+    assert p.base_combat_width == 120           # imposé, terrain/directions ignorés
+    p.combat_width_override = 0
+    assert p.base_combat_width == 50 + 2 * 25   # 0 = retour à l'auto
+
+
 # ----------------------------------------------------------- pénalités
 
 def _battle_with_divisions(n_att=1, n_def=1, width=20, seed=7, **params):
@@ -154,6 +163,38 @@ def test_force_to_reserve_no_op_if_not_in_frontline():
     outsider = make_template().spawn()   # jamais ajoutée à ce camp
     assert outsider not in battle.attacker.frontline
     assert battle.attacker.force_to_reserve(outsider) is False
+
+
+def test_force_to_frontline_from_reserve():
+    battle = _battle_with_divisions(n_att=8, n_def=1, width=20)  # surcharge → réserve
+    battle.run_round()
+    camp = battle.attacker
+    assert camp.reserves
+    division = camp.reserves[0]
+    assert camp.force_to_frontline(division) is True
+    assert division in camp.frontline
+    assert division not in camp.reserves
+    assert division.in_frontline is True
+
+
+def test_force_to_frontline_from_retreated():
+    battle = _battle_with_divisions()
+    battle.run_round()
+    camp = battle.attacker
+    division = camp.frontline[0]
+    camp.frontline.remove(division)
+    camp.retreated.append(division)
+    assert camp.force_to_frontline(division) is True
+    assert division in camp.frontline
+    assert division not in camp.retreated
+
+
+def test_force_to_frontline_no_op_if_already_front_or_foreign():
+    battle = _battle_with_divisions()
+    battle.run_round()
+    camp = battle.attacker
+    assert camp.force_to_frontline(camp.frontline[0]) is False   # déjà au front
+    assert camp.force_to_frontline(make_template().spawn()) is False  # étrangère
 
 
 # ------------------------------------------------------------- ciblage

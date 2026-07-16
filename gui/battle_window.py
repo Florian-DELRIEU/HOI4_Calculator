@@ -257,6 +257,9 @@ class CampPanel(QGroupBox):
         menu.addSeparator()
         reserve_action = menu.addAction("Mettre en réserve")
         reserve_action.setEnabled(division in self.camp.frontline)
+        front_action = menu.addAction("Mettre au front")
+        front_action.setEnabled(division in self.camp.reserves
+                                or division in self.camp.retreated)
 
         chosen = menu.exec(self.division_list.viewport().mapToGlobal(pos))
         if chosen is rename_action:
@@ -265,6 +268,8 @@ class CampPanel(QGroupBox):
             self._edit_division_stats(division)
         elif chosen is reserve_action:
             self._force_division_to_reserve(division)
+        elif chosen is front_action:
+            self._force_division_to_frontline(division)
 
     def _rename_division(self, division) -> None:
         new_name, ok = QInputDialog.getText(self, "Renommer la division",
@@ -283,6 +288,12 @@ class CampPanel(QGroupBox):
         if self.camp.force_to_reserve(division):
             self.log_callback(f"  • {self.camp.label} : {division.name} "
                               f"retirée manuellement en réserve.")
+            self.refresh_divisions()
+
+    def _force_division_to_frontline(self, division) -> None:
+        if self.camp.force_to_frontline(division):
+            self.log_callback(f"  • {self.camp.label} : {division.name} "
+                              f"envoyée manuellement au front.")
             self.refresh_divisions()
 
     # -------------------------------------------------------------- slots
@@ -407,6 +418,14 @@ class ParamsPanel(QGroupBox):
         self.directions_spin.setRange(0, 4)
         form.addRow("Directions d'attaque suppl.", self.directions_spin)
 
+        self.combat_width_spin = QDoubleSpinBox()
+        self.combat_width_spin.setRange(0.0, 1000.0)
+        self.combat_width_spin.setDecimals(0)
+        self.combat_width_spin.setToolTip(
+            "Aire de combat imposée manuellement. 0 = automatique selon le terrain "
+            "et les directions d'attaque.")
+        form.addRow("Aire de combat (0 = auto)", self.combat_width_spin)
+
         self.encirclement_check = QCheckBox("Défenseur encerclé (−30 %)")
         form.addRow(self.encirclement_check)
 
@@ -436,6 +455,7 @@ class ParamsPanel(QGroupBox):
         self.naval_advanced_check.setChecked(params.naval_invasion_advanced)
         self.fort_spin.setValue(params.fort_level)
         self.directions_spin.setValue(params.extra_directions)
+        self.combat_width_spin.setValue(params.combat_width_override)
         self.encirclement_check.setChecked(params.encirclement)
         self.entrenchment_spin.setValue(params.entrenchment)
         self.planning_spin.setValue(params.planning_bonus * 100)
@@ -452,6 +472,7 @@ class ParamsPanel(QGroupBox):
         params.naval_invasion_advanced = self.naval_advanced_check.isChecked()
         params.fort_level = self.fort_spin.value()
         params.extra_directions = self.directions_spin.value()
+        params.combat_width_override = self.combat_width_spin.value()
         params.encirclement = self.encirclement_check.isChecked()
         params.entrenchment = self.entrenchment_spin.value()
         params.planning_bonus = self.planning_spin.value() / 100.0
@@ -482,6 +503,9 @@ class BattleWindow(QMainWindow):
         divisions_btn = QPushButton("Éditeur de divisions…")
         divisions_btn.clicked.connect(self._open_division_editor)
         top.addWidget(divisions_btn)
+        battalions_btn = QPushButton("Éditeur de bataillons…")
+        battalions_btn.clicked.connect(self._open_battalion_editor)
+        top.addWidget(battalions_btn)
         leaders_btn = QPushButton("Éditeur de leaders…")
         leaders_btn.clicked.connect(self._open_leader_editor)
         top.addWidget(leaders_btn)
@@ -725,6 +749,10 @@ class BattleWindow(QMainWindow):
         editor.exec()
         self.attacker_panel.refresh_templates()
         self.defender_panel.refresh_templates()
+
+    def _open_battalion_editor(self) -> None:
+        from gui.battalion_editor import BattalionEditor
+        BattalionEditor(parent=self).exec()
 
     def _open_leader_editor(self) -> None:
         editor = LeaderEditor(self.leader_store, self.registry, parent=self)

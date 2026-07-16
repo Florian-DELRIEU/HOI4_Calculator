@@ -6,9 +6,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import pytest
 
+from engine import composition
 from engine.composition import (BATTALIONS, LINE_BATTALIONS, SUPPORT_COMPANIES,
-                                aggregate, is_artillery, validate)
+                                BattalionDef, aggregate, is_artillery, validate)
 from engine.division import DivisionTemplate
+from persistence.battalions import CustomBattalionStore
 
 
 def test_battalion_tables_loaded():
@@ -127,3 +129,70 @@ def test_template_recalculate_roundtrip():
     loaded = template_from_dict(data)
     assert loaded.battalions == template.battalions
     assert loaded.stats.hp == template.stats.hp
+
+
+# ------------------------------------------------ bataillons personnalisés
+
+@pytest.fixture
+def custom_path(tmp_path, monkeypatch):
+    """Redirige la persistance des bataillons personnalisés vers un fichier
+    temporaire et restaure l'état officiel à la fin."""
+    path = tmp_path / "battalions_custom.json"
+    monkeypatch.setattr(composition, "CUSTOM_BATTALIONS_PATH", path)
+    yield path
+    composition.reload()   # recharge sans les personnalisés de test
+
+
+def _custom_battalion(bid="custom_infanterie_elite", line=True):
+    return BattalionDef(
+        id=bid, nom="Infanterie d'élite", group="infanterie", line=line,
+        width=2, hp=30, org=80, soft=8, hard=1, air=0, defense=40,
+        breakthrough=5, armor=0, piercing=2, hardness=0.0, speed=4,
+        custom=True)
+
+
+def test_custom_battalion_upsert_merges_into_tables(custom_path):
+    store = CustomBattalionStore(custom_path)
+    store.upsert(_custom_battalion())
+
+    assert "custom_infanterie_elite" in composition.BATTALIONS
+    assert "custom_infanterie_elite" in composition.LINE_BATTALIONS
+    b = composition.BATTALIONS["custom_infanterie_elite"]
+    assert b.custom is True and b.nom == "Infanterie d'élite"
+    # utilisable dans une agrégation de composition
+    stats, _ = composition.aggregate(["custom_infanterie_elite"] * 5, [])
+    assert stats.hp == 150
+    assert stats.soft_attack == 40
+
+
+def test_custom_battalion_persistence_roundtrip(custom_path):
+    store = CustomBattalionStore(custom_path)
+    store.upsert(_custom_battalion())
+    assert custom_path.exists()
+    # rechargement à froid
+    reloaded = composition.load_custom()
+    assert "custom_infanterie_elite" in reloaded
+    assert reloaded["custom_infanterie_elite"].defense == 40
+
+
+def test_custom_support_company(custom_path):
+    store = CustomBattalionStore(custom_path)
+    store.upsert(_custom_battalion(bid="custom_soutien", line=False))
+    assert "custom_soutien" in composition.SUPPORT_COMPANIES
+    assert "custom_soutien" not in composition.LINE_BATTALIONS
+
+
+def test_custom_battalion_delete(custom_path):
+    store = CustomBattalionStore(custom_path)
+    store.upsert(_custom_battalion())
+    assert store.delete("custom_infanterie_elite") is True
+    assert "custom_infanterie_elite" not in composition.BATTALIONS
+    assert store.delete("inexistant") is False
+
+
+def test_custom_does_not_break_official(custom_path):
+    store = CustomBattalionStore(custom_path)
+    store.upsert(_custom_battalion())
+    # les officiels restent présents
+    assert "infantry" in composition.BATTALIONS
+    assert composition.BATTALIONS["infantry"].custom is False
