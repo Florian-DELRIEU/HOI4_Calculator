@@ -15,8 +15,9 @@ import re
 from pathlib import Path
 
 from engine.division import DivisionStats, DivisionTemplate
+from engine.paths import saves_dir
 
-DEFAULT_ROOT = Path(__file__).resolve().parent.parent / "saves" / "divisions"
+DEFAULT_ROOT = saves_dir() / "divisions"
 
 # Clés héritées du projet de référence — à conserver telles quelles.
 _LEGACY_KEYS = {

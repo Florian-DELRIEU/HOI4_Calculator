@@ -10,7 +10,9 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+from engine.paths import data_dir
+
+DATA_DIR = data_dir()
 
 
 def _load(name: str) -> dict:

@@ -217,7 +217,9 @@ def eval_condition(cond: dict | None, ctx: TacticContext) -> bool:
 
 # ---------------------------------------------------------------- registre
 
-DEFAULT_CUSTOM_PATH = Path(__file__).resolve().parent.parent / "saves" / "tactics_custom.json"
+from engine.paths import saves_dir
+
+DEFAULT_CUSTOM_PATH = saves_dir() / "tactics_custom.json"
 
 
 class TacticRegistry:

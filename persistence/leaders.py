@@ -5,8 +5,9 @@ import json
 from pathlib import Path
 
 from engine.leader import Leader
+from engine.paths import saves_dir
 
-DEFAULT_PATH = Path(__file__).resolve().parent.parent / "saves" / "leaders.json"
+DEFAULT_PATH = saves_dir() / "leaders.json"
 
 
 class LeaderStore:

@@ -17,9 +17,10 @@ from engine.division import Division
 from engine.leader import Leader
 from engine.params import BattleParams
 from engine.tactics import ActiveTactic, TacticRegistry
+from engine.paths import saves_dir
 from persistence.divisions import template_from_dict, template_to_dict
 
-DEFAULT_ROOT = Path(__file__).resolve().parent.parent / "saves" / "battles"
+DEFAULT_ROOT = saves_dir() / "battles"
 MAX_LOG_CHARS = 200_000
 
 
