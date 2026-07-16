@@ -495,9 +495,13 @@ class BattleWindow(QMainWindow):
         runn_btn = QPushButton("Lancer N tours")
         runn_btn.clicked.connect(lambda: self.run_turns(self.n_spin.value()))
         controls.addWidget(runn_btn)
-        self.detail_check = QCheckBox("Log détaillé de chaque tour")
-        self.detail_check.setChecked(True)
-        controls.addWidget(self.detail_check)
+        controls.addWidget(QLabel("Logs :"))
+        self.log_level_combo = QComboBox()
+        self.log_level_combo.addItem("Résumé", "summary")
+        self.log_level_combo.addItem("Détaillé", "detailed")
+        self.log_level_combo.addItem("Tout afficher", "full")
+        self.log_level_combo.setCurrentIndex(1)   # « Détaillé » par défaut
+        controls.addWidget(self.log_level_combo)
         csv_btn = QPushButton("Exporter les logs en CSV…")
         csv_btn.clicked.connect(self._export_csv)
         controls.addWidget(csv_btn)
@@ -559,16 +563,19 @@ class BattleWindow(QMainWindow):
         self.defender_panel.sync_to_battle()
 
         logs = self.battle.run_rounds(n)
-        detailed = self.detail_check.isChecked()
-        for log in logs:
-            if detailed:
-                self._print_round(log)
-        if not detailed and logs:
-            self._print_summary(logs)
+        level = self.log_level_combo.currentData()
+        if level == "summary":
+            if logs:
+                self._print_summary(logs)
+        else:
+            for log in logs:
+                self._print_round(log, full=(level == "full"))
         self._refresh_status()
 
-    def _print_round(self, log) -> None:
+    def _print_round(self, log, full: bool = False) -> None:
         self._append_log(f"— Tour {log.round} —")
+        if full and log.environment:
+            self._append_log(f"  ⚙ État : {log.environment}")
         for event in log.events:
             self._append_log(f"  • {event}")
         for attack in log.attacks:

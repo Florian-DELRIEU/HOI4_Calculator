@@ -155,3 +155,37 @@ def test_naval_invasion_advanced_only_progresses_while_flag_active():
     battle = _battle_with_divisions(naval_invasion=False, naval_invasion_advanced=True)
     battle.run_rounds(5)
     assert battle.naval_invasion_round == 0
+
+
+# --------------------------------- extra : instantané d'environnement (logs)
+
+def test_environment_snapshot_always_shows_terrain_weather_night():
+    battle = _battle_with_divisions(terrain_id="urban", weather_id="rain", is_night=True)
+    battle.run_round()
+    snap = battle.logs[-1].environment
+    assert "Terrain : Urbain" in snap
+    assert "Météo : Pluie" in snap
+    assert "Nuit : Oui" in snap
+
+
+def test_environment_snapshot_night_off_shown_explicitly():
+    battle = _battle_with_divisions(is_night=False)
+    battle.run_round()
+    assert "Nuit : Non" in battle.logs[-1].environment
+
+
+def test_environment_snapshot_includes_naval_invasion_progressive_state():
+    battle = _battle_with_divisions(naval_invasion=True, naval_invasion_advanced=True)
+    battle.run_round()
+    snap = battle.logs[-1].environment
+    assert "Débarquement amphibie : progressif" in snap
+    assert "tour 1/24" in snap
+
+
+def test_environment_snapshot_includes_fort_integrity():
+    battle = Battle(BattleParams(fort_level=2), seed=5)
+    battle.attacker.add_division(make_template().spawn())
+    battle.defender.add_division(make_template().spawn())
+    battle.run_round()
+    snap = battle.logs[-1].environment
+    assert f"Fort : niveau 2 (intégrité {FORT_INTEGRITY_PER_LEVEL:.0f}/{FORT_INTEGRITY_PER_LEVEL:.0f})" in snap

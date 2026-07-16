@@ -111,3 +111,24 @@ def test_csv_export(tmp_path):
     assert len(reader) == rows + 1
     # Chaque ligne a bien toutes les colonnes
     assert all(len(row) == len(reader[0]) for row in reader)
+
+
+def test_csv_export_is_always_complete(tmp_path):
+    """L'export CSV doit toujours contenir attaques + événements + état,
+    quel que soit le niveau d'affichage choisi dans la GUI (§11)."""
+    battle = make_running_battle()
+    path = tmp_path / "logs_complets.csv"
+    export_battle_csv(battle, path)
+    with open(path, encoding="utf-8-sig") as f:
+        reader = list(csv.reader(f, delimiter=";"))
+    header = reader[0]
+    type_col = header.index("type")
+    types_present = {row[type_col] for row in reader[1:]}
+    assert "attaque" in types_present
+    assert "evenement" in types_present
+    assert "etat" in types_present
+    # Une ligne "etat" par tour joué, avec le message d'environnement
+    message_col = header.index("message")
+    etat_rows = [row for row in reader[1:] if row[type_col] == "etat"]
+    assert len(etat_rows) == len(battle.logs)
+    assert all("Terrain" in row[message_col] for row in etat_rows)

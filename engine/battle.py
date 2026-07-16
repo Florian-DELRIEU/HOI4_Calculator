@@ -188,6 +188,37 @@ class Battle:
         # débarquement, pour la pénalité progressive −80 % → 0 %.
         self.naval_invasion_round = 0
 
+    def environment_snapshot(self) -> str:
+        """Résumé complet de l'état de la bataille pour le mode de log
+        « Tout afficher » : terrain, météo, cycle jour/nuit, fortifications,
+        encerclement, retranchement, débarquement amphibie — y compris les
+        paramètres statiques qui ne génèrent pas d'événement discret."""
+        p = self.params
+        parts = [f"Terrain : {p.terrain.nom}", f"Météo : {p.weather.nom}"]
+        if p.temperature_id != "normal":
+            parts.append(f"Température : {p.temperature.nom}")
+        parts.append(f"Nuit : {'Oui' if p.is_night else 'Non'}")
+        if p.large_river:
+            parts.append("Grande rivière")
+        elif p.small_river:
+            parts.append("Petite rivière")
+        if p.fort_level > 0:
+            parts.append(f"Fort : niveau {p.fort_level} "
+                         f"(intégrité {self.fort_integrity:.0f}/{FORT_INTEGRITY_PER_LEVEL:.0f})")
+        if p.encirclement:
+            parts.append("Défenseur encerclé")
+        if p.entrenchment:
+            parts.append(f"Retranchement : {p.entrenchment}")
+        if p.naval_invasion:
+            if p.naval_invasion_advanced:
+                parts.append(f"Débarquement amphibie : progressif "
+                            f"({self.naval_invasion_factor:+.1f} %, tour "
+                            f"{min(self.naval_invasion_round, NAVAL_INVASION_DECAY_ROUNDS)}/"
+                            f"{NAVAL_INVASION_DECAY_ROUNDS})")
+            else:
+                parts.append("Débarquement amphibie : actif (−50 % fixe)")
+        return " | ".join(parts)
+
     @property
     def naval_invasion_factor(self) -> float:
         """Facteur multiplicatif du débarquement amphibie progressif
@@ -310,6 +341,7 @@ class Battle:
         def_t = self.active_tactics.get("defender")
         log.attacker_tactic = atk_t.name if atk_t else ""
         log.defender_tactic = def_t.name if def_t else ""
+        log.environment = self.environment_snapshot()
 
         self._check_end(log)
         self.logs.append(log)

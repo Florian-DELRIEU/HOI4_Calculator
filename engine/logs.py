@@ -54,6 +54,7 @@ class RoundLog:
     attacker_tactic: str = ""
     defender_tactic: str = ""
     phase: str = ""
+    environment: str = ""      # état complet (terrain/météo/nuit/fort/débarquement…), mode « Tout »
 
     def total_damage(self, side: str) -> tuple[float, float]:
         """(PV, ORG) infligés par le camp donné pendant ce tour."""
