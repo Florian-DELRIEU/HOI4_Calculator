@@ -18,12 +18,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from engine.gamedata import DATA_DIR
+from engine.settings import SETTINGS
 
 if TYPE_CHECKING:
     from engine.battle import Battle, Camp
     from engine.logs import RoundLog
 
-RESELECT_INTERVAL = 12          # heures entre deux sélections (§9.1)
 PREFERRED_TACTIC_BONUS = 1.5    # +50 % de poids (§5)
 COUNTER_BONUS_PER_SKILL = 0.35  # +35 % par point d'avantage (§9.2)
 RECON_SKILL_BONUS = 5           # bonus d'initiative si meilleure recon (§9.2)
@@ -290,7 +290,8 @@ class TacticManager:
     # ------------------------------------------------------------ sélection
 
     def maybe_reselect(self, battle: "Battle", log: "RoundLog") -> None:
-        if (battle.round - 1) % RESELECT_INTERVAL == 0:
+        interval = max(1, SETTINGS.tactic_reselect_interval)
+        if (battle.round - 1) % interval == 0:
             self.reselect(battle, log)
 
     def reselect(self, battle: "Battle", log: "RoundLog") -> None:

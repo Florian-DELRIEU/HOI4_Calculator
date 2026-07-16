@@ -112,6 +112,25 @@ Le bundle `.app` est généré dans `dist/`. Pour distribuer hors de votre
 machine, signez/notarisez le bundle ou demandez aux utilisateurs d'autoriser
 l'app dans *Réglages > Confidentialité et sécurité*.
 
+## Paramètres configurables
+
+Le bouton **« Paramètres… »** de la fenêtre de bataille ouvre un dialogue qui
+expose des tunables du moteur, normalement codés en dur : coefficients de
+dégâts PV/organisation, chances de toucher, taux de renfort depuis la
+réserve, intervalle de re-sélection des tactiques, activation des
+tactiques / de l'érosion des forts / de l'arrêt automatique, et une graine
+aléatoire fixe pour des batailles reproductibles. Ce sont des leviers directs
+sur la **durée des batailles** (augmenter les coefficients de dégâts ou les
+chances de toucher raccourcit les combats).
+
+Les valeurs par défaut correspondent aux constantes officielles. Le dialogue
+permet d'**enregistrer** (vers `saves/settings.json`), de **charger** et de
+**rétablir les valeurs par défaut**. Les modifications validées prennent effet
+pour les batailles suivantes. Techniquement, tout passe par l'objet partagé
+`engine.settings.SETTINGS` ; le dialogue se construit automatiquement depuis
+`engine.settings.FIELD_META`, donc ajouter un paramètre = ajouter un champ à la
+dataclass `Settings` et une entrée dans `FIELD_META`.
+
 ## Format des sauvegardes
 
 - **Templates de division** : un JSON par template dans `saves/divisions/`

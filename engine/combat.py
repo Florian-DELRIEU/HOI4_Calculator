@@ -7,14 +7,11 @@ from engine import modifiers
 from engine.division import Division
 from engine.logs import AttackReport
 from engine.rng import CombatRNG
+from engine.settings import SETTINGS
 
 if TYPE_CHECKING:
     from engine.battle import Battle, Camp
 
-HP_DAMAGE_COEF = 0.06
-ORG_DAMAGE_COEF = 0.053
-HIT_CHANCE_DEFENDED = 0.10
-HIT_CHANCE_UNDEFENDED = 0.40
 BASE_COORDINATED_SHARE = 0.35
 MAX_COORDINATED_SHARE = 0.90
 FORT_DAMAGE_CHANCE = 0.05      # 5 % par attaque d'endommager le fort (§8.6)
@@ -156,13 +153,13 @@ def resolve_attacks(division: Division, camp: "Camp", battle: "Battle",
         for _ in range(n_attacks):
             if target.defense_pool > 0:
                 target.defense_pool -= 1
-                hit_chance = HIT_CHANCE_DEFENDED
+                hit_chance = SETTINGS.hit_chance_defended
             else:
-                hit_chance = HIT_CHANCE_UNDEFENDED
+                hit_chance = SETTINGS.hit_chance_undefended
             if rng.chance(hit_chance):
                 hits += 1
-                hp_dmg += rng.die(2) * HP_DAMAGE_COEF * damage_factor
-                org_dmg += rng.die(org_die) * ORG_DAMAGE_COEF * damage_factor
+                hp_dmg += rng.die(2) * SETTINGS.hp_damage_coef * damage_factor
+                org_dmg += rng.die(org_die) * SETTINGS.org_damage_coef * damage_factor
 
         target.take_damage(hp_dmg, org_dmg)
         report.hits = hits
@@ -171,8 +168,9 @@ def resolve_attacks(division: Division, camp: "Camp", battle: "Battle",
         reports.append(report)
 
         # Dégâts collatéraux sur le fort (§8.6) : seul l'attaquant érode
-        # les fortifications du défenseur.
-        if (camp.is_attacker and battle.params.fort_level > 0
+        # les fortifications du défenseur (désactivable dans les paramètres).
+        if (SETTINGS.fort_erosion_enabled and camp.is_attacker
+                and battle.params.fort_level > 0
                 and n_attacks > 0 and rng.chance(FORT_DAMAGE_CHANCE)):
             collateral = 0.1 * division.stats.soft_attack * n_attacks * damage_factor
             battle.apply_fort_damage(collateral)

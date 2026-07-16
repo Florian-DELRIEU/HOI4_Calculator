@@ -28,6 +28,8 @@ def ensure_default_templates() -> None:
 
 
 def main() -> int:
+    from engine import settings
+    settings.load()   # charge les paramètres utilisateur avant la fenêtre
     app = QApplication(sys.argv)
     app.setApplicationName("Simulateur de bataille HOI4")
     ensure_default_templates()

@@ -7,9 +7,9 @@ from engine.leader import Leader, LeaderAbility
 from engine.logs import AttackReport, RoundLog
 from engine.params import BattleParams
 from engine.rng import CombatRNG
+from engine.settings import SETTINGS
 from engine.tactics import ActiveTactic, TacticManager, TacticRegistry
 
-REINFORCE_CHANCE = 0.02        # 2 % par heure (§8.2)
 FORT_INTEGRITY_PER_LEVEL = 500.0   # jauge d'intégrité d'un niveau de fort (§8.6)
 NAVAL_INVASION_DECAY_ROUNDS = 24   # extra optionnel (§7.2) : durée assumée de résorption (1 jour)
 MAX_OVERWIDTH_RATIO = 1.33     # entrée en ligne refusée au-delà (§8.1)
@@ -113,7 +113,7 @@ class Camp:
             if not division.can_fight:
                 continue
             fits = self.frontline_width + division.stats.width <= width_limit
-            if (rng.chance(REINFORCE_CHANCE) and fits) or not self.frontline:
+            if (rng.chance(SETTINGS.reinforce_chance) and fits) or not self.frontline:
                 self.reserves.remove(division)
                 self.frontline.append(division)
                 division.in_frontline = True

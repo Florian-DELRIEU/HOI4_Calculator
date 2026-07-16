@@ -13,10 +13,12 @@ from engine.battle import Battle
 from engine.gamedata import TEMPERATURE, TERRAINS, WEATHER
 from engine.leader import Leader
 from engine.params import BattleParams, SideParams
+from engine.settings import SETTINGS
 from engine.tactics import PHASE_LABELS, TacticRegistry
 from gui.division_instance_editor import DivisionInstanceDialog
 from gui.leader_editor import LeaderEditor
 from gui.save_manager import SaveManager
+from gui.settings_dialog import SettingsDialog
 from gui.tactic_editor import TacticEditor
 from persistence.battles import BattleSaveStore
 from persistence.csv_export import export_battle_csv
@@ -466,7 +468,7 @@ class BattleWindow(QMainWindow):
         self.leader_store = LeaderStore()
         self.registry = TacticRegistry()
         self.battle_store = BattleSaveStore()
-        self.battle = Battle(BattleParams(), tactic_registry=self.registry)
+        self.battle = self._make_battle()
 
         central = QWidget()
         self.setCentralWidget(central)
@@ -489,6 +491,9 @@ class BattleWindow(QMainWindow):
         saves_btn = QPushButton("Sauvegardes…")
         saves_btn.clicked.connect(self._open_save_manager)
         top.addWidget(saves_btn)
+        settings_btn = QPushButton("Paramètres…")
+        settings_btn.clicked.connect(self._open_settings)
+        top.addWidget(settings_btn)
         top.addStretch(1)
         self.round_label = QLabel("Tour : 0")
         top.addWidget(self.round_label)
@@ -586,8 +591,15 @@ class BattleWindow(QMainWindow):
             panel.refresh_tactic_label()
         self._refresh_status()
 
+    def _make_battle(self) -> Battle:
+        """Crée une bataille en respectant les paramètres (graine fixe,
+        activation des tactiques)."""
+        seed = SETTINGS.fixed_seed if SETTINGS.use_fixed_seed else None
+        return Battle(BattleParams(), tactic_registry=self.registry,
+                      seed=seed, use_tactics=SETTINGS.tactics_enabled)
+
     def new_battle(self) -> None:
-        self.battle = Battle(BattleParams(), tactic_registry=self.registry)
+        self.battle = self._make_battle()
         self.params_panel.apply_to(self.battle.params)
         self.log_view.clear()
         self._append_log("=== Nouvelle bataille ===")
@@ -607,7 +619,7 @@ class BattleWindow(QMainWindow):
         self.attacker_panel.sync_to_battle()
         self.defender_panel.sync_to_battle()
 
-        logs = self.battle.run_rounds(n)
+        logs = self.battle.run_rounds(n, stop_on_end=SETTINGS.auto_stop_on_victory)
         level = self.log_level_combo.currentData()
         if level == "summary":
             if logs:
@@ -716,6 +728,9 @@ class BattleWindow(QMainWindow):
         editor.exec()
         self.attacker_panel.refresh_tactic_combo()
         self.defender_panel.refresh_tactic_combo()
+
+    def _open_settings(self) -> None:
+        SettingsDialog(parent=self).exec()
 
     def _toggle_theme(self) -> None:
         if self.theme_manager is not None:
