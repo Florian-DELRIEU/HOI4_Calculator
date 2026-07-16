@@ -31,6 +31,7 @@ class DivisionStats:
     initiative: float = 0.0        # 0..1 (apport transmissions)
     air_attack: float = 0.0
     speed: float = 4.0
+    recovery_rate: float = 0.3     # org régénérée /heure hors combat (moyenne bataillons+compagnies)
 
     def copy(self) -> "DivisionStats":
         return DivisionStats(**asdict(self))

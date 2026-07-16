@@ -43,6 +43,7 @@ class BattalionDef:
     artillery: bool = False
     recon: float = 0.0
     initiative: float = 0.0
+    recovery: float = 0.3
     special: str = ""
 
     def __str__(self):
@@ -120,6 +121,9 @@ def aggregate(battalions: list[str], supports: list[str]) -> tuple[DivisionStats
     stats.hardness = (sum(u.hardness for u in line) / len(line)) if line else 0.0
     stats.speed = min((u.speed for u in line), default=4.0)
     stats.initiative = sum(u.initiative for u in all_units)
+    # Taux de récupération d'organisation : moyenne de tous les bataillons
+    # et compagnies (confirmé par le wiki officiel, cf. recherche du 2026-07-16).
+    stats.recovery_rate = sum(u.recovery for u in all_units) / len(all_units)
     recon = sum(u.recon for u in all_units)
 
     # Arrondis d'affichage raisonnables
@@ -127,4 +131,5 @@ def aggregate(battalions: list[str], supports: list[str]) -> tuple[DivisionStats
                  "defense", "breakthrough", "armor", "piercing"):
         setattr(stats, attr, round(getattr(stats, attr), 2))
     stats.hardness = round(stats.hardness, 3)
+    stats.recovery_rate = round(stats.recovery_rate, 3)
     return stats, recon

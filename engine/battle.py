@@ -18,6 +18,18 @@ STACKING_BASE_LIMIT = 5
 STACKING_PER_DIRECTION = 3
 STACKING_PENALTY_PER_DIV = -2.0
 
+# Régénération d'organisation des divisions repliées (extension : le CDC ne
+# donne pas de formule, seuils/multiplicateurs confirmés par des constantes
+# de code communautaires — cf. forum Paradox, recherche du 2026-07-16).
+# Le CDC (§8.2) précise déjà que les divisions en RÉSERVE ne régénèrent pas ;
+# ce mécanisme s'applique uniquement aux divisions REPLIÉES (organisation
+# épuisée), qui sinon ne reviendraient jamais au combat.
+ORG_REGAIN_LOW_THRESHOLD = 0.25    # sous 25 % d'org : régénération ×2
+ORG_REGAIN_LOW_MULT = 2.0
+ORG_REGAIN_HIGH_THRESHOLD = 0.75   # au-dessus de 75 % d'org : régénération ×0,5
+ORG_REGAIN_HIGH_MULT = 0.5
+RETREAT_REJOIN_ORG_RATIO = 0.10    # seuil (approximatif, non sourcé) pour revenir en réserve
+
 
 class Camp:
     """Un des deux camps de la bataille."""
@@ -91,10 +103,18 @@ class Camp:
                 self.active_abilities.remove(entry)
 
     def deploy(self, battle: "Battle", events: list[str]) -> None:
-        """Place en ligne les divisions qui rentrent, le reste en réserve."""
+        """Place en ligne les divisions qui rentrent, le reste en réserve.
+
+        Exclut explicitement les divisions repliées (§ régénération) : dès
+        que leur organisation remonte au-dessus de 0, ``is_broken`` redevient
+        faux et elles seraient sinon reconquises par ce déploiement avant
+        même d'avoir formellement rejoint la réserve via
+        ``regenerate_retreated`` — une division se retrouverait alors dans
+        deux listes à la fois."""
         width_limit = MAX_OVERWIDTH_RATIO * self.battle_width(battle)
         for division in self.divisions:
-            if division in self.frontline or division in self.reserves:
+            if (division in self.frontline or division in self.reserves
+                    or division in self.retreated):
                 continue
             if not division.can_fight:
                 continue
@@ -158,6 +178,30 @@ class Camp:
             if division.is_destroyed:
                 self.reserves.remove(division)
                 self.destroyed.append(division)
+
+    def regenerate_retreated(self, events: list[str]) -> None:
+        """Les divisions repliées récupèrent leur organisation avec le temps
+        et reviennent en réserve une fois suffisamment remises. Sans ce
+        mécanisme, une division cassée quitte le combat définitivement et
+        une bataille ne peut se conclure qu'en épuisant, une à une et sans
+        retour possible, tout l'ordre de bataille d'un camp — d'où des
+        batailles durant plusieurs centaines de tours."""
+        for division in list(self.retreated):
+            ratio = division.org_ratio
+            if ratio < ORG_REGAIN_LOW_THRESHOLD:
+                mult = ORG_REGAIN_LOW_MULT
+            elif ratio > ORG_REGAIN_HIGH_THRESHOLD:
+                mult = ORG_REGAIN_HIGH_MULT
+            else:
+                mult = 1.0
+            division.current_org = min(
+                division.current_org + division.stats.recovery_rate * mult,
+                division.stats.organisation)
+            if division.org_ratio >= RETREAT_REJOIN_ORG_RATIO:
+                self.retreated.remove(division)
+                self.reserves.append(division)
+                events.append(f"{self.label} : {division.name} a récupéré "
+                              f"et rejoint la réserve.")
 
     # ---------------------------------------------------------- rapports
 
@@ -359,6 +403,7 @@ class Battle:
                     division.paradropped_rounds_left -= 1
             camp.tick_abilities()
             camp.cleanup(log.events)
+            camp.regenerate_retreated(log.events)
 
         atk_t = self.active_tactics.get("attacker")
         def_t = self.active_tactics.get("defender")

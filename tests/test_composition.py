@@ -77,6 +77,15 @@ def test_aggregate_speed_is_slowest_line_battalion():
     assert stats.speed == 12.0
 
 
+def test_aggregate_recovery_rate_is_average_of_all_units():
+    # 7 infanterie (0.3) + 2 artillerie (0.1), moyenne sur les 9 unités
+    stats, _ = aggregate(["infantry"] * 7 + ["artillery"] * 2, [])
+    assert stats.recovery_rate == pytest.approx((7 * 0.3 + 2 * 0.1) / 9, abs=0.001)
+    # Les compagnies de soutien comptent aussi dans la moyenne (confirmé wiki)
+    stats, _ = aggregate(["infantry"] * 4, ["engineer"])
+    assert stats.recovery_rate == pytest.approx((4 * 0.3 + 0.1) / 5, abs=0.001)
+
+
 def test_aggregate_supports_contribute_stats_not_width():
     base, _ = aggregate(["infantry"] * 4, [])
     with_art, recon = aggregate(["infantry"] * 4, ["support_artillery", "recon"])

@@ -36,6 +36,7 @@ _LEGACY_KEYS = {
 _EXTENDED_KEYS = {
     "Attaque Aerienne": "air_attack",
     "Vitesse": "speed",
+    "Recuperation": "recovery_rate",
 }
 
 

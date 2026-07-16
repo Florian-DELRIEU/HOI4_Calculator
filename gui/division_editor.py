@@ -27,6 +27,7 @@ STAT_FIELDS = [
     ("width", "Largeur de combat", 0, 200),
     ("initiative", "Initiative", 0, 1),
     ("speed", "Vitesse max (km/h)", 0, 50),
+    ("recovery_rate", "Récupération d'organisation (/h)", 0, 5),
 ]
 
 
@@ -213,7 +214,8 @@ class DivisionEditor(QDialog):
             f"Déf {stats.defense} | Percée {stats.breakthrough} | "
             f"Blind. {stats.armor} | Perce. {stats.piercing} | "
             f"Dureté {stats.hardness:.0%} | Largeur {stats.width:g} | "
-            f"Vitesse {stats.speed:g} km/h | Init. {stats.initiative:g} | Recon {recon:g}")
+            f"Vitesse {stats.speed:g} km/h | Init. {stats.initiative:g} | Recon {recon:g} | "
+            f"Récup. org. {stats.recovery_rate:g}/h")
 
     # ------------------------------------------------------------- slots
 

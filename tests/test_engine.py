@@ -156,6 +156,105 @@ def test_force_to_reserve_no_op_if_not_in_frontline():
     assert battle.attacker.force_to_reserve(outsider) is False
 
 
+# ------------------------------------------- régénération des repliés
+
+def test_regenerate_retreated_applies_low_org_multiplier():
+    from engine.battle import ORG_REGAIN_LOW_MULT
+    battle = _battle_with_divisions()
+    division = make_template(org=100).spawn()   # recovery_rate par défaut 0.3
+    division.current_org = 5.0                   # 5 % < seuil bas (25 %)
+    battle.attacker.retreated.append(division)
+    battle.attacker.regenerate_retreated([])
+    assert division.current_org == pytest.approx(5.0 + 0.3 * ORG_REGAIN_LOW_MULT)
+
+
+def test_regenerate_retreated_applies_high_org_multiplier():
+    from engine.battle import ORG_REGAIN_HIGH_MULT
+    battle = _battle_with_divisions()
+    division = make_template(org=100).spawn()
+    division.current_org = 80.0                  # 80 % > seuil haut (75 %)
+    battle.attacker.retreated.append(division)
+    battle.attacker.regenerate_retreated([])
+    assert division.current_org == pytest.approx(80.0 + 0.3 * ORG_REGAIN_HIGH_MULT)
+
+
+def test_regenerate_retreated_standard_multiplier_between_thresholds():
+    battle = _battle_with_divisions()
+    division = make_template(org=100).spawn()
+    division.current_org = 50.0                  # entre 25 % et 75 %
+    battle.attacker.retreated.append(division)
+    battle.attacker.regenerate_retreated([])
+    assert division.current_org == pytest.approx(50.3)
+
+
+def test_regenerate_retreated_caps_at_max_organisation():
+    battle = _battle_with_divisions()
+    division = make_template(org=100).spawn()
+    division.current_org = 99.9
+    battle.attacker.retreated.append(division)
+    battle.attacker.regenerate_retreated([])
+    assert division.current_org == 100.0
+
+
+def test_retreated_division_rejoins_reserve_once_recovered():
+    battle = _battle_with_divisions()
+    division = make_template(org=100).spawn()
+    division.current_org = 9.0   # sous 25 % (mult ×2) -> +0.6/tour, sous le seuil de 10 %
+    battle.attacker.retreated.append(division)
+    events = []
+
+    battle.attacker.regenerate_retreated(events)
+    assert division.current_org == pytest.approx(9.6)
+    assert division in battle.attacker.retreated   # pas encore assez remise
+    assert not events
+
+    battle.attacker.regenerate_retreated(events)
+    assert division.current_org == pytest.approx(10.2)
+    assert division not in battle.attacker.retreated
+    assert division in battle.attacker.reserves
+    assert any("a récupéré" in e for e in events)
+
+
+def test_deploy_never_reclaims_a_retreated_division():
+    """Régression : dès qu'une division repliée regagne un peu
+    d'organisation (>0), is_broken redevient faux ; deploy() ne doit
+    surtout pas la recapturer vers le front avant qu'elle n'ait
+    formellement rejoint la réserve via regenerate_retreated (sans quoi
+    elle se retrouve simultanément dans deux listes)."""
+    battle = _battle_with_divisions(n_att=1, seed=9)
+    battle.run_round()
+    division = battle.attacker.frontline[0]
+    battle.attacker.frontline.remove(division)
+    battle.attacker.retreated.append(division)
+    division.current_org = 0.5   # tout juste au-dessus de 0 : is_broken == False
+
+    battle.attacker.deploy(battle, [])
+
+    assert division in battle.attacker.retreated
+    assert division not in battle.attacker.frontline
+    assert division not in battle.attacker.reserves
+
+
+def test_broken_division_eventually_rejoins_and_battle_still_ends():
+    """Test d'intégration : une division qui se replie doit, avec le temps,
+    revenir en réserve — la bataille se termine par attrition réelle plutôt
+    que par un épuisement définitif et séquentiel de tout l'ordre de bataille."""
+    battle = _battle_with_divisions(n_att=1, n_def=1, seed=3)
+    division = battle.attacker.divisions[0]
+    battle.run_round()
+    division.current_org = 0.0   # force un repli immédiat
+    battle.attacker.cleanup([])
+    assert division in battle.attacker.retreated
+
+    events = []
+    for _ in range(60):
+        battle.attacker.regenerate_retreated(events)
+        if division not in battle.attacker.retreated:
+            break
+    assert division in battle.attacker.reserves
+    assert division not in battle.attacker.retreated
+
+
 # ------------------------------------------------------------- ciblage
 
 def test_targeting_engagement_width():
