@@ -93,3 +93,29 @@ def test_save_persists_grid_layout(editor, monkeypatch):
     saved = editor.store.get("Avec trou")
     assert saved.grid[24] == "heavy_tank" and saved.grid[9] is None
     assert saved.stats.hp == pytest.approx(editor.stat_spins["hp"].value())
+
+
+def test_equipment_combo_recomputes_stats_and_is_saved(editor, monkeypatch):
+    _pick(editor, "infantry")
+    editor._place_line(24)                       # recalcule les stats (équipement de base)
+    soft_basic = editor.stat_spins["soft_attack"].value()
+    editor.equipment_combo.setCurrentIndex(editor.equipment_combo.findData("1939"))
+    expected, _ = composition.aggregate(*editor._collect_composition(), "1939")
+    assert editor.stat_spins["soft_attack"].value() == pytest.approx(expected.soft_attack)
+    # à la main : 8 fantassins × 9 + 2 canons × 30 + génie 1,5 + reconnaissance 0,3
+    assert soft_basic == pytest.approx(8 * 3 + 2 * 25 + 1.5 + 0.3)
+    assert editor.stat_spins["soft_attack"].value() == pytest.approx(8 * 9 + 2 * 30 + 1.8)
+    assert "Équipement II" in editor.preview_label.text()
+
+    editor.name_edit.setText("Équipée 1939")
+    monkeypatch.setattr(QMessageBox, "information", staticmethod(lambda *a, **k: None))
+    editor._on_save()
+    saved = editor.store.get("Équipée 1939")
+    assert saved.equipment == "1939"
+    assert saved.stats.soft_attack == pytest.approx(expected.soft_attack)
+    # rechargement : le sélecteur reprend la génération sans toucher aux stats
+    editor._on_new()
+    assert editor.equipment_combo.currentData() == "basic"
+    editor._load_form(saved)
+    assert editor.equipment_combo.currentData() == "1939"
+    assert editor.stat_spins["soft_attack"].value() == pytest.approx(saved.stats.soft_attack)

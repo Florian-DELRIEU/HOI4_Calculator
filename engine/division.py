@@ -52,6 +52,9 @@ class DivisionTemplate:
     # indice = colonne*5 + rangée). Vide = pas de disposition mémorisée :
     # on suppose alors ``battalions`` rangé colonne par colonne.
     grid: list[str | None] = field(default_factory=list)
+    # Génération d'équipement d'infanterie utilisée pour calculer les stats
+    # depuis la composition (voir data/equipment.json). "basic" = 1918.
+    equipment: str = "basic"
     folder: str = ""  # sous-dossier de rangement dans saves/divisions
 
     def spawn(self) -> "Division":

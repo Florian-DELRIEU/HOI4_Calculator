@@ -19,7 +19,7 @@ incompatibles.
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, field, fields
+from dataclasses import asdict, dataclass, field, fields, replace
 
 from engine.division import DivisionStats
 from engine.gamedata import DATA_DIR
@@ -127,6 +127,51 @@ def reload() -> None:
 reload()
 
 
+# ------------------------------------------------- générations d'équipement
+
+DEFAULT_EQUIPMENT = "basic"
+_EQUIPMENT_STATS = ("soft", "hard", "defense", "breakthrough", "piercing")
+
+
+def _load_equipment() -> tuple[dict[str, dict], dict[str, dict], dict[str, dict]]:
+    with open(DATA_DIR / "equipment.json", encoding="utf-8") as f:
+        payload = json.load(f)
+    generations = {g["id"]: g for g in payload["generations"]}
+    families = {name: {gen: stats for gen, stats in table.items()
+                       if not gen.startswith("_")}
+                for name, table in payload["families"].items()}
+    return generations, families, dict(payload["units"])
+
+
+EQUIPMENT_GENERATIONS, EQUIPMENT_FAMILIES, EQUIPMENT_UNITS = _load_equipment()
+
+
+def equipment_label(equipment: str) -> str:
+    gen = EQUIPMENT_GENERATIONS.get(equipment)
+    return gen["nom"] if gen else equipment
+
+
+def normalize_equipment(equipment: str | None) -> str:
+    """Identifiant valide (retombe sur l'équipement de base si inconnu)."""
+    return equipment if equipment in EQUIPMENT_GENERATIONS else DEFAULT_EQUIPMENT
+
+
+def with_equipment(unit: BattalionDef, equipment: str) -> BattalionDef:
+    """Stats d'un bataillon pour une génération d'équipement.
+
+    Chaque stat est multipliée par stats(génération choisie) / stats(génération
+    de ses stats enregistrées) dans la famille d'équipement du bataillon
+    (infanterie, artillerie). Les bataillons non listés (chars, motorisés,
+    antichar, compagnies…) et les bataillons personnalisés sont inchangés."""
+    entry = EQUIPMENT_UNITS.get(unit.id)
+    if entry is None or unit.custom or equipment == entry["base"]:
+        return unit
+    table = EQUIPMENT_FAMILIES[entry["family"]]
+    base, target = table[entry["base"]], table[equipment]
+    changes = {k: getattr(unit, k) * target[k] / base[k] for k in _EQUIPMENT_STATS}
+    return replace(unit, **changes)
+
+
 def is_artillery(battalion_id: str) -> bool:
     b = BATTALIONS.get(battalion_id)
     return b is not None and b.artillery
@@ -152,25 +197,35 @@ def validate(battalions: list[str], supports: list[str]) -> list[str]:
     families: dict[str, str] = {}
     for sid in supports:
         support = SUPPORT_COMPANIES.get(sid)
-        if support is None or not support.exclusion:
+        if support is None:
             continue
-        other = families.get(support.exclusion)
-        if other is not None and other != sid:
-            problems.append(f"« {support.nom} » est incompatible avec "
-                            f"« {SUPPORT_COMPANIES[other].nom} » (même famille).")
-        families.setdefault(support.exclusion, sid)
+        for family in exclusion_families(support):
+            other = families.get(family)
+            if other is not None and other != sid:
+                problems.append(f"« {support.nom} » est incompatible avec "
+                                f"« {SUPPORT_COMPANIES[other].nom} » (même famille).")
+            families.setdefault(family, sid)
     return problems
+
+
+def exclusion_families(unit: BattalionDef) -> set[str]:
+    """Familles d'exclusion d'une compagnie (``exclusion`` peut en lister
+    plusieurs, séparées par des virgules)."""
+    return {f.strip() for f in unit.exclusion.split(",") if f.strip()}
 
 
 def blocked_by(support_id: str, supports: list[str]) -> str | None:
     """Id de la compagnie déjà présente qui interdit ``support_id``
-    (même famille d'exclusion), ou ``None``."""
+    (famille d'exclusion commune), ou ``None``."""
     candidate = SUPPORT_COMPANIES.get(support_id)
-    if candidate is None or not candidate.exclusion:
+    if candidate is None:
+        return None
+    mine = exclusion_families(candidate)
+    if not mine:
         return None
     for sid in supports:
         other = SUPPORT_COMPANIES.get(sid)
-        if other is not None and sid != support_id and other.exclusion == candidate.exclusion:
+        if other is not None and sid != support_id and mine & exclusion_families(other):
             return sid
     return None
 
@@ -216,18 +271,22 @@ def design_info(battalions: list[str], supports: list[str]) -> DesignInfo:
     )
 
 
-def aggregate(battalions: list[str], supports: list[str]) -> tuple[DivisionStats, float]:
+def aggregate(battalions: list[str], supports: list[str],
+              equipment: str = DEFAULT_EQUIPMENT) -> tuple[DivisionStats, float]:
     """Calcule les stats finales d'une division composée.
 
-    Renvoie ``(stats, recon)``. Lève ``ValueError`` si la composition est
-    invalide.
+    ``equipment`` : génération de l'équipement d'infanterie (voir
+    ``data/equipment.json``). Renvoie ``(stats, recon)``. Lève ``ValueError``
+    si la composition ou la génération est invalide.
     """
+    if equipment not in EQUIPMENT_GENERATIONS:
+        raise ValueError(f"Génération d'équipement inconnue : {equipment}")
     problems = validate(battalions, supports)
     if problems:
         raise ValueError(" ; ".join(problems))
 
-    line = [BATTALIONS[b] for b in battalions]
-    supp = [BATTALIONS[s] for s in supports]
+    line = [with_equipment(BATTALIONS[b], equipment) for b in battalions]
+    supp = [with_equipment(BATTALIONS[s], equipment) for s in supports]
     all_units = line + supp
     if not all_units:
         return DivisionStats(), 0.0

@@ -74,6 +74,14 @@ LINE_UNITS = {
     "Modern SP Anti-Air": ("modern_spaa", "Antiaérien automoteur moderne"),
 }
 
+# Écartés : le wiki ne donne aucune stat de combat (« unavailable without No
+# Step Back » : unités réservées au concepteur de chars).
+SKIPPED_LINE = {
+    "Light Amphibious Tank Battalion": "stats de combat absentes sur le wiki",
+    "Medium Amphibious Tank Battalion": "stats de combat absentes sur le wiki",
+    "Heavy Amphibious Tank Battalion": "stats de combat absentes sur le wiki",
+}
+
 CATEGORY_GROUP = {
     "Infanterie": "infanterie",
     "Mobile": "mobile",
@@ -127,30 +135,42 @@ SUPPORT_UNITS = {
     "Assault Battalion": ("assault_battalion", "Bataillon d'assaut", "s5", "heavy"),
     "Winter Logistics Company": ("winter_logistics", "Logistique hivernale", "s5", "std"),
     "Sturmtruppe Battalion": ("sturmtruppe", "Sturmtruppen", "s5", "heavy"),
+    "Helicopter Recon": ("helicopter_recon", "Reconnaissance en hélicoptère", "s6", "std"),
+    "Helicopter Brigade": ("helicopter_brigade", "Brigade d'hélicoptères", "d4", "std"),
+    "Helicopter Med-Evac": ("helicopter_med_evac", "Évacuation sanitaire en hélicoptère", "d4", "std"),
+    "Helicopter Transports": ("helicopter_transports", "Transports par hélicoptère", "d4", "std"),
 }
 
-# Écartées : stats de combat absentes ou format qu'on ne sait pas aligner.
+# Écartées : le wiki ne donne aucune stat de combat (« unavailable without No
+# Step Back » : unités réservées au concepteur de chars).
 SKIPPED_SUPPORT = {
-    "Helicopter Recon": "format de stats hélicoptère non aligné",
-    "Helicopter Brigade": "format de stats hélicoptère non aligné",
-    "Helicopter Med-Evac": "format de stats hélicoptère non aligné",
-    "Helicopter Transports": "format de stats hélicoptère non aligné",
     "Light Flame Tank Company": "stats de combat absentes",
     "Medium Flame Tank Company": "stats de combat absentes",
     "Heavy Flame Tank Company": "stats de combat absentes",
 }
 
 # Familles mutuellement exclusives (texte « bloque autres … » de la source).
+# Une compagnie peut appartenir à plusieurs familles : la brigade d'hélicoptères
+# bloque chacune des autres compagnies d'hélicoptères, qui, elles, se cumulent.
 EXCLUSION = {
     "recon": ["recon", "recon_rangers", "long_range_patrol", "motorized_recon",
-              "armored_car_recon", "light_tank_recon", "airborne_light_armor"],
+              "armored_car_recon", "light_tank_recon", "airborne_light_armor",
+              "helicopter_recon"],
     "engineer": ["engineer", "armored_engineer", "assault_engineer", "pioneers",
                  "jungle_pioneers"],
     "maintenance": ["maintenance", "armored_maintenance"],
     "signal": ["signal", "armored_signal"],
     "military_police": ["military_police", "motorized_military_police"],
+    "field_hospital": ["field_hospital", "helicopter_med_evac"],
+    "logistics": ["logistics", "helicopter_transports"],
+    "helicopter_brigade_recon": ["helicopter_brigade", "helicopter_recon"],
+    "helicopter_brigade_med_evac": ["helicopter_brigade", "helicopter_med_evac"],
+    "helicopter_brigade_transports": ["helicopter_brigade", "helicopter_transports"],
 }
-EXCLUSION_OF = {uid: fam for fam, ids in EXCLUSION.items() for uid in ids}
+EXCLUSION_OF: dict[str, str] = {}
+for _family, _ids in EXCLUSION.items():
+    for _uid in _ids:
+        EXCLUSION_OF[_uid] = f"{EXCLUSION_OF[_uid]},{_family}" if _uid in EXCLUSION_OF else _family
 
 # Compagnies dont la vitesse (et donc celle de la division) est imposée.
 SLOWS_DIVISION = {"super_heavy_tank", "super_heavy_spg", "super_heavy_td",
@@ -175,6 +195,7 @@ _COMBAT_LAYOUTS = {
     "s6": ["soft", "hard", "defense", "breakthrough", "armor", "piercing"],
     "h7": ["speed", "soft", "hard", "defense", "breakthrough", "armor", "piercing"],
     "h8": ["speed", "soft", "hard", "air", "defense", "breakthrough", "armor", "piercing"],
+    "d4": ["defense", "breakthrough", "armor", "piercing"],   # compagnies d'hélicoptères
 }
 # Cellules de structure (avant « | ») : la 6ᵉ valeur est, pour les compagnies
 # de reconnaissance, la reconnaissance apportée.
@@ -211,6 +232,9 @@ def import_line_units(report: dict) -> list[dict]:
     entries = []
     for row in _read_csv("vanilla_bataillons_terrestres.csv"):
         name = row["nom"]
+        if name in SKIPPED_LINE:
+            report["skipped"].append((name, SKIPPED_LINE[name]))
+            continue
         if name not in LINE_UNITS:
             report["skipped"].append((name, "absent de la table de correspondance"))
             continue
@@ -288,7 +312,7 @@ def import_support_units(report: dict) -> list[dict]:
         if "artillery" in name.lower() or "Artillery" in nom:
             entry["artillery"] = True
         recon = 0.0
-        if uid in EXCLUSION["recon"]:
+        if uid in EXCLUSION["recon"] or uid == "helicopter_brigade":
             recon = struct.get("extra", 0.0)
         m = re.search(r"\+(\d+(?:\.\d+)?) reconnaissance", special)
         if m:

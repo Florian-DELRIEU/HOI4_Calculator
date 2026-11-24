@@ -152,8 +152,29 @@ il est mémorisé dans la clé `Grille` du template.
   chars. Elles viennent de `tools/sources/*.csv` ; `python tools/import_csv.py`
   régénère `data/battalions.json` (`--check` pour un essai à blanc). Un test
   vérifie que le JSON versionné est bien celui produit par les CSV.
-- **Non importés** (stats absentes ou illisibles dans la source) : chars
-  amphibies léger/moyen/lourd, chars lance-flammes, compagnies d'hélicoptères.
+- **Non importés** : chars amphibies léger/moyen/lourd et chars lance-flammes
+  (léger/moyen/lourd). Le tableau « Land units » du wiki n'affiche aucune stat de
+  combat pour eux (« unavailable without No Step Back », unités liées au
+  concepteur de chars). Les compagnies d'hélicoptères, elles, sont importées.
+- **Génération d'équipement** : les stats de `data/battalions.json` sont celles
+  de la 1ère génération d'équipement (infanterie : équipement de base de 1918,
+  soft 3 / défense 20 / percée 2). Or le jeu démarre en 1936 avec l'équipement
+  d'infanterie I (soft 6 / défense 22 / percée 3), puis II (1939) et III (1942) :
+  avec les stats de base, les combats durent plusieurs fois plus longtemps.
+  Le sélecteur **« Génération d'équipement »** de l'éditeur (équipement de base,
+  I 1936, II 1939, III 1942) recalcule les stats depuis la composition ; il est
+  mémorisé dans la clé `Equipement` du template (absente = équipement de base,
+  les anciens fichiers ne changent pas). Valeurs : `data/equipment.json`
+  (wiki *Infantry technology* et *Artillery technology*).
+  Concerne l'infanterie « pure » (infanterie, milice, montagnards, marines,
+  parachutistes, cavalerie…) et l'artillerie tractée (bataillon et compagnie de
+  soutien). **Non concernés** : chars, motorisés/mécanisés, artillerie
+  motorisée, roquettes, antichar, antiaérien et les autres compagnies. Seules les
+  stats d'équipement sont modélisées, pas les technologies en pourcentage
+  (« Improved Infantry Equipment » +5 %, « Artillery Upgrade » +10 %), les
+  doctrines ni les bonus de nation (curseurs manuels de bataille). Les
+  templates d'exemple restent en équipement de base : ouvrir le template,
+  choisir la génération puis enregistrer.
 - Les effets en pourcentage des compagnies (« +10 % attaque souple artillerie »,
   « +60 % vitesse »…) sont conservés en texte dans l'info-bulle, pas calculés.
 - Les CSV navals et aériens ne sont pas utilisés (hors périmètre du combat

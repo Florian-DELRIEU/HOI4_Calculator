@@ -14,7 +14,9 @@ import json
 import re
 from pathlib import Path
 
-from engine.composition import MAX_LINE_BATTALIONS, list_from_slots, slots_from_list
+from engine.composition import (DEFAULT_EQUIPMENT, MAX_LINE_BATTALIONS,
+                                list_from_slots, normalize_equipment,
+                                slots_from_list)
 from engine.division import DivisionStats, DivisionTemplate
 from engine.paths import saves_dir
 
@@ -55,6 +57,8 @@ def template_to_dict(template: DivisionTemplate) -> dict:
             else slots_from_list(template.battalions)
     if template.support_companies:
         data["Compagnies de soutien"] = list(template.support_companies)
+    if template.equipment != DEFAULT_EQUIPMENT:   # absent = équipement de base
+        data["Equipement"] = template.equipment
     return data
 
 
@@ -77,6 +81,7 @@ def template_from_dict(data: dict) -> DivisionTemplate:
         battalions=battalions,
         support_companies=list(data.get("Compagnies de soutien", [])),
         grid=grid,
+        equipment=normalize_equipment(data.get("Equipement")),
     )
 
 

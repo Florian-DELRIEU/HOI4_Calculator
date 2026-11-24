@@ -178,6 +178,18 @@ class DivisionEditor(QDialog):
         for exp_id, label in EXPERIENCE_LABELS.items():
             self.experience_combo.addItem(label, exp_id)
         header.addRow("Expérience", self.experience_combo)
+        self.equipment_combo = QComboBox()
+        for gen_id, gen in composition.EQUIPMENT_GENERATIONS.items():
+            self.equipment_combo.addItem(gen["nom"], gen_id)
+        self.equipment_combo.setToolTip(
+            "Génération d'équipement pour le calcul des stats depuis la "
+            "composition. Concerne l'infanterie « pure » (infanterie, milice, "
+            "montagnards, marines, parachutistes, cavalerie…) et l'artillerie "
+            "tractée (bataillon et compagnie de soutien) ; chars, motorisés, "
+            "antichar, antiaérien et autres compagnies gardent leurs stats. "
+            "Le jeu démarre en 1936 avec l'équipement d'infanterie I.")
+        header.addRow("Génération d'équipement", self.equipment_combo)
+        self.equipment_combo.currentIndexChanged.connect(self._on_equipment_changed)
         self.recon_spin = QDoubleSpinBox()
         self.recon_spin.setRange(0, 100)
         header.addRow("Reconnaissance", self.recon_spin)
@@ -377,6 +389,13 @@ class DivisionEditor(QDialog):
         return (composition.list_from_slots(self.slots),
                 [s for s in self.support_slots if s])
 
+    def _equipment(self) -> str:
+        return composition.normalize_equipment(self.equipment_combo.currentData())
+
+    def _on_equipment_changed(self, _index: int = 0) -> None:
+        if not self._loading:
+            self._refresh_composition()
+
     def _refresh_composition(self, apply_stats: bool = True) -> None:
         """Redessine la grille et recalcule l'aperçu. Avec ``apply_stats``,
         les statistiques de l'onglet manuel suivent la composition."""
@@ -396,18 +415,21 @@ class DivisionEditor(QDialog):
                 "<span style='color:#d9534f'>⚠ " + "<br>⚠ ".join(problems) + "</span>")
             self.preview_label.setWordWrap(True)
             return
-        stats, recon = composition.aggregate(battalions, supports)
+        stats, recon = composition.aggregate(battalions, supports, self._equipment())
         info = composition.design_info(battalions, supports)
         self.preview_label.setText(self._format_preview(
-            stats, recon, info, len(battalions), len(supports)))
+            stats, recon, info, len(battalions), len(supports),
+            composition.equipment_label(self._equipment())))
         if apply_stats and not self._loading:
             self._apply_stats(stats, recon)
 
     @staticmethod
     def _format_preview(stats: DivisionStats, recon: float,
-                        info: composition.DesignInfo, n_line: int, n_supp: int) -> str:
+                        info: composition.DesignInfo, n_line: int, n_supp: int,
+                        equipment: str = "") -> str:
         rows = [
             ("Bataillons / soutiens", f"{n_line} / {n_supp}"),
+            ("Génération d'équipement", equipment),
             ("PV", f"{stats.hp:g}"),
             ("Organisation", f"{stats.organisation:g}"),
             ("Attaque douce", f"{stats.soft_attack:g}"),
@@ -443,7 +465,7 @@ class DivisionEditor(QDialog):
         if problems:
             QMessageBox.warning(self, "Composition invalide", "\n".join(problems))
             return
-        stats, recon = composition.aggregate(battalions, supports)
+        stats, recon = composition.aggregate(battalions, supports, self._equipment())
         self._apply_stats(stats, recon)
         self._say("Statistiques recalculées depuis la composition.")
 
@@ -466,6 +488,10 @@ class DivisionEditor(QDialog):
         self.folder_edit.setText(template.folder)
         idx = self.experience_combo.findData(template.experience)
         self.experience_combo.setCurrentIndex(max(idx, 0))
+        self.equipment_combo.blockSignals(True)
+        self.equipment_combo.setCurrentIndex(
+            max(self.equipment_combo.findData(template.equipment), 0))
+        self.equipment_combo.blockSignals(False)
         self.recon_spin.setValue(template.recon)
         for attr, spin in self.stat_spins.items():
             spin.setValue(getattr(template.stats, attr))
@@ -538,6 +564,7 @@ class DivisionEditor(QDialog):
             battalions=battalions,
             support_companies=supports,
             grid=list(self.slots) if battalions else [],
+            equipment=self._equipment(),
             folder=self.folder_edit.text().strip().replace("\\", "/"),
         )
         self.store.save(template)

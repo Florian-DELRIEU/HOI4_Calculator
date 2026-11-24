@@ -1,0 +1,42 @@
+{
+  "_comment": "Générations d'équipement. Les stats de data/battalions.json sont celles de la 1ère génération d'équipement (infanterie : équipement de base 1918 ; artillerie : canon tracté 1934) : le jeu démarre en 1936 avec l'équipement d'infanterie I, nettement plus puissant, et l'artillerie progresse en 1939 puis 1942. Le multiplicateur appliqué à un bataillon vaut stats(génération choisie) / stats(génération de ses stats enregistrées), stat par stat, dans la famille d'équipement du bataillon ; les modificateurs propres au bataillon (−5 % attaque douce de l'infanterie irrégulière, +30 % de percée des montagnards, −40 % de la compagnie d'artillerie de soutien…) étant multiplicatifs, ils sont conservés. PV, organisation, largeur et vitesse ne changent pas. Seules les stats d'ÉQUIPEMENT sont modélisées, pas les technologies à pourcentage (« Improved Infantry Equipment » +5 %, « Artillery Upgrade » +10 %…).",
+  "generations": [
+    {"id": "basic", "nom": "Équipement de base (1918)", "year": 1918},
+    {"id": "1936", "nom": "Équipement I (1936)", "year": 1936},
+    {"id": "1939", "nom": "Équipement II (1939)", "year": 1939},
+    {"id": "1942", "nom": "Équipement III (1942)", "year": 1942}
+  ],
+  "families": {
+    "infantry": {
+      "_source": "https://hoi4.paradoxwikis.com/Infantry_technology — Basic Infantry equipment, Infantry Equipment I / II / III",
+      "basic": {"soft": 3.0,  "hard": 0.5, "defense": 20.0, "breakthrough": 2.0, "piercing": 1.0},
+      "1936":  {"soft": 6.0,  "hard": 1.0, "defense": 22.0, "breakthrough": 3.0, "piercing": 4.0},
+      "1939":  {"soft": 9.0,  "hard": 1.5, "defense": 28.0, "breakthrough": 4.0, "piercing": 5.0},
+      "1942":  {"soft": 12.0, "hard": 2.0, "defense": 34.0, "breakthrough": 5.0, "piercing": 10.0}
+    },
+    "artillery": {
+      "_source": "https://hoi4.paradoxwikis.com/Artillery_technology (section Equipment) — Towed Artillery (1934, déjà l'équipement de départ : pas de nouveau modèle en 1936), Improved Artillery (1939), Advanced Artillery (1942)",
+      "basic": {"soft": 25.0, "hard": 2.0, "defense": 10.0, "breakthrough": 6.0, "piercing": 5.0},
+      "1936":  {"soft": 25.0, "hard": 2.0, "defense": 10.0, "breakthrough": 6.0, "piercing": 5.0},
+      "1939":  {"soft": 30.0, "hard": 2.0, "defense": 15.0, "breakthrough": 7.0, "piercing": 5.0},
+      "1942":  {"soft": 34.0, "hard": 2.0, "defense": 18.0, "breakthrough": 8.0, "piercing": 5.0}
+    }
+  },
+  "_units_comment": "Bataillons dont les stats ne viennent QUE d'une famille d'équipement (colonne « Equip. » du wiki Land_units) -> (famille, génération des stats enregistrées). Exclus : motorisés/mécanisés/Amtrac et artillerie motorisée (camions), roquettes, antichar, antiaérien, chars, autres compagnies (stats mêlées à d'autres équipements ou à des bonus propres).",
+  "units": {
+    "infantry":           {"family": "infantry",  "base": "basic"},
+    "bicycle":            {"family": "infantry",  "base": "basic"},
+    "penal_battalion":    {"family": "infantry",  "base": "basic"},
+    "irregular_infantry": {"family": "infantry",  "base": "basic"},
+    "militia":            {"family": "infantry",  "base": "basic"},
+    "mountain":           {"family": "infantry",  "base": "basic"},
+    "marines":            {"family": "infantry",  "base": "basic"},
+    "marine_commandos":   {"family": "infantry",  "base": "basic"},
+    "paratrooper":        {"family": "infantry",  "base": "basic"},
+    "rangers":            {"family": "infantry",  "base": "basic"},
+    "cavalry":            {"family": "infantry",  "base": "basic"},
+    "camelry":            {"family": "infantry",  "base": "1936"},
+    "artillery":          {"family": "artillery", "base": "basic"},
+    "support_artillery":  {"family": "artillery", "base": "basic"}
+  }
+}
