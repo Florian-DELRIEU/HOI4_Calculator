@@ -131,13 +131,41 @@ pour les batailles suivantes. Techniquement, tout passe par l'objet partagé
 `engine.settings.FIELD_META`, donc ajouter un paramètre = ajouter un champ à la
 dataclass `Settings` et une entrée dans `FIELD_META`.
 
+## Concepteur de divisions
+
+L'onglet **« Concepteur »** de l'éditeur de divisions reproduit celui du jeu :
+une grille de **5 colonnes × 5 rangées** de bataillons de ligne (25 max) et
+**5 emplacements de soutien**. On choisit une unité dans la palette puis on
+clique une case (clic droit = vider ; « ▼ Colonne » remplit toute une colonne).
+Les statistiques de la division — PV, organisation, attaques, défense, percée,
+blindage, perce-blindage, dureté, largeur, vitesse, initiative, reconnaissance,
+et les chiffres de conception (effectif, coût IC, ravitaillement, carburant) —
+se recalculent à chaque modification, et l'onglet « Statistiques » les suit.
+L'emplacement d'une unité n'influence pas les stats (comme dans le jeu), mais
+il est mémorisé dans la clé `Grille` du template.
+
+- **Compagnies exclusives** : deux compagnies d'une même famille
+  (reconnaissance, génie, maintenance, transmissions, police militaire) sont
+  refusées. Les chars super-lourds et le croiseur terrestre sont des
+  compagnies de soutien dont la vitesse plafonne celle de la division.
+- **Données** : stats génériques (équipement de base), sans concepteur de
+  chars. Elles viennent de `tools/sources/*.csv` ; `python tools/import_csv.py`
+  régénère `data/battalions.json` (`--check` pour un essai à blanc). Un test
+  vérifie que le JSON versionné est bien celui produit par les CSV.
+- **Non importés** (stats absentes ou illisibles dans la source) : chars
+  amphibies léger/moyen/lourd, chars lance-flammes, compagnies d'hélicoptères.
+- Les effets en pourcentage des compagnies (« +10 % attaque souple artillerie »,
+  « +60 % vitesse »…) sont conservés en texte dans l'info-bulle, pas calculés.
+- Les CSV navals et aériens ne sont pas utilisés (hors périmètre du combat
+  terrestre).
+
 ## Format des sauvegardes
 
 - **Templates de division** : un JSON par template dans `saves/divisions/`
   (sous-dossiers libres), clés héritées de l'ancien format (`Nom de Template`,
   `PV`, `Organisation`, `Soft Attack`, `Hard Attack`, `Defense`,
   `Attaque` = percée, `Piercing`, `Armor`, `Hardness`, `Width`, `Initiative`)
-  étendues (`Experience`, `Recon`, `Bataillons`, `Compagnies de soutien`).
+  étendues (`Experience`, `Recon`, `Bataillons`, `Grille`, `Compagnies de soutien`).
   Les anciens fichiers « liste » sont lus tels quels et importables.
 - **Batailles** : `saves/battles/<nom>.json` — état complet (§12), y compris
   l'état du générateur aléatoire : recharger puis rejouer donne exactement

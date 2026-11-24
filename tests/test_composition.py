@@ -18,13 +18,16 @@ def test_battalion_tables_loaded():
     required = {"infantry", "bicycle", "mountain", "marines", "paratrooper",
                 "cavalry", "motorized", "mechanized", "anti_tank", "anti_air",
                 "artillery", "rocket_artillery", "light_tank", "medium_tank",
-                "heavy_tank", "super_heavy_tank", "modern_tank",
+                "heavy_tank", "modern_tank",
                 "light_td", "light_spg", "light_spaa"}
     assert required <= set(LINE_BATTALIONS)
     required_supports = {"recon", "engineer", "field_hospital", "logistics",
                          "maintenance", "military_police", "signal",
                          "support_artillery", "support_anti_tank", "support_anti_air",
-                         "support_rocket_artillery"}
+                         "support_rocket_artillery",
+                         # compagnies (et non bataillons) dans les CSV vanilla
+                         "super_heavy_tank", "super_heavy_td", "super_heavy_spg",
+                         "super_heavy_spaa", "land_cruiser"}
     assert required_supports <= set(SUPPORT_COMPANIES)
 
 
@@ -129,6 +132,127 @@ def test_template_recalculate_roundtrip():
     loaded = template_from_dict(data)
     assert loaded.battalions == template.battalions
     assert loaded.stats.hp == template.stats.hp
+
+
+# ------------------------------------------------ données issues des CSV
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def test_battalion_data_integrity():
+    assert len(BATTALIONS) == 77
+    for b in BATTALIONS.values():
+        if b.line:
+            assert b.width > 0, b.id
+        else:
+            assert b.width == 0, b.id
+        assert b.hp > 0 and b.nom, b.id
+    # chaque famille d'exclusion compte au moins deux compagnies de soutien
+    families: dict[str, list[str]] = {}
+    for b in SUPPORT_COMPANIES.values():
+        if b.exclusion:
+            families.setdefault(b.exclusion, []).append(b.id)
+    assert set(families) == {"recon", "engineer", "maintenance", "signal", "military_police"}
+    assert all(len(ids) >= 2 for ids in families.values())
+
+
+def test_battalions_json_is_in_sync_with_csv():
+    """data/battalions.json doit être exactement ce que génère le script
+    d'import depuis tools/sources (sinon : relancer tools/import_csv.py)."""
+    import json
+    sys.path.insert(0, str(ROOT / "tools"))
+    import import_csv
+    entries, _ = import_csv.build()
+    with open(ROOT / "data" / "battalions.json", encoding="utf-8") as f:
+        committed = json.load(f)["battalions"]
+    assert committed == [import_csv._clean_entry(e) for e in entries]
+
+
+def test_super_heavy_and_land_cruiser_are_support_companies():
+    for uid in ("super_heavy_tank", "super_heavy_td", "super_heavy_spg",
+                "super_heavy_spaa", "land_cruiser"):
+        assert uid in SUPPORT_COMPANIES and uid not in LINE_BATTALIONS
+        assert SUPPORT_COMPANIES[uid].slows_division
+
+
+def test_new_vanilla_units_present():
+    for uid in ("penal_battalion", "militia", "rangers", "camelry", "armored_car",
+                "amtrac", "motorized_artillery", "modern_spaa"):
+        assert uid in LINE_BATTALIONS
+    assert BATTALIONS["armored_car"].armor == 3
+    assert BATTALIONS["mechanized"].hardness == pytest.approx(0.6)
+
+
+# ------------------------------------------------------- concepteur (grille)
+
+def test_exclusive_support_families():
+    assert validate(["infantry"], ["engineer", "armored_engineer"]) != []
+    assert validate(["infantry"], ["recon", "armored_car_recon"]) != []
+    assert validate(["infantry"], ["engineer", "recon", "signal"]) == []
+    assert composition.blocked_by("pioneers", ["recon", "engineer"]) == "engineer"
+    assert composition.blocked_by("pioneers", ["recon"]) is None
+    assert composition.blocked_by("engineer", ["engineer"]) is None   # doublon : autre règle
+
+
+def test_support_company_can_cap_division_speed():
+    stats, _ = aggregate(["motorized"] * 3, ["super_heavy_tank"])
+    assert stats.speed == 4.0
+    stats, _ = aggregate(["motorized"] * 3, ["engineer"])
+    assert stats.speed == 12.0
+
+
+def test_grid_slot_helpers():
+    slots = composition.slots_from_list(["infantry", "artillery"])
+    assert len(slots) == composition.MAX_LINE_BATTALIONS == 25
+    assert slots[:3] == ["infantry", "artillery", None]
+    sparse = [None] * 25
+    sparse[7], sparse[20] = "infantry", "medium_tank"
+    assert composition.list_from_slots(sparse) == ["infantry", "medium_tank"]
+
+
+def test_design_info_sums():
+    info = composition.design_info(["infantry"] * 2, ["engineer"])
+    assert info.manpower == 2 * 1000 + 300
+    assert info.training_days == 120
+    assert info.ic_cost == pytest.approx(2 * 43 + 124)
+
+
+def test_grid_persistence_roundtrip_and_legacy():
+    from persistence.divisions import template_from_dict, template_to_dict
+    grid = [None] * 25
+    grid[0], grid[1], grid[10] = "infantry", "artillery", "medium_tank"
+    template = DivisionTemplate(name="Grille", battalions=["infantry", "artillery", "medium_tank"],
+                                grid=grid, support_companies=["engineer"])
+    data = template_to_dict(template)
+    assert data["Grille"] == grid
+    loaded = template_from_dict(data)
+    assert loaded.grid == grid
+    assert loaded.battalions == ["infantry", "artillery", "medium_tank"]
+    # ancien fichier sans « Grille » : lu tel quel, grille reconstruite à l'écriture
+    legacy = {"Nom de Template": "Ancien", "Bataillons": ["infantry"] * 3}
+    old = template_from_dict(legacy)
+    assert old.grid == [] and old.battalions == ["infantry"] * 3
+    assert template_to_dict(old)["Grille"][:4] == ["infantry"] * 3 + [None]
+
+
+def test_saved_templates_match_their_composition():
+    """Non-régression : les templates d'exemple composés en bataillons
+    redonnent leurs stats enregistrées."""
+    from persistence.divisions import DivisionStore
+    checked = 0
+    for t in DivisionStore(ROOT / "saves" / "divisions").list_templates():
+        if not (t.battalions or t.support_companies):
+            continue
+        assert validate(t.battalions, t.support_companies) == [], t.name
+        stats, recon = aggregate(t.battalions, t.support_companies)
+        for attr in ("hp", "organisation", "soft_attack", "hard_attack", "defense",
+                     "breakthrough", "armor", "piercing", "hardness", "width",
+                     "speed", "initiative", "air_attack"):
+            assert getattr(t.stats, attr) == pytest.approx(getattr(stats, attr), abs=0.02), \
+                f"{t.name} : {attr}"
+        assert t.recon == pytest.approx(recon), t.name
+        checked += 1
+    assert checked >= 10
 
 
 # ------------------------------------------------ bataillons personnalisés

@@ -48,6 +48,10 @@ class DivisionTemplate:
     # et de compagnies de soutien (jusqu'à 5). Vide = mode manuel pur.
     battalions: list[str] = field(default_factory=list)
     support_companies: list[str] = field(default_factory=list)
+    # Emplacements de la grille 5×5 du concepteur (25 entrées, None = vide,
+    # indice = colonne*5 + rangée). Vide = pas de disposition mémorisée :
+    # on suppose alors ``battalions`` rangé colonne par colonne.
+    grid: list[str | None] = field(default_factory=list)
     folder: str = ""  # sous-dossier de rangement dans saves/divisions
 
     def spawn(self) -> "Division":

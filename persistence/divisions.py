@@ -14,6 +14,7 @@ import json
 import re
 from pathlib import Path
 
+from engine.composition import MAX_LINE_BATTALIONS, list_from_slots, slots_from_list
 from engine.division import DivisionStats, DivisionTemplate
 from engine.paths import saves_dir
 
@@ -49,6 +50,9 @@ def template_to_dict(template: DivisionTemplate) -> dict:
     data["Recon"] = template.recon
     if template.battalions:
         data["Bataillons"] = list(template.battalions)
+        # Disposition dans la grille du concepteur (colonne par colonne).
+        data["Grille"] = list(template.grid) if template.grid \
+            else slots_from_list(template.battalions)
     if template.support_companies:
         data["Compagnies de soutien"] = list(template.support_companies)
     return data
@@ -59,13 +63,20 @@ def template_from_dict(data: dict) -> DivisionTemplate:
     for key, attr in {**_LEGACY_KEYS, **_EXTENDED_KEYS}.items():
         if key in data:
             setattr(stats, attr, float(data[key]))
+    battalions = list(data.get("Bataillons", []))
+    grid: list[str | None] = []
+    raw_grid = data.get("Grille")
+    if isinstance(raw_grid, list) and len(raw_grid) == MAX_LINE_BATTALIONS:
+        grid = [bid or None for bid in raw_grid]
+        battalions = list_from_slots(grid)   # la grille fait foi
     return DivisionTemplate(
         name=data.get("Nom de Template", "Sans nom"),
         stats=stats,
         experience=data.get("Experience", "regular"),
         recon=float(data.get("Recon", 0.0)),
-        battalions=list(data.get("Bataillons", [])),
+        battalions=battalions,
         support_companies=list(data.get("Compagnies de soutien", [])),
+        grid=grid,
     )
 
 
