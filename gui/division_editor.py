@@ -75,6 +75,9 @@ def _unit_tooltip(b: composition.BattalionDef) -> str:
 class _Cell(QToolButton):
     """Case de la grille : clic gauche = poser, clic droit = vider."""
 
+    _unit_id: str | None = None
+    _refreshing = False
+
     def __init__(self, index: int, on_place, on_clear, width: int = CELL_W):
         super().__init__()
         self.index = index
@@ -91,11 +94,20 @@ class _Cell(QToolButton):
     def changeEvent(self, event) -> None:
         # Les feuilles de style figent la palette : on les réapplique quand
         # le thème clair/sombre bascule.
-        if event.type() == QEvent.PaletteChange:
+        # setStyleSheet() relance lui-même un PaletteChange : on ignore ceux
+        # qui surviennent pendant show_unit, sinon récursion infinie.
+        if event.type() == QEvent.PaletteChange and not self._refreshing:
             self.show_unit(self._unit_id)
         super().changeEvent(event)
 
     def show_unit(self, unit_id: str | None) -> None:
+        self._refreshing = True
+        try:
+            self._show_unit(unit_id)
+        finally:
+            self._refreshing = False
+
+    def _show_unit(self, unit_id: str | None) -> None:
         self._unit_id = unit_id
         b = composition.BATTALIONS.get(unit_id) if unit_id else None
         if unit_id and b is None:        # id inconnu (ex. bataillon supprimé)
