@@ -101,7 +101,8 @@ class DivisionStore:
     def list_templates(self) -> list[DivisionTemplate]:
         templates: list[DivisionTemplate] = []
         for path in sorted(self.root.rglob("*.json")):
-            folder = str(path.parent.relative_to(self.root))
+            # séparateur « / » sur toutes les plateformes
+            folder = path.parent.relative_to(self.root).as_posix()
             folder = "" if folder == "." else folder
             try:
                 with open(path, encoding="utf-8") as f:
@@ -121,7 +122,7 @@ class DivisionStore:
 
     def folders(self) -> list[str]:
         found = {t.folder for t in self.list_templates()}
-        found.update(str(p.relative_to(self.root))
+        found.update(p.relative_to(self.root).as_posix()
                      for p in self.root.rglob("*") if p.is_dir())
         return sorted(f for f in found if f)
 

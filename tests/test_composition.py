@@ -267,7 +267,7 @@ def test_saved_templates_match_their_composition():
         if not (t.battalions or t.support_companies):
             continue
         assert validate(t.battalions, t.support_companies) == [], t.name
-        stats, recon = aggregate(t.battalions, t.support_companies)
+        stats, recon = aggregate(t.battalions, t.support_companies, t.equipment)
         for attr in ("hp", "organisation", "soft_attack", "hard_attack", "defense",
                      "breakthrough", "armor", "piercing", "hardness", "width",
                      "speed", "initiative", "air_attack"):
@@ -384,8 +384,14 @@ def test_equipment_keeps_unit_specific_modifiers():
     assert mnt.breakthrough == pytest.approx(4 * 1.3)
 
 
+def test_motorized_follows_infantry_equipment_plus_truck():
+    stats, _ = aggregate(["motorized"], [], "1939")
+    assert (stats.soft_attack, stats.defense, stats.breakthrough) == (9, 28, 9)
+    assert stats.speed == 12.0
+
+
 def test_equipment_does_not_touch_other_unit_types():
-    for uid in ("anti_tank", "anti_air", "motorized", "motorized_artillery",
+    for uid in ("anti_tank", "anti_air", "mechanized", "motorized_artillery",
                 "rocket_artillery", "medium_tank"):
         assert aggregate([uid], [], "1942")[0] == aggregate([uid], [], "basic")[0], uid
     assert aggregate(["infantry"], ["engineer"], "1942")[0].defense \

@@ -167,9 +167,10 @@ il est mémorisé dans la clé `Grille` du template.
   les anciens fichiers ne changent pas). Valeurs : `data/equipment.json`
   (wiki *Infantry technology* et *Artillery technology*).
   Concerne l'infanterie « pure » (infanterie, milice, montagnards, marines,
-  parachutistes, cavalerie…) et l'artillerie tractée (bataillon et compagnie de
-  soutien). **Non concernés** : chars, motorisés/mécanisés, artillerie
-  motorisée, roquettes, antichar, antiaérien et les autres compagnies. Seules les
+  parachutistes, cavalerie…), l'infanterie motorisée (mêmes stats d'infanterie,
+  plus la percée du camion) et l'artillerie tractée (bataillon et compagnie de
+  soutien). **Non concernés** : chars, mécanisés, artillerie motorisée,
+  roquettes, antichar, antiaérien et les autres compagnies. Seules les
   stats d'équipement sont modélisées, pas les technologies en pourcentage
   (« Improved Infantry Equipment » +5 %, « Artillery Upgrade » +10 %), les
   doctrines ni les bonus de nation (curseurs manuels de bataille). Les
@@ -179,6 +180,36 @@ il est mémorisé dans la clé `Grille` du template.
   « +60 % vitesse »…) sont conservés en texte dans l'info-bulle, pas calculés.
 - Les CSV navals et aériens ne sont pas utilisés (hors périmètre du combat
   terrestre).
+
+### Divisions d'exemple (guide Paradox)
+
+`saves/divisions/Guide Paradox/<année>/` contient les 15 designs de la section
+« Example Division Designs » du
+[Beginner's Guide to Unit Types & Division Design](https://forum.paradoxplaza.com/forum/threads/beginners-guide-to-unit-types-division-design.942449/)
+(GAGA Extrem), déclinés par époque en **43 templates** :
+
+| Design | 1936 | 1939 | 1942 | 1945 |
+|---|---|---|---|---|
+| Infanterie de base / intermédiaire / de luxe / de luxe XL | ✓ | ✓ | ✓ | |
+| Antichar, antiaérienne, garnison, sécurité | ✓ | ✓ | ✓ | |
+| Assaut de masse, infanterie lourde, artillerie, motorisée | | ✓ | ✓ | |
+| Fer de lance blindé, canons d'assaut | légers | moyens | lourds | modernes |
+| Blindée mixte | | moyens | lourds | modernes |
+
+- Les compagnies entre crochets dans le guide (facultatives) sont toutes mises.
+- Le guide écrit « ARM », « SP-ART », « TD » sans classe : la classe de chars
+  suit l'époque (choix du calculateur, pas du guide). La variante 1945 garde
+  l'équipement d'infanterie III.
+- Le guide date de 2016 : avec les largeurs actuelles (artillerie automotrice 2
+  au lieu de 3), les divisions blindées font 16 ou 18 de large au lieu de 20.
+  Les compositions sont celles du guide.
+- Les antichars, antiaériens, roquettes, mécanisés et chars gardent leurs stats
+  génériques à toutes les époques.
+
+`python tools/guide_divisions.py` recrée les fichiers manquants sans toucher à
+ceux déjà présents (`--force` pour tout réécrire, `--check` pour le rapport).
+Un exécutable empaqueté ne les contient pas : copier le dossier dans son
+`saves/divisions/`.
 
 ## Format des sauvegardes
 

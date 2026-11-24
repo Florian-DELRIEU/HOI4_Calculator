@@ -14,6 +14,13 @@
       "1939":  {"soft": 9.0,  "hard": 1.5, "defense": 28.0, "breakthrough": 4.0, "piercing": 5.0},
       "1942":  {"soft": 12.0, "hard": 2.0, "defense": 34.0, "breakthrough": 5.0, "piercing": 10.0}
     },
+    "motorized": {
+      "_source": "https://hoi4.paradoxwikis.com/Land_units — Motorized Infantry : mêmes stats que l'infanterie, plus 5 de percée apportés par le camion (7 au lieu de 2 avec l'équipement de base) ; la part infanterie suit les générations ci-dessus",
+      "basic": {"soft": 3.0,  "hard": 0.5, "defense": 20.0, "breakthrough": 7.0,  "piercing": 1.0},
+      "1936":  {"soft": 6.0,  "hard": 1.0, "defense": 22.0, "breakthrough": 8.0,  "piercing": 4.0},
+      "1939":  {"soft": 9.0,  "hard": 1.5, "defense": 28.0, "breakthrough": 9.0,  "piercing": 5.0},
+      "1942":  {"soft": 12.0, "hard": 2.0, "defense": 34.0, "breakthrough": 10.0, "piercing": 10.0}
+    },
     "artillery": {
       "_source": "https://hoi4.paradoxwikis.com/Artillery_technology (section Equipment) — Towed Artillery (1934, déjà l'équipement de départ : pas de nouveau modèle en 1936), Improved Artillery (1939), Advanced Artillery (1942)",
       "basic": {"soft": 25.0, "hard": 2.0, "defense": 10.0, "breakthrough": 6.0, "piercing": 5.0},
@@ -22,7 +29,7 @@
       "1942":  {"soft": 34.0, "hard": 2.0, "defense": 18.0, "breakthrough": 8.0, "piercing": 5.0}
     }
   },
-  "_units_comment": "Bataillons dont les stats ne viennent QUE d'une famille d'équipement (colonne « Equip. » du wiki Land_units) -> (famille, génération des stats enregistrées). Exclus : motorisés/mécanisés/Amtrac et artillerie motorisée (camions), roquettes, antichar, antiaérien, chars, autres compagnies (stats mêlées à d'autres équipements ou à des bonus propres).",
+  "_units_comment": "Bataillons dont les stats ne viennent QUE d'une famille d'équipement (colonne « Equip. » du wiki Land_units) -> (famille, génération des stats enregistrées). L'infanterie motorisée a sa propre famille (infanterie + camion). Exclus : mécanisés/Amtrac, artillerie et armes de soutien motorisées, roquettes, antichar, antiaérien, chars, autres compagnies (stats mêlées à d'autres équipements ou à des bonus propres).",
   "units": {
     "infantry":           {"family": "infantry",  "base": "basic"},
     "bicycle":            {"family": "infantry",  "base": "basic"},
@@ -36,6 +43,7 @@
     "rangers":            {"family": "infantry",  "base": "basic"},
     "cavalry":            {"family": "infantry",  "base": "basic"},
     "camelry":            {"family": "infantry",  "base": "1936"},
+    "motorized":          {"family": "motorized", "base": "basic"},
     "artillery":          {"family": "artillery", "base": "basic"},
     "support_artillery":  {"family": "artillery", "base": "basic"}
   }
